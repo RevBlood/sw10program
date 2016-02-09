@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- GPS settings -->
+    <integer name="Interval">1000</integer>
+    <integer name="Distance">0</integer>
+</resources>

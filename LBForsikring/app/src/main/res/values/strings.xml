@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">LB Forsikring</string>
+
+    <!-- Text for ToggleDriving button -->
+    <string name="Start">Start</string>
+    <string name="Stop">Stop</string>
 </resources>
