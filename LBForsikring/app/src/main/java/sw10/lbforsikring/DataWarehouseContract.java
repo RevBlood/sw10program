@@ -33,10 +33,10 @@ public final class DataWarehouseContract {
         public static final String COLUMN_NAME_SPEEDING = "speeding";
         public static final String COLUMN_NAME_BRAKING = "braking";
         public static final String COLUMN_NAME_STEADYSPEED = "steadyspeed";
-        public static final String COLUMN_NAME_DISTANCE_TO_LAG = "distancetolag";
-        public static final String COLUMN_NAME_SECONDS_TO_LAG = "secondstolag";
         public static final String COLUMN_NAME_ACCELERATING = "accelerating";
         public static final String COLUMN_NAME_JERKING = "jerking";
+        public static final String COLUMN_NAME_DISTANCE_TO_LAG = "distancetolag";
+        public static final String COLUMN_NAME_SECONDS_TO_LAG = "secondstolag";
 
     }
 
@@ -93,7 +93,6 @@ public final class DataWarehouseContract {
         public static final String COLUMN_NAME_ACCELERATION_COUNT = "accelerationcount";
         public static final String COLUMN_NAME_JERK_COUNT = "jerkcount";
         public static final String COLUMN_NAME_BRAKE_COUNT = "brakecount";;
-        public static final String COLUMN_NAME_SECONDS_TO_LAG = "secondstolag";
         public static final String COLUMN_NAME_CRITICAL_TIME_INTERVALS = "criticaltimeinterval";
         public static final String COLUMN_NAME_SPEED_INTERVALS = "speedinterval";
         public static final String COLUMN_NAME_ACCELERATION_INTERVALS = "accelerationinterval";

@@ -16,16 +16,25 @@ public class LBDatabaseHelper extends SQLiteOpenHelper{
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
-    // DE ANDRE TABLES SKAL NOK OGSÅ LIGE FIXES ;)
+    // CREATE TABLE SQL STATEMENTS KALDES
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(dbMetaQueries.SQL_CREATE_GPSFACT);
+        db.execSQL(dbMetaQueries.SQL_CREATE_CAR_INFORMATION);
+        db.execSQL(dbMetaQueries.SQL_CREATE_QUALITY_INFORMATION);
+        db.execSQL(dbMetaQueries.SQL_CREATE_SEGMENT_INFORMATION);
+        db.execSQL(dbMetaQueries.SQL_CREATE_DATE_DIMENSIONS);
+        db.execSQL(dbMetaQueries.SQL_CREATE_TIME_DIMENSIONS);
+        db.execSQL(dbMetaQueries.SQL_CREATE_SUBTRIP_FACT);
+        db.execSQL(dbMetaQueries.SQL_CREATE_GPS_FACT);
+        db.execSQL(dbMetaQueries.SQL_CREATE_TRIP_FACT);
     }
+
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // This database is only a cache for online data, so its upgrade policy is
         // to simply to discard the data and start over
         db.execSQL(dbMetaQueries.SQL_DELETE_ENTRIES);
         onCreate(db);
     }
+
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         onUpgrade(db, oldVersion, newVersion);
     }
