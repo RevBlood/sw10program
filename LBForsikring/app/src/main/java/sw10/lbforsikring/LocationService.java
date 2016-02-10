@@ -2,54 +2,96 @@ package sw10.lbforsikring;
 
 import android.Manifest;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.LocationManager;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
-public class LocationService extends Service {
-    private LocationManager mLocationManager;
-    private LocationListener mGPSListener;
-    private LocationListener mNetworkListener;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
+import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+
+public class LocationService extends Service implements ConnectionCallbacks, OnConnectionFailedListener {
+    GoogleApiClient mGoogleApiClient;
+    LocationRequest mLocationRequest;
+    LocationListener mLocationListener;
 
     @Override
     public void onCreate() {
-        mGPSListener = new LocationListener(LocationManager.GPS_PROVIDER);
-        mNetworkListener = new LocationListener(LocationManager.NETWORK_PROVIDER);
+        //Setup the GoogleApiClient, responsible for connecting to Google Location Services
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
 
-        if (mLocationManager == null) {
-            mLocationManager = (LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
-        }
+        mGoogleApiClient.connect();
 
+        //LocationRequest specifies settings for receiving location updates
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(500);
+        mLocationRequest.setFastestInterval(500);
+        //mLocationRequest.setMaxWaitTime(20000); //Saves battery - Handles location in batches
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        //Listener for retrieving location updates
+        mLocationListener = new LocationListener();
+    }
+
+    @Override
+    public void onDestroy() {
+        Log.i("Debug", "Disconnecting from Google Play Services");
+
+        //Check that permission to access location has been given
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            //TODO: Notify user of the missing permission
+            Log.e("Debug", "Missing permission: ACCESS_FINE_LOCATION");
         }
 
-        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-                                                R.integer.Interval,
-                                                R.integer.Distance,
-                                                mGPSListener);
-        Log.e("App", "Requesting GPS");
+        //Stop retrieving location updates
+        if(mGoogleApiClient.isConnected()) {
+            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, mLocationListener);
+        }
 
-        mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
-                                                R.integer.Interval,
-                                                R.integer.Distance,
-                                                mNetworkListener);
+        super.onDestroy();
+    }
 
-        Log.e("App", "Requesting Network");
+    @Override
+    public void onConnected(Bundle connectionHint) {
+        Log.i("Debug", "Connected to Google Play Services");
+
+        //Check that permission to access location has been given
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Log.e("Debug", "Missing permission: ACCESS_FINE_LOCATION");
+        }
+
+        //Start retrieving location updates
+        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, mLocationListener);
+    }
+
+    @Override
+    public void onConnectionSuspended(int cause) {
+        // The connection has been interrupted.
+        // Disable any UI components that depend on Google APIs
+        // until onConnected() is called.
+
+        Log.w("Debug", "Connection Suspended");
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult result) {
+        // This callback is important for handling errors that
+        // may occur while attempting to connect with Google.
+
+        Log.e("Debug", "Connection Failed");
     }
 
     @Override
     public IBinder onBind(Intent arg0) {
         return null;
-    }
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        super.onStartCommand(intent, flags, startId);
-        return START_STICKY;
     }
 }
