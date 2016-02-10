@@ -15,6 +15,6 @@ import android.util.Log;
         @Override
         public void onLocationChanged(Location location) {
             mLastLocation = location;
-            Log.e("App", "Lat: " + location.getLatitude() + ", Lng: " + location.getLongitude());
+            Log.d("Debug", "Lat: " + location.getLatitude() + ", Lng: " + location.getLongitude());
         }
 }

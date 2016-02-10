@@ -23,8 +23,6 @@ public class LocationService extends Service implements ConnectionCallbacks, OnC
 
     @Override
     public void onCreate() {
-        Log.d("App", "Service Started");
-
         //Setup the GoogleApiClient, responsible for connecting to Google Location Services
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
@@ -36,8 +34,9 @@ public class LocationService extends Service implements ConnectionCallbacks, OnC
 
         //LocationRequest specifies settings for receiving location updates
         mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(1000);
-        mLocationRequest.setFastestInterval(1000);
+        mLocationRequest.setInterval(500);
+        mLocationRequest.setFastestInterval(500);
+        //mLocationRequest.setMaxWaitTime(20000); //Saves battery - Handles location in batches
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
         //Listener for retrieving location updates
@@ -46,26 +45,28 @@ public class LocationService extends Service implements ConnectionCallbacks, OnC
 
     @Override
     public void onDestroy() {
-        Log.d("App", "Service Stopped");
+        Log.i("Debug", "Disconnecting from Google Play Services");
 
         //Check that permission to access location has been given
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Log.e("App", "Missing permission: ACCESS_FINE_LOCATION");
+            Log.e("Debug", "Missing permission: ACCESS_FINE_LOCATION");
         }
 
         //Stop retrieving location updates
         if(mGoogleApiClient.isConnected()) {
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, mLocationListener);
         }
+
+        super.onDestroy();
     }
 
     @Override
     public void onConnected(Bundle connectionHint) {
-        Log.d("App", "Connected to Google Play Services");
+        Log.i("Debug", "Connected to Google Play Services");
 
         //Check that permission to access location has been given
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Log.e("App", "Missing permission: ACCESS_FINE_LOCATION");
+            Log.e("Debug", "Missing permission: ACCESS_FINE_LOCATION");
         }
 
         //Start retrieving location updates
@@ -78,7 +79,7 @@ public class LocationService extends Service implements ConnectionCallbacks, OnC
         // Disable any UI components that depend on Google APIs
         // until onConnected() is called.
 
-        Log.w("App", "Connection Suspended");
+        Log.w("Debug", "Connection Suspended");
     }
 
     @Override
@@ -86,7 +87,7 @@ public class LocationService extends Service implements ConnectionCallbacks, OnC
         // This callback is important for handling errors that
         // may occur while attempting to connect with Google.
 
-        Log.e("App", "Connection Failed");
+        Log.e("Debug", "Connection Failed");
     }
 
     @Override
