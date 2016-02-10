@@ -41,7 +41,7 @@ public class MainActivity extends Activity {
 
     @Override
     public void onDestroy() {
-        stopService(new Intent(mContext, LocationService.class));
+        stopService(new Intent(this, LocationService.class));
         Log.i("Debug", "Service Stopped on application exit");
 
         super.onDestroy();
