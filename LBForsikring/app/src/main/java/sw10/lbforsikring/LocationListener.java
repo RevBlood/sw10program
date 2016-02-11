@@ -1,6 +1,5 @@
 package sw10.lbforsikring;
 
-import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -22,9 +21,15 @@ public class LocationListener implements com.google.android.gms.location.Locatio
     Location mPreviousLocation;
     Handler mMovementTimer;
     Runnable mTimerTask;
+    LBDatabaseHelper mDBHelper;
+    dbWriteQueries mDBWriter;
 
     public LocationListener(Context context) {
         mContext = context;
+
+        //Instantiate the database
+        mDBHelper = new LBDatabaseHelper(mContext);
+        mDBWriter = new dbWriteQueries(mDBHelper);
 
         //Define what to do when the mMovementTimer runs out
         mTimerTask = new Runnable() {
@@ -45,14 +50,16 @@ public class LocationListener implements com.google.android.gms.location.Locatio
         //While speed is above 10km/h, keep resetting the movement timer
         //If speed is less than 10km/h, let the timer run out, issuing a notification
         //If a notification is issued, no more notifications will occur until speed has been above 10km/h again
-        if(GetSpeed(location) >= R.integer.MovementMinSpeed) {
+        if(GetSpeed(location) >= mContext.getResources().getInteger(R.integer.MovementMinSpeed)) {
             UpdateMovementTimer();
         }
 
         //Save the observed location as the previous location
         Log.d("Debug", location.getLatitude() + ", " + location.getLongitude());
         mPreviousLocation = location;
-        long rowID = SaveLocationInDB(location);
+
+        //Save the observed location in DB
+        long rowID = mDBWriter.InsertLocationIntoGPS(location);
         Log.d("Debug", Long.toString(rowID));
 
         //Convert timestamp of location to database format
@@ -78,7 +85,7 @@ public class LocationListener implements com.google.android.gms.location.Locatio
     public void UpdateMovementTimer() {
         //If timer exists, cancel it. Then restart it
         mMovementTimer.removeCallbacks(mTimerTask);
-        mMovementTimer.postDelayed(mTimerTask, R.integer.NotificationDelay);
+        mMovementTimer.postDelayed(mTimerTask, mContext.getResources().getInteger(R.integer.NotificationDelay));
     }
 
     public void IssueNotification(){
@@ -118,16 +125,5 @@ public class LocationListener implements com.google.android.gms.location.Locatio
         dbTime += String.format("%02d", calendar.get(Calendar.MINUTE));
         dbTime += String.format("%02d", calendar.get(Calendar.SECOND));
         return dbTime;
-    }
-
-    public long SaveLocationInDB(Location location) {
-
-        LBDatabaseHelper mDBhelper;
-        dbWriteQueries dbw;
-
-        mDBhelper = new LBDatabaseHelper(mContext);
-        dbw = new dbWriteQueries(mDBhelper);
-
-        return dbw.InsertLocationIntoGPS(location);
     }
 }

@@ -1,12 +1,12 @@
 package sw10.lbforsikring;
 
-import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -19,13 +19,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
-
-public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity {
     Context mContext;
     Boolean mDriving = false;
-
     LBDatabaseHelper mDBhelper;
 
     @Override
@@ -33,7 +29,6 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mContext = this;
-
         mDBhelper = new LBDatabaseHelper(this);
 
         Button toggleDrivingButton = (Button) findViewById(R.id.toggleDrivingButton);
@@ -44,8 +39,6 @@ public class MainActivity extends Activity {
             mDriving = true;
             toggleDrivingButton.setText(R.string.ToggleDrivingStop);
         }
-
-
     }
 
     @Override
