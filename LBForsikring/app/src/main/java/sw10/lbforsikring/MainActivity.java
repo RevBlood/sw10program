@@ -24,24 +24,12 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
     Context mContext;
     boolean mDriving = false;
-    boolean mOnBackPressedOnce = false;
-    Handler mOnBackPressedTimer;
-    Runnable mOnBackPressedTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mContext = this;
-
-        //Setup timer to register if Back is clicked two times in a row
-        mOnBackPressedTimer = new Handler();
-        mOnBackPressedTask = new Runnable() {
-            @Override
-            public void run() {
-                mOnBackPressedOnce = false;
-            }
-        };
 
         Button toggleDrivingButton = (Button) findViewById(R.id.toggleDrivingButton);
         toggleDrivingButton.setOnClickListener(OnToggleDrivingListener);
@@ -60,17 +48,15 @@ public class MainActivity extends AppCompatActivity {
 
         super.onDestroy();
     }
-    
+
     @Override
     public void onBackPressed() {
-        if (mOnBackPressedOnce) {
+        if (!mDriving) {
             super.onBackPressed();
             return;
+        } else {
+            Toast.makeText(this, R.string.OnBackPressedToast, Toast.LENGTH_SHORT).show();
         }
-
-        mOnBackPressedOnce = true;
-        Toast.makeText(this, R.string.OnBackPressedToast, Toast.LENGTH_SHORT).show();
-        mOnBackPressedTimer.postDelayed(mOnBackPressedTask, getResources().getInteger(R.integer.OnBackPressedTimer));
     }
 
     Button.OnClickListener OnToggleDrivingListener = new Button.OnClickListener() {
@@ -84,11 +70,13 @@ public class MainActivity extends AppCompatActivity {
                 Log.i("Debug", "Service Started");
                 toggleDrivingButton.setText(R.string.ToggleDrivingStop);
                 mDriving = true;
+                Toast.makeText(mContext, R.string.ToggleDrivingStartToast, Toast.LENGTH_SHORT).show();
             } else {
                 stopService(new Intent(mContext, LocationService.class));
                 Log.i("Debug", "Service Stopped");
                 toggleDrivingButton.setText(R.string.ToggleDrivingStart);
                 mDriving = false;
+                Toast.makeText(mContext, R.string.ToggleDrivingStopToast, Toast.LENGTH_SHORT).show();
 
                 File file = GetFilePath();
                 ArrayList<String> log = ReadLogCat();

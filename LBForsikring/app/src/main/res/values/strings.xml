@@ -14,6 +14,10 @@
     <string name="LogFilename">Logcat</string>
     <string name="LogFiletype">.txt</string>
 
+    <!-- Text for ToggleDriving toasts -->
+    <string name="ToggleDrivingStartToast">Tur begyndt</string>
+    <string name="ToggleDrivingStopToast">Tur stoppet</string>
+
     <!-- Text for back press toast -->
-    <string name="OnBackPressedToast">Tryk igen for at afslutte og stoppe din tur</string>
+    <string name="OnBackPressedToast">Stop venligst tur inden afslutning</string>
 </resources>
