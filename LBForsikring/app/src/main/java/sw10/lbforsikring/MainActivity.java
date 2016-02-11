@@ -35,14 +35,14 @@ public class MainActivity extends Activity {
         if(isServiceRunning(LocationService.class)) {
             Log.i("Debug", "Service already running");
             mDriving = true;
-            toggleDrivingButton.setText(R.string.Stop);
+            toggleDrivingButton.setText(R.string.ToggleDrivingStop);
         }
     }
 
     @Override
     public void onDestroy() {
         stopService(new Intent(this, LocationService.class));
-        Log.i("Debug", "Service Stopped on application exit");
+        Log.i("Debug", "Service stopped on application exit");
 
         super.onDestroy();
     }
@@ -51,18 +51,17 @@ public class MainActivity extends Activity {
         public void onClick(View v) {
             Button toggleDrivingButton = (Button)findViewById(R.id.toggleDrivingButton);
 
-            //If user was not driving, reset Logcat, start the location service, otherwise stop it.
-            //Change text on button accordingly
+            //If user was not driving, reset Logcat and start the location service - otherwise stop it
             if (!mDriving) {
                 ClearLogCat();
                 startService(new Intent(mContext, LocationService.class));
                 Log.i("Debug", "Service Started");
-                toggleDrivingButton.setText(R.string.Stop);
+                toggleDrivingButton.setText(R.string.ToggleDrivingStop);
                 mDriving = true;
             } else {
                 stopService(new Intent(mContext, LocationService.class));
                 Log.i("Debug", "Service Stopped");
-                toggleDrivingButton.setText(R.string.Start);
+                toggleDrivingButton.setText(R.string.ToggleDrivingStart);
                 mDriving = false;
 
                 File file = GetFilePath();
@@ -125,18 +124,17 @@ public class MainActivity extends Activity {
     private File GetFilePath(){
         //Save file in folder in downloads
         File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-        dir = new File (dir.getAbsolutePath() + "/lbforsikring");
+        dir = new File (dir.getAbsolutePath() + R.string.LogFolder);
         dir.mkdirs();
 
         //Get timestamp
-        Long tsLong = System.currentTimeMillis()/1000;
-        String timestamp = tsLong.toString();
+        Long timestamp = System.currentTimeMillis()/1000;
 
         //Add filename to dir and return
-        return new File(dir, "logcat" + timestamp + ".txt");
+        return new File(dir, R.string.LogFilename + timestamp.toString() + R.string.LogFiletype);
     }
 
-    //From http://stackoverflow.com/questions/600207/how-to-check-if-a-service-is-running-on-android
+    //Method found on http://stackoverflow.com/questions/600207/how-to-check-if-a-service-is-running-on-android
     private boolean isServiceRunning(Class<?> serviceClass) {
         ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {

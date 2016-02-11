@@ -34,13 +34,13 @@ public class LocationService extends Service implements ConnectionCallbacks, OnC
 
         //LocationRequest specifies settings for receiving location updates
         mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(500);
-        mLocationRequest.setFastestInterval(500);
-        //mLocationRequest.setMaxWaitTime(20000); //Saves battery - Handles location in batches
+        mLocationRequest.setInterval(R.integer.PositionInterval);
+        mLocationRequest.setFastestInterval(R.integer.PositionFastestInterval);
+        //mLocationRequest.setMaxWaitTime(R.integer.PositionMaxWait); //Saves battery - Handles location in batches
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
         //Listener for retrieving location updates
-        mLocationListener = new LocationListener();
+        mLocationListener = new LocationListener(this);
     }
 
     @Override

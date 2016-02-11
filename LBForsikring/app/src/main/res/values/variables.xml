@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Variables for positioning settings -->
+    <integer name="PositionInterval">500</integer>
+    <integer name="PositionFastestInterval">500</integer>
+    <integer name="PositionMaxWait">20000</integer>
+
+    <!-- Variables for movement detection -->
+    <integer name="MovementMinSpeed">10</integer>
+
+    <!-- Variables for notification settings -->
+    <integer name="NotificationDelay">180000</integer>
+</resources>

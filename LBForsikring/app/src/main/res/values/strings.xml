@@ -2,6 +2,15 @@
     <string name="app_name">LB Forsikring</string>
 
     <!-- Text for ToggleDriving button -->
-    <string name="Start">Start</string>
-    <string name="Stop">Stop</string>
+    <string name="ToggleDrivingStart">Start</string>
+    <string name="ToggleDrivingStop">Stop</string>
+
+    <!-- Text for notification -->
+    <string name="NotificationTitle">Er din tur slut?</string>
+    <string name="NotificationText">Tryk her for at slutte din tur</string>
+
+    <!-- Text for saving Logcats after trips -->
+    <string name="LogFolder">/lbforsikring</string>
+    <string name="LogFilename">Logcat</string>
+    <string name="LogFiletype">.txt</string>
 </resources>
