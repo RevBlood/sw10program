@@ -156,7 +156,7 @@ public final class DataWarehouseContract {
 
     public static abstract class DateDimension implements BaseColumns {
 
-        public static final String TABLE_NAME = "dimtime";
+        public static final String TABLE_NAME = "dimdate";
         public static final String COLUMN_NAME_DATE_ID = "dateid";
         public static final String COLUMN_NAME_YEAR = "year";
         public static final String COLUMN_NAME_MONTH = "month";

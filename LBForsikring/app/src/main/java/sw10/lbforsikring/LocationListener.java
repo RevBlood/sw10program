@@ -1,5 +1,6 @@
 package sw10.lbforsikring;
 
+import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -9,6 +10,9 @@ import android.location.Location;
 import android.os.Handler;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by treel on 09-02-2016.
@@ -48,6 +52,13 @@ public class LocationListener implements com.google.android.gms.location.Locatio
         //Save the observed location as the previous location
         Log.d("Debug", location.getLatitude() + ", " + location.getLongitude());
         mPreviousLocation = location;
+        long rowID = SaveLocationInDB(location);
+        Log.d("Debug", Long.toString(rowID));
+
+        //Convert timestamp of location to database format
+        Date timestamp = new java.util.Date(location.getTime());
+        String dbDate = ToDBDate(timestamp);
+        String dbTime = ToDBTime(timestamp);
     }
 
     private double GetSpeed(Location location) {
@@ -87,5 +98,36 @@ public class LocationListener implements com.google.android.gms.location.Locatio
         //Pop the notification
         NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(mContext.NOTIFICATION_SERVICE);
         notificationManager.notify(0, notificationBuilder.build());
+    }
+
+    private String ToDBDate(Date timestamp) {
+        String dbDate = "";
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(timestamp);
+        dbDate += calendar.get(Calendar.YEAR);
+        dbDate += String.format("%02d", calendar.get(Calendar.MONTH) + 1);
+        dbDate += String.format("%02d", calendar.get(Calendar.DAY_OF_MONTH));
+        return dbDate;
+    }
+
+    private String ToDBTime(Date timestamp) {
+        String dbTime = "";
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(timestamp);
+        dbTime += String.format("%02d", calendar.get(Calendar.HOUR_OF_DAY));
+        dbTime += String.format("%02d", calendar.get(Calendar.MINUTE));
+        dbTime += String.format("%02d", calendar.get(Calendar.SECOND));
+        return dbTime;
+    }
+
+    public long SaveLocationInDB(Location location) {
+
+        LBDatabaseHelper mDBhelper;
+        dbWriteQueries dbw;
+
+        mDBhelper = new LBDatabaseHelper(mContext);
+        dbw = new dbWriteQueries(mDBhelper);
+
+        return dbw.InsertLocationIntoGPS(location);
     }
 }

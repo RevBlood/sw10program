@@ -14,11 +14,11 @@ public class dbMetaQueries {
     private static final String INTEGER = " INTEGER";
     private static final String REAL  = " REAL";
     private static final String TEXT = " TEXT";
-    private static final String BOOLEAN = "BOOLEAN";
+    private static final String BOOLEAN = " BOOLEAN";
 
-    private static final String PRIMARYKEY = " PRIMARY KEY";
-    private static final String FOREIGNKEY = " FOREIGN KEY";
-    private static final String REFERENCES = " REFERENCES";
+    private static final String PRIMARYKEY = " PRIMARY KEY ";
+    private static final String FOREIGNKEY = " FOREIGN KEY ";
+    private static final String REFERENCES = " REFERENCES ";
 
 
     public static final String SQL_DELETE_ENTRIES =
@@ -34,7 +34,7 @@ public class dbMetaQueries {
 
     public static final String SQL_CREATE_GPS_FACT =
             "CREATE TABLE " + DataWarehouseContract.GPSFact.TABLE_NAME + " (" +
-                    DataWarehouseContract.GPSFact.COLUMN_NAME_ENTRY_ID + INTEGER + PRIMARYKEY + COMMA_SEP +
+                    DataWarehouseContract.GPSFact.COLUMN_NAME_ENTRY_ID + INTEGER + PRIMARYKEY + "AUTOINCREMENT" + COMMA_SEP +
                     DataWarehouseContract.GPSFact.COLUMN_NAME_CAR_ID + INTEGER + COMMA_SEP +
                     DataWarehouseContract.GPSFact.COLUMN_NAME_TRIP_ID + INTEGER + COMMA_SEP +
                     DataWarehouseContract.GPSFact.COLUMN_NAME_QUALITY_ID + INTEGER + COMMA_SEP +

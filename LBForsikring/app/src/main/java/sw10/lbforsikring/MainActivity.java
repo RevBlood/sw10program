@@ -19,15 +19,22 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+
 public class MainActivity extends Activity {
     Context mContext;
     Boolean mDriving = false;
+
+    LBDatabaseHelper mDBhelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mContext = this;
+
+        mDBhelper = new LBDatabaseHelper(this);
 
         Button toggleDrivingButton = (Button) findViewById(R.id.toggleDrivingButton);
         toggleDrivingButton.setOnClickListener(OnToggleDrivingListener);
@@ -37,6 +44,8 @@ public class MainActivity extends Activity {
             mDriving = true;
             toggleDrivingButton.setText(R.string.ToggleDrivingStop);
         }
+
+
     }
 
     @Override
