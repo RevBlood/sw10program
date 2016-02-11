@@ -6,10 +6,12 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -21,15 +23,25 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     Context mContext;
-    Boolean mDriving = false;
-    LBDatabaseHelper mDBhelper;
+    boolean mDriving = false;
+    boolean mOnBackPressedOnce = false;
+    Handler mOnBackPressedTimer;
+    Runnable mOnBackPressedTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mContext = this;
-        mDBhelper = new LBDatabaseHelper(this);
+
+        //Setup timer to register if Back is clicked two times in a row
+        mOnBackPressedTimer = new Handler();
+        mOnBackPressedTask = new Runnable() {
+            @Override
+            public void run() {
+                mOnBackPressedOnce = false;
+            }
+        };
 
         Button toggleDrivingButton = (Button) findViewById(R.id.toggleDrivingButton);
         toggleDrivingButton.setOnClickListener(OnToggleDrivingListener);
@@ -47,6 +59,18 @@ public class MainActivity extends AppCompatActivity {
         Log.i("Debug", "Service stopped on application exit");
 
         super.onDestroy();
+    }
+    
+    @Override
+    public void onBackPressed() {
+        if (mOnBackPressedOnce) {
+            super.onBackPressed();
+            return;
+        }
+
+        mOnBackPressedOnce = true;
+        Toast.makeText(this, R.string.OnBackPressedToast, Toast.LENGTH_SHORT).show();
+        mOnBackPressedTimer.postDelayed(mOnBackPressedTask, getResources().getInteger(R.integer.OnBackPressedTimer));
     }
 
     Button.OnClickListener OnToggleDrivingListener = new Button.OnClickListener() {

@@ -13,4 +13,7 @@
     <string name="LogFolder">/lbforsikring</string>
     <string name="LogFilename">Logcat</string>
     <string name="LogFiletype">.txt</string>
+
+    <!-- Text for back press toast -->
+    <string name="OnBackPressedToast">Tryk igen for at afslutte og stoppe din tur</string>
 </resources>
