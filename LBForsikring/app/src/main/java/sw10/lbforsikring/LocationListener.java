@@ -61,11 +61,6 @@ public class LocationListener implements com.google.android.gms.location.Locatio
         //Save the observed location in DB
         long rowID = mDBWriter.InsertLocationIntoGPS(location);
         Log.d("Debug", Long.toString(rowID));
-
-        //Convert timestamp of location to database format
-        Date timestamp = new java.util.Date(location.getTime());
-        String dbDate = ToDBDate(timestamp);
-        String dbTime = ToDBTime(timestamp);
     }
 
     private double GetSpeed(Location location) {
@@ -105,25 +100,5 @@ public class LocationListener implements com.google.android.gms.location.Locatio
         //Pop the notification
         NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(mContext.NOTIFICATION_SERVICE);
         notificationManager.notify(0, notificationBuilder.build());
-    }
-
-    private String ToDBDate(Date timestamp) {
-        String dbDate = "";
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(timestamp);
-        dbDate += calendar.get(Calendar.YEAR);
-        dbDate += String.format("%02d", calendar.get(Calendar.MONTH) + 1);
-        dbDate += String.format("%02d", calendar.get(Calendar.DAY_OF_MONTH));
-        return dbDate;
-    }
-
-    private String ToDBTime(Date timestamp) {
-        String dbTime = "";
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(timestamp);
-        dbTime += String.format("%02d", calendar.get(Calendar.HOUR_OF_DAY));
-        dbTime += String.format("%02d", calendar.get(Calendar.MINUTE));
-        dbTime += String.format("%02d", calendar.get(Calendar.SECOND));
-        return dbTime;
     }
 }
