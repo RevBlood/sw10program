@@ -50,7 +50,7 @@ public class LocationListener implements com.google.android.gms.location.Locatio
         //While speed is above 10km/h, keep resetting the movement timer
         //If speed is less than 10km/h, let the timer run out, issuing a notification
         //If a notification is issued, no more notifications will occur until speed has been above 10km/h again
-        if(GetSpeed(location) >= mContext.getResources().getInteger(R.integer.MovementMinSpeed)) {
+        if(MeasureHelper.Speed(location, mPreviousLocation) >= mContext.getResources().getInteger(R.integer.MovementMinSpeed)) {
             UpdateMovementTimer();
         }
 
@@ -61,20 +61,6 @@ public class LocationListener implements com.google.android.gms.location.Locatio
         //Save the observed location in DB
         long rowID = mDBWriter.InsertLocationIntoGPS(location);
         Log.d("Debug", Long.toString(rowID));
-    }
-
-    private double GetSpeed(Location location) {
-        //If not previous location exists, there is no speed - return 0
-        if (mPreviousLocation != null) {
-            //Get the difference in time and distance and calculate speed
-            double timeDifference = location.getTime() - mPreviousLocation.getTime() / 1000;
-            float distanceDifference = mPreviousLocation.distanceTo(location);
-
-            //Return calculated speed
-            return (distanceDifference / timeDifference) * 3.6;
-        } else {
-            return 0;
-        }
     }
 
     public void UpdateMovementTimer() {
