@@ -6,6 +6,8 @@ import android.util.Log;
 import java.util.Calendar;
 import java.util.Date;
 
+import sw10.lbforsikring.Objects.FactObjects.*;
+
 /**
  * Created by Casper on 11-02-2016.
  */
@@ -15,31 +17,38 @@ public final class MeasureHelper {
         return MPoint.distanceTo(PrevMPoint);
     }
 
-    public static int SecondsToLag(Location MPoint, Location PrevMPoint){
-        long time = MPoint.getTime();
-        long prevTime = PrevMPoint.getTime();
-
-        return (int)(time - prevTime);
+    public static int SecondsToLag(TemporalInformation CurrentTI, TemporalInformation PrevTI){
+        return (int)(CurrentTI.Timestamp.getTime() - PrevTI.Timestamp.getTime()) / 1000;
     }
 
-    public static double Speed(Location MPoint, Location PrevMPoint){
-        //distance/time
-
-
+    public static double Speed(Location MPoint, Location PrevMPoint, TemporalInformation CurrentTI, TemporalInformation PrevTI){
+        //Speed = Distance / Time
         double distance = MPoint.distanceTo(PrevMPoint);
 
-        long time = MPoint.getTime();
-        long prevTime = PrevMPoint.getTime();
-        int timeSpend = (int)(time - prevTime);
+        long differenceInSeconds = (CurrentTI.Timestamp.getTime() - PrevTI.Timestamp.getTime()) / 1000;
 
-//      3.6 * m/s
+        // Conversion from m/s to km/h
+        //3.6 * m/s
 
-        return (distance / timeSpend) * 3.6;
+        return (distance / differenceInSeconds) * 3.6;
     }
 
-    public static double Acceleration(){
-        return 0.0;
+    public static double Acceleration(MeasureInformation CurrentMI, MeasureInformation PrevMI, TemporalInformation CurrentTI, TemporalInformation PrevTI){
+        //Acceleration = Velocity change / Time
+        double velocityChange = CurrentMI.Speed - PrevMI.Speed;
+        long differenceInSeconds = (CurrentTI.Timestamp.getTime() - PrevTI.Timestamp.getTime()) / 1000;
+        return velocityChange / differenceInSeconds;
     }
+
+    public static double Jerk(MeasureInformation CurrentMi, MeasureInformation PrevMI, TemporalInformation CurrentTI, TemporalInformation PrevTI){
+        //Jerk = Acceleration change / Time
+        double accelerationChange = CurrentMi.Acceleration - PrevMI.Acceleration;
+        long differenceInSeconds = (CurrentTI.Timestamp.getTime() - PrevTI.Timestamp.getTime()) / 1000;
+
+        return accelerationChange / differenceInSeconds;
+    }
+
+
 
     public static int DBDate(long unixTime) {
         Date timestamp = new java.util.Date(unixTime);
