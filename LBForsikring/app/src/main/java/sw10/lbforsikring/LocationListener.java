@@ -6,12 +6,11 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
-
-import java.util.Calendar;
-import java.util.Date;
 
 /**
  * Created by treel on 09-02-2016.
@@ -50,9 +49,12 @@ public class LocationListener implements com.google.android.gms.location.Locatio
         //While speed is above 10km/h, keep resetting the movement timer
         //If speed is less than 10km/h, let the timer run out, issuing a notification
         //If a notification is issued, no more notifications will occur until speed has been above 10km/h again
-        if(MeasureHelper.Speed(location, mPreviousLocation) >= mContext.getResources().getInteger(R.integer.MovementMinSpeed)) {
+        if(mPreviousLocation != null && MeasureHelper.Speed(location, mPreviousLocation) >= mContext.getResources().getInteger(R.integer.MovementMinSpeed)) {
             UpdateMovementTimer();
         }
+
+        //Broadcast the new position so it can be retrieved elsewhere in the application
+        BroadcastLocation(location);
 
         //Save the observed location as the previous location
         Log.d("Debug", location.getLatitude() + ", " + location.getLongitude());
@@ -86,5 +88,13 @@ public class LocationListener implements com.google.android.gms.location.Locatio
         //Pop the notification
         NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(mContext.NOTIFICATION_SERVICE);
         notificationManager.notify(0, notificationBuilder.build());
+    }
+
+    private void BroadcastLocation(Location location) {
+        Intent intent = new Intent(mContext.getString(R.string.BroadcastIntentName));
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(mContext.getString(R.string.BroadcastParcelableLocationName), location);
+        intent.putExtra(mContext.getString(R.string.BroadcastIntentBundleName), bundle);
+        LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
     }
 }

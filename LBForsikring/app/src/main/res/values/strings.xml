@@ -5,14 +5,12 @@
     <string name="ToggleDrivingStart">Start</string>
     <string name="ToggleDrivingStop">Stop</string>
 
+    <!-- Text for OpenMap button -->
+    <string name="OpenMap">Se tur på kort</string>
+
     <!-- Text for notification -->
     <string name="NotificationTitle">Er din tur slut?</string>
     <string name="NotificationText">Tryk her for at slutte din tur</string>
-
-    <!-- Text for saving Logcats after trips -->
-    <string name="LogFolder">/lbforsikring</string>
-    <string name="LogFilename">Logcat</string>
-    <string name="LogFiletype">.txt</string>
 
     <!-- Text for ToggleDriving toasts -->
     <string name="ToggleDrivingStartToast">Tur begyndt</string>
@@ -20,4 +18,15 @@
 
     <!-- Text for back press toast -->
     <string name="OnBackPressedToast">Stop venligst tur inden afslutning</string>
+    <string name="title_activity_map">Kort</string>
+
+    <!-- Text for saving Logcats after trips -->
+    <string name="LogFolder">/lbforsikring</string>
+    <string name="LogFilename">Logcat</string>
+    <string name="LogFiletype">.txt</string>
+
+    <!-- Text for broadcasting/recieving location updates -->
+    <string name="BroadcastIntentName">NewLocation</string>
+    <string name="BroadcastIntentBundleName">NewLocation</string>
+    <string name="BroadcastParcelableLocationName">NewLocation</string>
 </resources>
