@@ -1,6 +1,8 @@
 package sw10.lbforsikring.Objects.FactObjects;
 
 
+import org.json.JSONObject;
+
 /**
  * Created by Casper on 11-02-2016.
  */
@@ -21,5 +23,9 @@ public class Fact {
         this.Measure = Measure;
         this.Spatial = Spatial;
         this.Temporal = Temporal;
+    }
+
+    public Fact(JSONObject obj) {
+
     }
 }

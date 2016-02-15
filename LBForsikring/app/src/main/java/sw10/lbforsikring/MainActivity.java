@@ -20,6 +20,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
+import sw10.lbforsikring.Helpers.ServiceHelper;
+import sw10.lbforsikring.Objects.TripObjects.Trip;
+
 public class MainActivity extends AppCompatActivity {
     Context mContext;
     boolean mDriving = false;
@@ -78,6 +81,13 @@ public class MainActivity extends AppCompatActivity {
                 mDriving = true;
                 openMapButton.setEnabled(true);
                 Toast.makeText(mContext, R.string.ToggleDrivingStartToast, Toast.LENGTH_SHORT).show();
+
+                /*
+                Trip trip = ServiceHelper.GetTrip(4, 1);
+                Log.i("Debug", Long.toString(trip.TripId));
+                Log.i("Debug", Long.toString(trip.PreviousTripId));
+                Log.i("Debug", Integer.toString(trip.CarId));
+                */
             } else {
                 stopService(new Intent(mContext, LocationService.class));
                 Log.i("Debug", "Service Stopped");
