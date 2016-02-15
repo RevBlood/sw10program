@@ -12,6 +12,8 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
+import sw10.lbforsikring.Helpers.MeasureHelper;
+
 /**
  * Created by treel on 09-02-2016.
  */

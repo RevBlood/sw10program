@@ -1,4 +1,4 @@
-package sw10.lbforsikring;
+package sw10.lbforsikring.Helpers;
 
 import android.location.Location;
 import android.util.Log;
@@ -21,11 +21,11 @@ public final class MeasureHelper {
         return (int)(CurrentTI.Timestamp.getTime() - PrevTI.Timestamp.getTime()) / 1000;
     }
 
-    public static double Speed(Location MPoint, Location PrevMPoint, TemporalInformation CurrentTI, TemporalInformation PrevTI){
+    public static double Speed(Location MPoint, Location PrevMPoint){
         //Speed = Distance / Time
         double distance = MPoint.distanceTo(PrevMPoint);
 
-        long differenceInSeconds = (CurrentTI.Timestamp.getTime() - PrevTI.Timestamp.getTime()) / 1000;
+        long differenceInSeconds = (MPoint.getTime() - PrevMPoint.getTime()) / 1000;
 
         // Conversion from m/s to km/h
         //3.6 * m/s

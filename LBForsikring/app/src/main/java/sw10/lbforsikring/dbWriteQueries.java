@@ -8,6 +8,8 @@ import android.util.Log;
 import java.util.Calendar;
 import java.util.Date;
 
+import sw10.lbforsikring.Helpers.MeasureHelper;
+
 /**
  * Created by Johan Leth Gregersen on 10-02-2016.
  */
