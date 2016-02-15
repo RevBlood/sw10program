@@ -57,6 +57,9 @@ public class LocationService extends Service implements ConnectionCallbacks, OnC
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, mLocationListener);
         }
 
+        //Stop the LocationListener from issuing notifications
+        mLocationListener.DisableMovementTimer();
+
         super.onDestroy();
     }
 

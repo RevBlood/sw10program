@@ -67,13 +67,13 @@ public class LocationListener implements com.google.android.gms.location.Locatio
         Log.d("Debug", Long.toString(rowID));
     }
 
-    public void UpdateMovementTimer() {
+    private void UpdateMovementTimer() {
         //If timer exists, cancel it. Then restart it
         mMovementTimer.removeCallbacks(mTimerTask);
         mMovementTimer.postDelayed(mTimerTask, mContext.getResources().getInteger(R.integer.NotificationDelay));
     }
 
-    public void IssueNotification(){
+    private void IssueNotification(){
         //Build notification, asking user to maybe stop the trip
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(mContext)
                 .setSmallIcon(R.mipmap.ic_launcher)
@@ -98,5 +98,9 @@ public class LocationListener implements com.google.android.gms.location.Locatio
         bundle.putParcelable(mContext.getString(R.string.BroadcastParcelableLocationName), location);
         intent.putExtra(mContext.getString(R.string.BroadcastIntentBundleName), bundle);
         LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
+    }
+
+    public void DisableMovementTimer() {
+        mMovementTimer.removeCallbacks(mTimerTask);
     }
 }
