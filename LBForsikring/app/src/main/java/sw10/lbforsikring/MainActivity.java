@@ -33,10 +33,16 @@ public class MainActivity extends AppCompatActivity {
         Button toggleDrivingButton = (Button) findViewById(R.id.toggleDrivingButton);
         toggleDrivingButton.setOnClickListener(OnToggleDrivingListener);
 
+
+        Button openMapButton = (Button) findViewById(R.id.openMapButton);
+        openMapButton.setOnClickListener(OnOpenMapListener);
+
         if(isServiceRunning(LocationService.class)) {
             Log.i("Debug", "Service already running");
             mDriving = true;
             toggleDrivingButton.setText(R.string.ToggleDrivingStop);
+        } else {
+            openMapButton.setEnabled(false);
         }
     }
 
@@ -61,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
     Button.OnClickListener OnToggleDrivingListener = new Button.OnClickListener() {
         public void onClick(View v) {
             Button toggleDrivingButton = (Button)findViewById(R.id.toggleDrivingButton);
+            Button openMapButton = (Button) findViewById(R.id.openMapButton);
 
             //If user was not driving, reset Logcat and start the location service - otherwise stop it
             if (!mDriving) {
@@ -69,12 +76,14 @@ public class MainActivity extends AppCompatActivity {
                 Log.i("Debug", "Service Started");
                 toggleDrivingButton.setText(R.string.ToggleDrivingStop);
                 mDriving = true;
+                openMapButton.setEnabled(true);
                 Toast.makeText(mContext, R.string.ToggleDrivingStartToast, Toast.LENGTH_SHORT).show();
             } else {
                 stopService(new Intent(mContext, LocationService.class));
                 Log.i("Debug", "Service Stopped");
                 toggleDrivingButton.setText(R.string.ToggleDrivingStart);
                 mDriving = false;
+                openMapButton.setEnabled(false);
                 Toast.makeText(mContext, R.string.ToggleDrivingStopToast, Toast.LENGTH_SHORT).show();
 
                 File file = GetFilePath();
@@ -83,6 +92,12 @@ public class MainActivity extends AppCompatActivity {
 
                 Log.i("Debug", "Wrote logfile to" + file.getAbsolutePath());
             }
+        }
+    };
+
+    Button.OnClickListener OnOpenMapListener = new Button.OnClickListener() {
+        public void onClick(View v) {
+            startActivity(new Intent(mContext, MapActivity.class));
         }
     };
 
