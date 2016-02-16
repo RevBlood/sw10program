@@ -50,4 +50,18 @@ public class MeasureInformation {
         }
         return obj;
     }
+
+    @Override public String toString() {
+        StringBuilder result = new StringBuilder();
+        String NEW_LINE = System.getProperty("line.separator");
+
+        result.append("{" + NEW_LINE);
+        result.append("  Speed: " + Speed + NEW_LINE);
+        result.append("  Acceleration: " + Acceleration + NEW_LINE);
+        result.append("  Jerk: " + Jerk);
+        result.append(" }");
+
+        return result.toString();
+    }
+
 }

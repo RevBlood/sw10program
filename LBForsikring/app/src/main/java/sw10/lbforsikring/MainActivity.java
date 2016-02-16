@@ -90,10 +90,17 @@ public class MainActivity extends AppCompatActivity {
                 Log.i("Debug", Long.toString(trip.PreviousTripId));
                 Log.i("Debug", Integer.toString(trip.CarId));
                 */
-                //List<Fact> facts = ServiceHelper.GetFacts(4, 1);
+
+                /*
+                ArrayList<Fact> facts = ServiceHelper.GetFacts(4, 1);
 
 
-
+                try {
+                    Log.i("Debug", facts.get(1).toString());
+                } catch(Exception e) {
+                    Log.e("Debug", "Fejl: ", e);
+                }
+                */
             } else {
                 stopService(new Intent(mContext, LocationService.class));
                 Log.i("Debug", "Service Stopped");

@@ -38,15 +38,15 @@ public class ServiceHelper {
 		return trip;
 	}
 
-	public static List<Fact> GetFacts(int carid, int tripid){
-		String response = null;
+	public static ArrayList<Fact> GetFacts(int carid, int tripid){
+		String response = "Empty response";
 		try {
 			response = HTTPHelper.HTTPGet("http://" + ip + ":8000/RestService/Fact/GetFacts?carid=" + carid + "&tripid=" + tripid);
-			System.out.println("Response: " + response);
+			Log.i("Debug", response);
 		} catch (Exception e) {
-			e.printStackTrace();
+			Log.i("Debug", "Response failure:", e);
 		}
-		Log.i("Debug", response);
+
 		ArrayList<Fact> facts = new ArrayList<Fact>();
 
 		try {

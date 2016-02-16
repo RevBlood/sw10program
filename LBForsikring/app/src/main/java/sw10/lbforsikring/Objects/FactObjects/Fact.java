@@ -34,9 +34,9 @@ public class Fact {
             this.CarId = obj.getInt("carid");
 
             this.Flag = new FlagInformation(obj.getJSONObject("flag"));
-            //this.Measure = new MeasureInformation(obj.getJSONObject("measure"));
-            //this.Spatial = new SpatialInformation(obj.getJSONObject("spatial"));
-            //this.Temporal = new TemporalInformation(obj.getJSONObject("temporal"));
+            this.Measure = new MeasureInformation(obj.getJSONObject("measure"));
+            this.Spatial = new SpatialInformation(obj.getJSONObject("spatial"));
+            this.Temporal = new TemporalInformation(obj.getJSONObject("temporal"));
         }
         catch (Exception e){
             Log.e("Debug", "Fact - JSONObject:", e);
@@ -61,7 +61,23 @@ public class Fact {
         return obj;
     }
 
+    @Override public String toString() {
+        StringBuilder result = new StringBuilder();
+        String NEW_LINE = System.getProperty("line.separator");
 
+        result.append(this.getClass().getName() + " Object {" + NEW_LINE);
+        result.append(" EntryId: " + EntryId + NEW_LINE);
+        result.append(" TripId: " + TripId + NEW_LINE);
+        result.append(" CarId: " + CarId + NEW_LINE );
+
+        result.append(" FlagInformation: " + Flag.toString() + NEW_LINE);
+        result.append(" MeasureInformation: " + Measure.toString() + NEW_LINE);
+        result.append(" SpatialInformation: " + Spatial.toString() + NEW_LINE);
+        result.append(" TemporalInformation: " + Temporal.toString());
+        result.append("}");
+
+        return result.toString();
+    }
 
 
 }

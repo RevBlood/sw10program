@@ -19,13 +19,13 @@ public class TemporalInformation {
         this.EntryId = EntryId;
         this.TripId = TripId;
         this.Timestamp = Timestamp;
-        this.SecondsToLag = SecondsToLag;
+        //this.SecondsToLag = SecondsToLag;
     }
 
     public TemporalInformation(JSONObject obj){
         try {
             this.Timestamp = deserializeDate(obj.isNull("timestamp") ? "\\/Date(0+0100)\\/" : obj.getString("timestamp"));
-            this.SecondsToLag = obj.isNull("secondstolag") ? 0 : obj.getInt("secondstolag");
+            //this.SecondsToLag = obj.isNull("secondstolag") ? 0 : obj.getInt("secondstolag");
         }
         catch (Exception e){
             Log.e("Debug", "TemporalInformation - JSONObject:", e);
@@ -36,7 +36,7 @@ public class TemporalInformation {
         JSONObject obj = new JSONObject();
         try{
             obj.put("timestamp", Timestamp.getTime());
-            obj.put("secondstolag", SecondsToLag);
+            //obj.put("secondstolag", SecondsToLag);
         } catch(Exception e) {
             Log.e("Debug", "TemporalInformation - Serialize:", e);
         }
@@ -62,5 +62,15 @@ public class TemporalInformation {
         return d;
     }
 
+    @Override public String toString() {
+        StringBuilder result = new StringBuilder();
+        String NEW_LINE = System.getProperty("line.separator");
 
+        result.append("{" + NEW_LINE);
+        result.append("  Timestamp: " + Timestamp);
+        result.append(" }");
+        //result.append(" SecondsToLag: " + SecondsToLag);
+
+        return result.toString();
+    }
 }

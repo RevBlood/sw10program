@@ -54,4 +54,22 @@ public class FlagInformation {
         }
         return obj;
     }
+
+    @Override public String toString() {
+        StringBuilder result = new StringBuilder();
+        String NEW_LINE = System.getProperty("line.separator");
+
+        result.append("{" + NEW_LINE);
+        result.append("  Speeding: " + Speeding + NEW_LINE);
+        result.append("  Accelerating: " + Accelerating + NEW_LINE);
+        result.append("  Jerking: " + Jerking + NEW_LINE );
+        result.append("  Braking: " + Braking + NEW_LINE);
+        result.append("  SteadySpeed: " + SteadySpeed);
+        result.append(" }");
+
+        return result.toString();
+    }
+
+
+
 }

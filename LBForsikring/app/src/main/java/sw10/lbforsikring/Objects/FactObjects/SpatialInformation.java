@@ -36,7 +36,7 @@ public class SpatialInformation {
             this.MPoint.setLongitude(obj.isNull("mpointlng") ? 0 : obj.getDouble("mpointlng"));
 
             this.DistanceToLag = obj.isNull("distancetolag") ? 0 : obj.getDouble("distancetolag");
-            this.PathLine = obj.getString("pathline");
+            this.PathLine = obj.isNull("pathline") ? "" : obj.getString("pathline");
         }
         catch (Exception e){
             Log.e("Debug", "SpatialInformation - JSONObject:", e);
@@ -56,5 +56,19 @@ public class SpatialInformation {
             Log.e("Debug", "SpatialInformation - Serialize:", e);
         }
         return obj;
+    }
+
+    @Override public String toString() {
+        StringBuilder result = new StringBuilder();
+        String NEW_LINE = System.getProperty("line.separator");
+
+        result.append("{" + NEW_LINE);
+        result.append("  Point: " + "Lat: " + Point.getLatitude() + ", Lng: " + Point.getLongitude() + ", Time: " + Point.getTime() + NEW_LINE);
+        result.append("  MPoint: " + "Lat: " + MPoint.getLatitude() + ", Lng: " + MPoint.getLongitude() + ", Time: " + MPoint.getTime() + NEW_LINE);
+        result.append("  DistanceToLag: " + DistanceToLag + NEW_LINE);
+        result.append("  PathLine: " + PathLine);
+        result.append(" }");
+
+        return result.toString();
     }
 }
