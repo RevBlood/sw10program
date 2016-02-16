@@ -37,6 +37,11 @@ public final class MeasureHelper {
         //Acceleration = Velocity change / Time
         double velocityChange = CurrentMI.Speed - PrevMI.Speed;
         long differenceInSeconds = (CurrentTI.Timestamp.getTime() - PrevTI.Timestamp.getTime()) / 1000;
+
+        if(differenceInSeconds == 0){
+            return 0;
+        }
+
         return velocityChange / differenceInSeconds;
     }
 
@@ -44,6 +49,10 @@ public final class MeasureHelper {
         //Jerk = Acceleration change / Time
         double accelerationChange = CurrentMi.Acceleration - PrevMI.Acceleration;
         long differenceInSeconds = (CurrentTI.Timestamp.getTime() - PrevTI.Timestamp.getTime()) / 1000;
+
+        if(differenceInSeconds == 0){
+            return 0;
+        }
 
         return accelerationChange / differenceInSeconds;
     }
