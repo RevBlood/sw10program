@@ -2,18 +2,21 @@ package sw10.lbforsikring.Helpers;
 
 import android.util.Log;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import sw10.lbforsikring.Objects.FactObjects.Fact;
 import sw10.lbforsikring.Objects.TripObjects.Trip;
 
 
 public class ServiceHelper {
-	private static String ip = "192.168.43.123";
+	private static String ip = "192.168.87.102";
 
+	//Getters
 	public static Trip GetTrip(int carid, int tripid){
 		String response = null;
 		try {
@@ -33,6 +36,53 @@ public class ServiceHelper {
 
 		}
 		return trip;
+	}
+
+	public static List<Fact> GetFacts(int carid, int tripid){
+		String response = null;
+		try {
+			response = HTTPHelper.HTTPGet("http://" + ip + ":8000/RestService/Fact/GetFacts?carid=" + carid + "&tripid=" + tripid);
+			System.out.println("Response: " + response);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		Log.i("Debug", response);
+		ArrayList<Fact> facts = new ArrayList<Fact>();
+
+		try {
+			JSONArray jsonArr = new JSONArray(response);
+			for(int i = 0; i < jsonArr.length(); i++){
+				JSONObject obj = jsonArr.getJSONObject(i);
+				Fact fact = new Fact(obj);
+				facts.add(fact);
+			}
+		}
+		catch(Exception e) {
+			Log.e("Debug", "GetFacts:", e);
+		}
+		return facts;
+	}
+
+	//Posts
+	public static boolean PostFacts(List<Fact> facts) {
+		String response = null;
+		//String serializedAcc = JSONHelper.Serializer(newAcc);
+		JSONArray jsArray = new JSONArray();
+		//jsArray.put
+
+
+
+		System.out.println("Serialized account: " + jsArray.toString());
+
+		String addFacts = "http://" + ip + ":8000/RestService/Fact/AddFacts";
+		try {
+			response = HTTPHelper.HTTPPost(addFacts, jsArray.toString());
+			System.out.println("Response: " + response);
+			return true;
+		} catch(Exception e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 

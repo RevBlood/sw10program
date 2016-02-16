@@ -19,8 +19,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.List;
 
 import sw10.lbforsikring.Helpers.ServiceHelper;
+import sw10.lbforsikring.Objects.FactObjects.Fact;
 import sw10.lbforsikring.Objects.TripObjects.Trip;
 
 public class MainActivity extends AppCompatActivity {
@@ -88,6 +90,10 @@ public class MainActivity extends AppCompatActivity {
                 Log.i("Debug", Long.toString(trip.PreviousTripId));
                 Log.i("Debug", Integer.toString(trip.CarId));
                 */
+                //List<Fact> facts = ServiceHelper.GetFacts(4, 1);
+
+
+
             } else {
                 stopService(new Intent(mContext, LocationService.class));
                 Log.i("Debug", "Service Stopped");

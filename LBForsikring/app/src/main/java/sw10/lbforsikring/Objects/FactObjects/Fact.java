@@ -1,6 +1,8 @@
 package sw10.lbforsikring.Objects.FactObjects;
 
 
+import android.util.Log;
+
 import org.json.JSONObject;
 
 /**
@@ -26,6 +28,40 @@ public class Fact {
     }
 
     public Fact(JSONObject obj) {
+        try {
+            this.EntryId = obj.getLong("entryid");
+            this.TripId = obj.getLong("tripid");
+            this.CarId = obj.getInt("carid");
 
+            this.Flag = new FlagInformation(obj.getJSONObject("flag"));
+            //this.Measure = new MeasureInformation(obj.getJSONObject("measure"));
+            //this.Spatial = new SpatialInformation(obj.getJSONObject("spatial"));
+            //this.Temporal = new TemporalInformation(obj.getJSONObject("temporal"));
+        }
+        catch (Exception e){
+            Log.e("Debug", "Fact - JSONObject:", e);
+        }
     }
+
+    public JSONObject serializeToJSON(){
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("entryid", EntryId);
+            obj.put("tripid", TripId);
+            obj.put("carid", CarId);
+
+            obj.put("flag", Flag.serializeToJSON());
+            obj.put("measure", Measure.serializeToJSON());
+            obj.put("spatial", Spatial.serializeToJSON());
+            obj.put("temporal", Temporal.serializeToJSON());
+        } catch(Exception e) {
+            Log.e("Debug", "Fact - Serialize:", e);
+        }
+
+        return obj;
+    }
+
+
+
+
 }

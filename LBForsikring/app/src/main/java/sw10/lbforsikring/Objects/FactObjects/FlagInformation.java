@@ -1,5 +1,9 @@
 package sw10.lbforsikring.Objects.FactObjects;
 
+import android.util.Log;
+
+import org.json.JSONObject;
+
 /**
  * Created by Casper on 11-02-2016.
  */
@@ -23,4 +27,31 @@ public class FlagInformation {
         this.SteadySpeed = SteadySpeed;
     }
 
+    public FlagInformation(JSONObject obj) {
+        try {
+            this.Speeding = obj.isNull("speeding") ? false : obj.getBoolean("speeding");
+            this.Accelerating = obj.isNull("accelerating") ? false : obj.getBoolean("accelerating");
+            this.Jerking = obj.isNull("jerking") ? false : obj.getBoolean("jerking");
+            this.Braking = obj.isNull("braking") ? false : obj.getBoolean("braking");
+            this.SteadySpeed = obj.isNull("steadyspeed") ? false : obj.getBoolean("steadyspeed");
+        }
+        catch (Exception e){
+            Log.e("Debug", "FlagInformation - JSONObject:", e);
+        }
+    }
+
+    public JSONObject serializeToJSON(){
+        JSONObject obj = new JSONObject();
+        try{
+            obj.put("speeding", Speeding);
+            obj.put("accelerating", Accelerating);
+            obj.put("jerking", Jerking);
+            obj.put("braking", Braking);
+            obj.put("steadyspeed", SteadySpeed);
+
+        } catch(Exception e) {
+            Log.e("Debug", "FlagInformation - Serialize:", e);
+        }
+        return obj;
+    }
 }
