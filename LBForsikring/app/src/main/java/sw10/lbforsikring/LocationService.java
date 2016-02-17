@@ -1,11 +1,14 @@
 package sw10.lbforsikring;
 
 import android.Manifest;
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
@@ -17,12 +20,17 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
 public class LocationService extends Service implements ConnectionCallbacks, OnConnectionFailedListener {
+    Notification mDrivingNotification;
     GoogleApiClient mGoogleApiClient;
     LocationRequest mLocationRequest;
     LocationListener mLocationListener;
 
     @Override
     public void onCreate() {
+        //Ensure the Service is run with priority (Not killed randomly by Android when resources are scarce)
+        BuildDrivingNotification();
+        startForeground(1, mDrivingNotification);
+
         //Setup the GoogleApiClient, responsible for connecting to Google Location Services
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
@@ -53,7 +61,7 @@ public class LocationService extends Service implements ConnectionCallbacks, OnC
         }
 
         //Stop retrieving location updates
-        if(mGoogleApiClient.isConnected()) {
+        if (mGoogleApiClient.isConnected()) {
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, mLocationListener);
         }
 
@@ -96,5 +104,21 @@ public class LocationService extends Service implements ConnectionCallbacks, OnC
     @Override
     public IBinder onBind(Intent arg0) {
         return null;
+    }
+
+    private void BuildDrivingNotification() {
+        //Build notification, asking user to maybe stop the trip
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle(getString(R.string.ServiceNotificationTitle))
+                .setContentText(getString(R.string.ServiceNotificationText));
+
+        //Create intent to launch MainActivity when notification is pressed
+        Intent intent = new Intent(this, LocationService.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        notificationBuilder.setContentIntent(pendingIntent);
+
+        //Build and save the notification for future use
+        mDrivingNotification = notificationBuilder.build();
     }
 }

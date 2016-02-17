@@ -38,7 +38,6 @@ public class MainActivity extends AppCompatActivity {
         Button toggleDrivingButton = (Button) findViewById(R.id.toggleDrivingButton);
         toggleDrivingButton.setOnClickListener(OnToggleDrivingListener);
 
-
         Button openMapButton = (Button) findViewById(R.id.openMapButton);
         openMapButton.setOnClickListener(OnOpenMapListener);
 
