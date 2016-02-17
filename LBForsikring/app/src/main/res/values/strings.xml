@@ -8,9 +8,13 @@
     <!-- Text for OpenMap button -->
     <string name="OpenMap">Se tur på kort</string>
 
-    <!-- Text for notification -->
-    <string name="NotificationTitle">Er din tur slut?</string>
-    <string name="NotificationText">Tryk her for at slutte din tur</string>
+    <!-- Text for movement notification -->
+    <string name="MovementNotificationTitle">Er din tur slut?</string>
+    <string name="MovementNotificationText">Tryk her for at slutte din tur</string>
+
+    <!-- Text for service notification -->
+    <string name="ServiceNotificationTitle">Igangværende tur</string>
+    <string name="ServiceNotificationText">Din tur bliver logget</string>
 
     <!-- Text for ToggleDriving toasts -->
     <string name="ToggleDrivingStartToast">Tur begyndt</string>

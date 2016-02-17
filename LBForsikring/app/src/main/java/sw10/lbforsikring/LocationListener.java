@@ -77,8 +77,8 @@ public class LocationListener implements com.google.android.gms.location.Locatio
         //Build notification, asking user to maybe stop the trip
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(mContext)
                 .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle(mContext.getString(R.string.NotificationTitle))
-                .setContentText(mContext.getString(R.string.NotificationText))
+                .setContentTitle(mContext.getString(R.string.MovementNotificationTitle))
+                .setContentText(mContext.getString(R.string.MovementNotificationText))
                 .setDefaults(Notification.DEFAULT_ALL)
                 .setAutoCancel(true);
 

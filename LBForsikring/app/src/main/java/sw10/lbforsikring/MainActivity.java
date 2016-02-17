@@ -19,11 +19,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
-import java.util.List;
-
-import sw10.lbforsikring.Helpers.ServiceHelper;
-import sw10.lbforsikring.Objects.FactObjects.Fact;
-import sw10.lbforsikring.Objects.TripObjects.Trip;
 
 public class MainActivity extends AppCompatActivity {
     Context mContext;
@@ -37,7 +32,6 @@ public class MainActivity extends AppCompatActivity {
 
         Button toggleDrivingButton = (Button) findViewById(R.id.toggleDrivingButton);
         toggleDrivingButton.setOnClickListener(OnToggleDrivingListener);
-
 
         Button openMapButton = (Button) findViewById(R.id.openMapButton);
         openMapButton.setOnClickListener(OnOpenMapListener);
@@ -83,24 +77,6 @@ public class MainActivity extends AppCompatActivity {
                 mDriving = true;
                 openMapButton.setEnabled(true);
                 Toast.makeText(mContext, R.string.ToggleDrivingStartToast, Toast.LENGTH_SHORT).show();
-
-                /*
-                Trip trip = ServiceHelper.GetTrip(4, 1);
-                Log.i("Debug", Long.toString(trip.TripId));
-                Log.i("Debug", Long.toString(trip.PreviousTripId));
-                Log.i("Debug", Integer.toString(trip.CarId));
-                */
-
-                /*
-                ArrayList<Fact> facts = ServiceHelper.GetFacts(4, 1);
-
-
-                try {
-                    Log.i("Debug", facts.get(1).toString());
-                } catch(Exception e) {
-                    Log.e("Debug", "Fejl: ", e);
-                }
-                */
             } else {
                 stopService(new Intent(mContext, LocationService.class));
                 Log.i("Debug", "Service Stopped");
