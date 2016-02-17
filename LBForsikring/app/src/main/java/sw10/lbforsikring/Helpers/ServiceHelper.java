@@ -14,8 +14,8 @@ import sw10.lbforsikring.Objects.TripObjects.Trip;
 
 
 public class ServiceHelper {
-	private static String ip = "192.168.87.102";
-
+	//private static String ip = "192.168.87.102";
+	private static String ip = "192.168.43.123";
 	//Getters
 	public static Trip GetTrip(int carid, int tripid){
 		String response = null;
@@ -64,15 +64,16 @@ public class ServiceHelper {
 	}
 
 	//Posts
-	public static boolean PostFacts(List<Fact> facts) {
+	public static boolean PostFacts(ArrayList<Fact> facts) {
 		String response = null;
 		//String serializedAcc = JSONHelper.Serializer(newAcc);
 		JSONArray jsArray = new JSONArray();
-		//jsArray.put
+		for(int i = 0; i < facts.size(); i++) {
+			jsArray.put(facts.get(i).serializeToJSON());
+		}
 
 
-
-		System.out.println("Serialized account: " + jsArray.toString());
+		Log.i("Debug", "Serialized facts: " + jsArray.toString());
 
 		String addFacts = "http://" + ip + ":8000/RestService/Fact/AddFacts";
 		try {
@@ -80,7 +81,7 @@ public class ServiceHelper {
 			System.out.println("Response: " + response);
 			return true;
 		} catch(Exception e) {
-			e.printStackTrace();
+			Log.e("Debug", "AddFacts:", e);
 			return false;
 		}
 	}

@@ -100,7 +100,15 @@ public class MainActivity extends AppCompatActivity {
                 } catch(Exception e) {
                     Log.e("Debug", "Fejl: ", e);
                 }
+
+
+                try {
+                    ServiceHelper.PostFacts(facts);
+                } catch(Exception e) {
+                    Log.e("Debug", "Fejl: ", e);
+                }
                 */
+
             } else {
                 stopService(new Intent(mContext, LocationService.class));
                 Log.i("Debug", "Service Stopped");

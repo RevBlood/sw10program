@@ -14,17 +14,15 @@ public class Fact {
     public int CarId;
     public FlagInformation Flag;
     public MeasureInformation Measure;
-    public SpatialInformation Spatial;
-    public TemporalInformation Temporal;
+    public SpatialTemporalInformation SpatialTemporal;
 
-    public Fact(long EntryId, long TripId, int CarId, FlagInformation Flag, MeasureInformation Measure, SpatialInformation Spatial, TemporalInformation Temporal){
+    public Fact(long EntryId, long TripId, int CarId, FlagInformation Flag, MeasureInformation Measure, SpatialTemporalInformation Spatial){
         this.EntryId = EntryId;
         this.TripId = TripId;
         this.CarId = CarId;
         this.Flag = Flag;
         this.Measure = Measure;
-        this.Spatial = Spatial;
-        this.Temporal = Temporal;
+        this.SpatialTemporal = Spatial;
     }
 
     public Fact(JSONObject obj) {
@@ -35,8 +33,7 @@ public class Fact {
 
             this.Flag = new FlagInformation(obj.getJSONObject("flag"));
             this.Measure = new MeasureInformation(obj.getJSONObject("measure"));
-            this.Spatial = new SpatialInformation(obj.getJSONObject("spatial"));
-            this.Temporal = new TemporalInformation(obj.getJSONObject("temporal"));
+            this.SpatialTemporal = new SpatialTemporalInformation(obj.getJSONObject("spatial"), obj.getJSONObject("temporal"));
         }
         catch (Exception e){
             Log.e("Debug", "Fact - JSONObject:", e);
@@ -52,8 +49,8 @@ public class Fact {
 
             obj.put("flag", Flag.serializeToJSON());
             obj.put("measure", Measure.serializeToJSON());
-            obj.put("spatial", Spatial.serializeToJSON());
-            obj.put("temporal", Temporal.serializeToJSON());
+            obj.put("spatial", SpatialTemporal.serializeSpatialToJSON());
+            obj.put("temporal", SpatialTemporal.serializeTemporalToJSON());
         } catch(Exception e) {
             Log.e("Debug", "Fact - Serialize:", e);
         }
@@ -72,8 +69,7 @@ public class Fact {
 
         result.append(" FlagInformation: " + Flag.toString() + NEW_LINE);
         result.append(" MeasureInformation: " + Measure.toString() + NEW_LINE);
-        result.append(" SpatialInformation: " + Spatial.toString() + NEW_LINE);
-        result.append(" TemporalInformation: " + Temporal.toString());
+        result.append(" SpatialTemporalInformation: " + SpatialTemporal.toString());
         result.append("}");
 
         return result.toString();
