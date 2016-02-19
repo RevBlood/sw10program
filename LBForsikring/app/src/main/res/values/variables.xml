@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Variables for positioning settings -->
-    <integer name="PositionInterval">500</integer>
-    <integer name="PositionFastestInterval">500</integer>
+    <integer name="PositionInterval">1000</integer>
+    <integer name="PositionFastestInterval">1000</integer>
     <integer name="PositionMaxWait">20000</integer>
 
     <!-- Variables for movement detection -->

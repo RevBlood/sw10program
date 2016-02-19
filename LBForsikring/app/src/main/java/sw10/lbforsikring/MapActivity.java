@@ -45,15 +45,15 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         mMessageReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                Bundle b = intent.getBundleExtra(getString(R.string.BroadcastIntentBundleName));
-                Location location = b.getParcelable(getString(R.string.BroadcastParcelableLocationName));
+                Bundle b = intent.getBundleExtra(getString(R.string.BroadcastLocationIntentBundleName));
+                Location location = b.getParcelable(getString(R.string.BroadcastLocationParcelableLocationName));
                 pathOptions.add(new LatLng(location.getLatitude(), location.getLongitude()));
                 mMap.addPolyline(pathOptions);
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude())));
             }
         };
 
-        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver, new IntentFilter(getString(R.string.BroadcastIntentName)));
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver, new IntentFilter(getString(R.string.BroadcastLocationIntentName)));
     }
 
     @Override

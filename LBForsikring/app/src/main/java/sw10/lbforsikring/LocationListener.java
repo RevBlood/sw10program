@@ -12,6 +12,9 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import sw10.lbforsikring.Helpers.MeasureHelper;
 
 /**
@@ -19,18 +22,12 @@ import sw10.lbforsikring.Helpers.MeasureHelper;
  */
 public class LocationListener implements com.google.android.gms.location.LocationListener {
     Context mContext;
-    Location mPreviousLocation;
+    List<Location> mEntries = new ArrayList<>();
     Handler mMovementTimer;
     Runnable mTimerTask;
-    LBDatabaseHelper mDBHelper;
-    dbWriteQueries mDBWriter;
 
     public LocationListener(Context context) {
         mContext = context;
-
-        //Instantiate the database
-        mDBHelper = new LBDatabaseHelper(mContext);
-        mDBWriter = new dbWriteQueries(mDBHelper);
 
         //Define what to do when the mMovementTimer runs out
         mTimerTask = new Runnable() {
@@ -48,23 +45,19 @@ public class LocationListener implements com.google.android.gms.location.Locatio
 
     @Override
     public void onLocationChanged(Location location) {
-        //While speed is above 10km/h, keep resetting the movement timer
+        //While speed stays above 10km/h, keep resetting the movement timer
         //If speed is less than 10km/h, let the timer run out, issuing a notification
         //If a notification is issued, no more notifications will occur until speed has been above 10km/h again
-        if(mPreviousLocation != null && MeasureHelper.Speed(location, mPreviousLocation) >= mContext.getResources().getInteger(R.integer.MovementMinSpeed)) {
+        if(!mEntries.isEmpty() && MeasureHelper.Speed(location, mEntries.get(mEntries.size() - 1)) >= mContext.getResources().getInteger(R.integer.MovementMinSpeed)) {
             UpdateMovementTimer();
         }
 
         //Broadcast the new position so it can be retrieved elsewhere in the application
         BroadcastLocation(location);
 
-        //Save the observed location as the previous location
+        //Save the observed location
         Log.d("Debug", location.getLatitude() + ", " + location.getLongitude());
-        mPreviousLocation = location;
-
-        //Save the observed location in DB
-        long rowID = mDBWriter.InsertLocationIntoGPS(location);
-        Log.d("Debug", Long.toString(rowID));
+        mEntries.add(location);
     }
 
     private void UpdateMovementTimer() {
@@ -93,14 +86,20 @@ public class LocationListener implements com.google.android.gms.location.Locatio
     }
 
     private void BroadcastLocation(Location location) {
-        Intent intent = new Intent(mContext.getString(R.string.BroadcastIntentName));
+        Intent intent = new Intent(mContext.getString(R.string.BroadcastLocationIntentName));
         Bundle bundle = new Bundle();
-        bundle.putParcelable(mContext.getString(R.string.BroadcastParcelableLocationName), location);
-        intent.putExtra(mContext.getString(R.string.BroadcastIntentBundleName), bundle);
+        bundle.putParcelable(mContext.getString(R.string.BroadcastLocationParcelableLocationName), location);
+        intent.putExtra(mContext.getString(R.string.BroadcastLocationIntentBundleName), bundle);
         LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
     }
 
     public void DisableMovementTimer() {
         mMovementTimer.removeCallbacks(mTimerTask);
+    }
+
+    public List<Location> GetEntries() {
+        List<Location> entries = mEntries;
+        mEntries.clear();
+        return entries;
     }
 }

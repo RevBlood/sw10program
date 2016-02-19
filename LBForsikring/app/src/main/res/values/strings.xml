@@ -13,12 +13,12 @@
     <string name="MovementNotificationText">Tryk her for at slutte din tur</string>
 
     <!-- Text for service notification -->
-    <string name="ServiceNotificationTitle">Igangværende tur</string>
-    <string name="ServiceNotificationText">Din tur bliver logget</string>
+    <string name="ServiceNotificationTitle">UBI Forsikring</string>
+    <string name="ServiceNotificationText">UBI service kører i baggrunden</string>
 
     <!-- Text for ToggleDriving toasts -->
-    <string name="ToggleDrivingStartToast">Tur begyndt</string>
-    <string name="ToggleDrivingStopToast">Tur stoppet</string>
+    <string name="ToggleDrivingStartToast">Starter tur</string>
+    <string name="ToggleDrivingStopToast">Stopper tur</string>
 
     <!-- Text for back press toast -->
     <string name="OnBackPressedToast">Stop venligst tur inden afslutning</string>
@@ -30,7 +30,13 @@
     <string name="LogFiletype">.txt</string>
 
     <!-- Text for broadcasting/recieving location updates -->
-    <string name="BroadcastIntentName">NewLocation</string>
-    <string name="BroadcastIntentBundleName">NewLocation</string>
-    <string name="BroadcastParcelableLocationName">NewLocation</string>
+    <string name="BroadcastLocationIntentName">NewLocation</string>
+    <string name="BroadcastLocationIntentBundleName">NewLocation</string>
+    <string name="BroadcastLocationParcelableLocationName">NewLocation</string>
+
+    <!-- Text for broadcasting/recieving location updates -->
+    <string name="BroadcastIntent">LocationServiceBroadcast</string>
+    <string name="BroadcastIsConnected">IsConnected</string>
+    <string name="BroadcastIsDriving">IsDriving</string>
+    <string name="BroadcastIsProcessing">IsProcessing</string>
 </resources>

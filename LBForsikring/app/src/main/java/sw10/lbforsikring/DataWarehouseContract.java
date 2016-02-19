@@ -8,13 +8,11 @@ import android.database.sqlite.*;
  * Created by Johan Leth Gregersen on 10-02-2016.
  */
 public final class DataWarehouseContract {
-
     public DataWarehouseContract(){}
 
-    /* FACT TABLES */
+    //region FACT TABLES
 
     public static abstract class GPSFact implements BaseColumns {
-
         public static final String TABLE_NAME = "gpsfact";
         public static final String COLUMN_NAME_ENTRY_ID = "entryid";
         public static final String COLUMN_NAME_CAR_ID = "carid";
@@ -37,11 +35,9 @@ public final class DataWarehouseContract {
         public static final String COLUMN_NAME_JERKING = "jerking";
         public static final String COLUMN_NAME_DISTANCE_TO_LAG = "distancetolag";
         public static final String COLUMN_NAME_SECONDS_TO_LAG = "secondstolag";
-
     }
 
     public static abstract class TripFact implements BaseColumns {
-
         public static final String TABLE_NAME = "tripfact";
         public static final String COLUMN_NAME_TRIP_ID = "tripid";
         public static final String COLUMN_NAME_PREVIOUS_TRIP_ID = "previoustripid";
@@ -70,11 +66,9 @@ public final class DataWarehouseContract {
         public static final String COLUMN_NAME_JERK_INTERVALS = "jerkinterval";
         public static final String COLUMN_NAME_BRAKE_INTERVALS = "brakeinterval";
         public static final String COLUMN_NAME_DATA_QUALITY = "dataquality";
-
     }
 
     public static abstract class SubTripFact implements BaseColumns {
-
         public static final String TABLE_NAME = "subtripfact";
         public static final String COLUMN_NAME_SUBTRIP_ID = "subtripid";
         public static final String COLUMN_NAME_PREVIOUS_SUBTRIP_ID = "previoussubtripid";
@@ -99,13 +93,13 @@ public final class DataWarehouseContract {
         public static final String COLUMN_NAME_JERK_INTERVALS = "jerkinterval";
         public static final String COLUMN_NAME_BRAKE_INTERVALS = "brakeinterval";
         public static final String COLUMN_NAME_DATA_QUALITY = "dataquality";
-
     }
 
-    /* INFORMATION TABLES */
+    //endregion
+
+    //region INFORMATION TABLES
 
     public static abstract class CarInformation implements BaseColumns {
-
         public static final String TABLE_NAME = "carinformation";
         public static final String COLUMN_NAME_CAR_ID = "carid";
         public static final String COLUMN_NAME_CAR_TYPE = "cartype";
@@ -115,20 +109,16 @@ public final class DataWarehouseContract {
         public static final String COLUMN_NAME_ENERGY_CONSUMPTION = "energyconsumption";
         public static final String COLUMN_NAME_WEIGHT = "weight";
         public static final String COLUMN_NAME_CAPACITY = "capacity";
-
     }
 
     public static abstract class QualityInformation implements BaseColumns {
-
         public static final String TABLE_NAME = "qualityinformation";
         public static final String COLUMN_NAME_QUALITY_ID = "qualityid";
         public static final String COLUMN_NAME_SATELLITES = "satellites";
         public static final String COLUMN_NAME_HDOP = "hdop";
-
     }
 
     public static abstract class SegmentInformation implements BaseColumns {
-
         public static final String TABLE_NAME = "segmentinformation";
         public static final String COLUMN_NAME_SEGMENT_ID = "segmentid";
         public static final String COLUMN_NAME_OSM_ID = "osmid";
@@ -142,20 +132,19 @@ public final class DataWarehouseContract {
         public static final String COLUMN_NAME_SEGMENT_LINE = "segmentline";
     }
 
-    /* DIMENSIONS */
+    //endregion
+
+    //region DIMENSIONS
 
     public static abstract class TimeDimension implements BaseColumns {
-
         public static final String TABLE_NAME = "dimtime";
         public static final String COLUMN_NAME_TIME_ID = "timeid";
         public static final String COLUMN_NAME_HOUR = "hour";
         public static final String COLUMN_NAME_MINUTE = "minute";
         public static final String COLUMN_NAME_SECOND = "second";
-
     }
 
     public static abstract class DateDimension implements BaseColumns {
-
         public static final String TABLE_NAME = "dimdate";
         public static final String COLUMN_NAME_DATE_ID = "dateid";
         public static final String COLUMN_NAME_YEAR = "year";
@@ -166,7 +155,6 @@ public final class DataWarehouseContract {
         public static final String COLUMN_NAME_HOLIDAY = "holiday";
         public static final String COLUMN_NAME_QUARTER = "quarter";
         public static final String COLUMN_NAME_SEASON = "season";
-
     }
-
+    //endregion
 }
