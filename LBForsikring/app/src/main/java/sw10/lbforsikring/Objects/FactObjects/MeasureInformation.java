@@ -43,7 +43,7 @@ public class MeasureInformation {
         JSONObject obj = new JSONObject();
         try{
             obj.put("speed", Speed);
-            obj.put("accelerating", Acceleration);
+            obj.put("acceleration", Acceleration);
             obj.put("jerk", Jerk);
         } catch(Exception e) {
             Log.e("Debug", "MeasureInformation - Serialize:", e);

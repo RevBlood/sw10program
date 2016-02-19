@@ -17,8 +17,8 @@ public final class MeasureHelper {
         return MPoint.distanceTo(PrevMPoint);
     }
 
-    public static int SecondsToLag(TemporalInformation CurrentTI, TemporalInformation PrevTI){
-        return (int)(CurrentTI.Timestamp.getTime() - PrevTI.Timestamp.getTime()) / 1000;
+    public static int SecondsToLag(SpatialTemporalInformation CurrentTI, SpatialTemporalInformation PrevTI){
+        return (int)(CurrentTI.MPoint.getTime() - PrevTI.MPoint.getTime()) / 1000;
     }
 
     public static double Speed(Location MPoint, Location PrevMPoint){
@@ -33,10 +33,10 @@ public final class MeasureHelper {
         return (distance / differenceInSeconds) * 3.6;
     }
 
-    public static double Acceleration(MeasureInformation CurrentMI, MeasureInformation PrevMI, TemporalInformation CurrentTI, TemporalInformation PrevTI){
+    public static double Acceleration(MeasureInformation CurrentMI, MeasureInformation PrevMI, SpatialTemporalInformation CurrentTI, SpatialTemporalInformation PrevTI){
         //Acceleration = Velocity change / Time
         double velocityChange = CurrentMI.Speed - PrevMI.Speed;
-        long differenceInSeconds = (CurrentTI.Timestamp.getTime() - PrevTI.Timestamp.getTime()) / 1000;
+        long differenceInSeconds = (CurrentTI.MPoint.getTime() - PrevTI.MPoint.getTime()) / 1000;
 
         if(differenceInSeconds == 0){
             return 0;
@@ -45,10 +45,10 @@ public final class MeasureHelper {
         return velocityChange / differenceInSeconds;
     }
 
-    public static double Jerk(MeasureInformation CurrentMi, MeasureInformation PrevMI, TemporalInformation CurrentTI, TemporalInformation PrevTI){
+    public static double Jerk(MeasureInformation CurrentMi, MeasureInformation PrevMI, SpatialTemporalInformation CurrentTI, SpatialTemporalInformation PrevTI){
         //Jerk = Acceleration change / Time
         double accelerationChange = CurrentMi.Acceleration - PrevMI.Acceleration;
-        long differenceInSeconds = (CurrentTI.Timestamp.getTime() - PrevTI.Timestamp.getTime()) / 1000;
+        long differenceInSeconds = (CurrentTI.MPoint.getTime() - PrevTI.MPoint.getTime()) / 1000;
 
         if(differenceInSeconds == 0){
             return 0;
