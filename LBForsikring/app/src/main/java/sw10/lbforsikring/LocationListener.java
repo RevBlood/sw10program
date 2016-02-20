@@ -28,6 +28,7 @@ public class LocationListener implements com.google.android.gms.location.Locatio
 
     public LocationListener(Context context) {
         mContext = context;
+        mMovementTimer = new Handler();
 
         //Define what to do when the mMovementTimer runs out
         mTimerTask = new Runnable() {
@@ -37,10 +38,6 @@ public class LocationListener implements com.google.android.gms.location.Locatio
                 IssueNotification();
             }
         };
-
-        //Start the timer
-        mMovementTimer = new Handler();
-        UpdateMovementTimer();
     }
 
     @Override
@@ -58,12 +55,6 @@ public class LocationListener implements com.google.android.gms.location.Locatio
         //Save the observed location
         Log.d("Debug", location.getLatitude() + ", " + location.getLongitude());
         mEntries.add(location);
-    }
-
-    private void UpdateMovementTimer() {
-        //If timer exists, cancel it. Then restart it
-        mMovementTimer.removeCallbacks(mTimerTask);
-        mMovementTimer.postDelayed(mTimerTask, mContext.getResources().getInteger(R.integer.NotificationDelay));
     }
 
     private void IssueNotification(){
@@ -91,6 +82,12 @@ public class LocationListener implements com.google.android.gms.location.Locatio
         bundle.putParcelable(mContext.getString(R.string.BroadcastLocationParcelableLocationName), location);
         intent.putExtra(mContext.getString(R.string.BroadcastLocationIntentBundleName), bundle);
         LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
+    }
+
+    public void UpdateMovementTimer() {
+        //If timer exists, cancel it. Then restart it
+        mMovementTimer.removeCallbacks(mTimerTask);
+        mMovementTimer.postDelayed(mTimerTask, mContext.getResources().getInteger(R.integer.NotificationDelay));
     }
 
     public void DisableMovementTimer() {

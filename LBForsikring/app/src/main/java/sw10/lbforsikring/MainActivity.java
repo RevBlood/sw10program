@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {;
     List<Trip> tripList;
     BroadcastReceiver mLocationServiceListener;
     ServiceConnection mLocationServiceConnection;
-    Messenger mMessenger;
+    static Messenger mMessenger;
 
     //LocationService Status
     boolean mIsConnected = false;
@@ -72,24 +72,27 @@ public class MainActivity extends AppCompatActivity {;
         Button openMapButton = (Button) findViewById(R.id.OpenMapButton);
         openMapButton.setOnClickListener(OpenMapListener);
 
-        ListView mainListView = (ListView)findViewById(R.id.MainListView);
+        ListView mainListView = (ListView) findViewById(R.id.MainListView);
         mMainListViewAdapter = new MainListViewAdapter(this, tripList);
         mainListView.setAdapter(mMainListViewAdapter);
         mainListView.setOnItemClickListener(MainListViewListener);
 
-        //Initialize the LocationService
-        if(!IsServiceRunning(LocationService.class)) {
-            Log.i("Debug", "Starting LocationService");
-            InitializeLocationService();
-            BindLocationService();
-        } else {
-            Log.i("Debug", "LocationService already running");
-            BindLocationService();
-        }
-
         //Listen for LocationService status messages
         mLocationServiceListener = new LocationServiceListener();
         LocalBroadcastManager.getInstance(this).registerReceiver(mLocationServiceListener, new IntentFilter(getString(R.string.BroadcastIntent)));
+
+        //Initialize the LocationService
+        if (!IsServiceRunning(LocationService.class)) {
+            Log.i("Debug", "Starting LocationService");
+            InitializeLocationServiceConnection();
+            startService(new Intent(mContext, LocationService.class));
+            BindLocationService();
+        } else {
+            Log.i("Debug", "LocationService already running");
+            InitializeLocationServiceConnection();
+            BindLocationService();
+            UpdateBroadcast();
+        }
     }
 
     @Override
@@ -269,10 +272,7 @@ public class MainActivity extends AppCompatActivity {;
         return false;
     }
 
-    private void InitializeLocationService() {
-        //Start the service
-        startService(new Intent(mContext, LocationService.class));
-
+    private void InitializeLocationServiceConnection() {
         //Create a connection and a messenger for communication with the service
         //Enable/disable interaction with the service depending on connection status
         mLocationServiceConnection = new ServiceConnection() {
@@ -323,5 +323,16 @@ public class MainActivity extends AppCompatActivity {;
         }
     }
 
+    private void UpdateBroadcast() {
+        //Create message to LocationService with intent to run case for END_TRIP
+        Message message = Message.obtain(null, LocationService.UPDATE_BROADCAST, 0, 0);
+
+        //Send the Message to the Service
+        try {
+            mMessenger.send(message);
+        } catch (RemoteException e) {
+            Log.e("Debug", "Failed to contact LocationService");
+        }
+    }
     //endregion
 }

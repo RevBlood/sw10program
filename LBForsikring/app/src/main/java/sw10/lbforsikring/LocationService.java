@@ -35,6 +35,7 @@ public class LocationService extends Service implements ConnectionCallbacks, OnC
     //Method Handles
     static final int BEGIN_TRIP = 0;
     static final int END_TRIP = 1;
+    static final int UPDATE_BROADCAST = 2;
 
     //Status
     boolean mIsConnected = false;
@@ -148,6 +149,8 @@ public class LocationService extends Service implements ConnectionCallbacks, OnC
                 case END_TRIP:
                     EndTrip();
                     break;
+                case UPDATE_BROADCAST:
+                    UpdateBroadcast();
                 default:
                     super.handleMessage(message);
             }
@@ -162,6 +165,9 @@ public class LocationService extends Service implements ConnectionCallbacks, OnC
 
         //Start retrieving location updates
         LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, mLocationListener);
+
+        //Start the MovementTimer
+        mLocationListener.UpdateMovementTimer();
 
         //Broadcast the new status
         mIsDriving = true;
