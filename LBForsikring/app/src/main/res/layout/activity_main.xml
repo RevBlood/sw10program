@@ -8,20 +8,35 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="sw10.lbforsikring.MainActivity">
+    <LinearLayout
+        android:id="@+id/ButtonLayout"
+        style="?android:attr/buttonBarButtonStyle"
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_alignParentBottom="true">
 
-    <Button
-        android:id="@+id/toggleDrivingButton"
-        android:enabled="false"
-        android:layout_centerInParent="true"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:text="@string/ToggleDrivingStart"/>
+        <Button
+            android:id="@+id/ToggleDrivingButton"
+            android:enabled="false"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/ToggleDrivingStart"/>
 
-    <Button
-        android:id="@+id/openMapButton"
-        android:enabled="false"
-        android:layout_alignParentBottom="true"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:text="@string/OpenMap"/>
+        <Button
+            android:id="@+id/OpenMapButton"
+            android:enabled="false"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/OpenMap"/>
+    </LinearLayout>
+
+
+    <ListView
+        android:id="@+id/MainListView"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@id/ButtonLayout"/>
+
 </RelativeLayout>

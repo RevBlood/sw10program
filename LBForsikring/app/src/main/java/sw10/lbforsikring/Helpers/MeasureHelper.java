@@ -57,8 +57,6 @@ public final class MeasureHelper {
         return accelerationChange / differenceInSeconds;
     }
 
-
-
     public static int DBDate(long unixTime) {
         Date timestamp = new java.util.Date(unixTime);
         String dbDate = "";

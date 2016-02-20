@@ -39,4 +39,12 @@
     <string name="BroadcastIsConnected">IsConnected</string>
     <string name="BroadcastIsDriving">IsDriving</string>
     <string name="BroadcastIsProcessing">IsProcessing</string>
+
+    <!-- Text for MainListView -->
+    <string name="MainListViewTitle">Tur</string>
+    <string name="MainListViewDescription">Ingen beskrivelse</string>
+    <string name="MainListViewCostCurrency">Dkr</string>
+
+    <!-- Other -->
+    <string name="DefaultText">DefaultText</string>
 </resources>

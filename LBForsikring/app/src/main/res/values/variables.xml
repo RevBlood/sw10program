@@ -13,4 +13,7 @@
 
     <!-- Variables for exiting application -->
     <integer name="OnBackPressedTimer">2000</integer>
+
+    <!-- Variables for MainListView -->
+    <integer name="OptimalityMaxColor">50</integer>
 </resources>

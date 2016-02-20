@@ -18,7 +18,10 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -28,9 +31,15 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.List;
+
+import sw10.lbforsikring.Objects.MainListViewAdapter;
+import sw10.lbforsikring.Objects.TripObjects.Trip;
 
 public class MainActivity extends AppCompatActivity {;
     Context mContext;
+    ArrayAdapter mMainListViewAdapter;
+    List<Trip> tripList;
     BroadcastReceiver mLocationServiceListener;
     ServiceConnection mLocationServiceConnection;
     Messenger mMessenger;
@@ -46,13 +55,27 @@ public class MainActivity extends AppCompatActivity {;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mContext = this;
+        tripList = new ArrayList<>();
+
+        //TODO: Remove test data
+        Trip trip1 = new Trip();
+        trip1.TripId = 0;
+        tripList.add(trip1);
+        Trip trip2 = new Trip();
+        trip2.TripId = 1;
+        tripList.add(trip2);
 
         //Setup listeners for UI
-        Button toggleDrivingButton = (Button) findViewById(R.id.toggleDrivingButton);
-        toggleDrivingButton.setOnClickListener(OnToggleDrivingListener);
+        Button toggleDrivingButton = (Button) findViewById(R.id.ToggleDrivingButton);
+        toggleDrivingButton.setOnClickListener(ToggleDrivingListener);
 
-        Button openMapButton = (Button) findViewById(R.id.openMapButton);
-        openMapButton.setOnClickListener(OnOpenMapListener);
+        Button openMapButton = (Button) findViewById(R.id.OpenMapButton);
+        openMapButton.setOnClickListener(OpenMapListener);
+
+        ListView mainListView = (ListView)findViewById(R.id.MainListView);
+        mMainListViewAdapter = new MainListViewAdapter(this, tripList);
+        mainListView.setAdapter(mMainListViewAdapter);
+        mainListView.setOnItemClickListener(MainListViewListener);
 
         //Initialize the LocationService
         if(!IsServiceRunning(LocationService.class)) {
@@ -93,7 +116,7 @@ public class MainActivity extends AppCompatActivity {;
     //endregion
 
     //region LISTENERS
-    Button.OnClickListener OnToggleDrivingListener = new Button.OnClickListener() {
+    Button.OnClickListener ToggleDrivingListener = new Button.OnClickListener() {
         public void onClick(View v) {
             //Send message to LocationService to start/stop the trip
             if (!mIsDriving) {
@@ -106,9 +129,16 @@ public class MainActivity extends AppCompatActivity {;
         }
     };
 
-    Button.OnClickListener OnOpenMapListener = new Button.OnClickListener() {
+    Button.OnClickListener OpenMapListener = new Button.OnClickListener() {
         public void onClick(View v) {
             startActivity(new Intent(mContext, MapActivity.class));
+        }
+    };
+
+    ListView.OnItemClickListener MainListViewListener = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> a, View v, int position, long id) {
+            Toast.makeText(getBaseContext(), "Click", Toast.LENGTH_SHORT).show();
         }
     };
 
@@ -128,7 +158,7 @@ public class MainActivity extends AppCompatActivity {;
 
     //region STATUS HANDLERS
     private void HandleConnectionStatus() {
-        Button toggleDrivingButton = (Button) findViewById(R.id.toggleDrivingButton);
+        Button toggleDrivingButton = (Button) findViewById(R.id.ToggleDrivingButton);
 
         if (mIsConnected) {
             toggleDrivingButton.setEnabled(true);
@@ -139,8 +169,8 @@ public class MainActivity extends AppCompatActivity {;
     }
 
     private void HandleDrivingStatus() {
-        Button toggleDrivingButton = (Button) findViewById(R.id.toggleDrivingButton);
-        Button openMapButton = (Button) findViewById(R.id.openMapButton);
+        Button toggleDrivingButton = (Button) findViewById(R.id.ToggleDrivingButton);
+        Button openMapButton = (Button) findViewById(R.id.OpenMapButton);
 
         if (mIsDriving) {
             toggleDrivingButton.setText(R.string.ToggleDrivingStop);
@@ -248,14 +278,14 @@ public class MainActivity extends AppCompatActivity {;
         mLocationServiceConnection = new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
-                Button toggleDrivingButton = (Button) findViewById(R.id.toggleDrivingButton);
+                Button toggleDrivingButton = (Button) findViewById(R.id.ToggleDrivingButton);
                 toggleDrivingButton.setEnabled(true);
                 mMessenger = new Messenger(service);
             }
 
             @Override
             public void onServiceDisconnected(ComponentName name) {
-                Button toggleDrivingButton = (Button) findViewById(R.id.toggleDrivingButton);
+                Button toggleDrivingButton = (Button) findViewById(R.id.ToggleDrivingButton);
                 toggleDrivingButton.setEnabled(false);
                 mMessenger = null;
             }
