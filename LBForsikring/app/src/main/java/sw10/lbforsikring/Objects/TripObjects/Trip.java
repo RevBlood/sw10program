@@ -13,6 +13,7 @@ public class Trip {
     public long TripId;
     public long PreviousTripId;
     public int CarId;
+    public boolean IsActive = false;
 
     public Trip(){
 

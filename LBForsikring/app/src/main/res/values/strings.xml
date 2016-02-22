@@ -41,9 +41,11 @@
     <string name="BroadcastIsProcessing">IsProcessing</string>
 
     <!-- Text for MainListView -->
-    <string name="MainListViewTitle">Tur</string>
+    <string name="MainListViewTitle">Tur %d</string>
     <string name="MainListViewDescription">Ingen beskrivelse</string>
-    <string name="MainListViewCostCurrency">Dkr</string>
+    <string name="MainListViewCost">%.2f Dkr</string>
+    <string name="MainListViewOptimality">%d%%</string>
+    <string name="MainListViewEmpty">Ingen ture kørt</string>
 
     <!-- Other -->
     <string name="DefaultText">DefaultText</string>

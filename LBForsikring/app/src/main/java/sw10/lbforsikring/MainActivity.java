@@ -33,7 +33,6 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import sw10.lbforsikring.Objects.MainListViewAdapter;
 import sw10.lbforsikring.Objects.TripObjects.Trip;
 
 public class MainActivity extends AppCompatActivity {;
@@ -59,23 +58,25 @@ public class MainActivity extends AppCompatActivity {;
 
         //TODO: Remove test data
         Trip trip1 = new Trip();
-        trip1.TripId = 0;
+        trip1.TripId = 1;
         tripList.add(trip1);
         Trip trip2 = new Trip();
-        trip2.TripId = 1;
-        tripList.add(trip2);
+        trip2.TripId = 2;
+        tripList.add(0, trip2);
 
-        //Setup listeners for UI
+        //Setup buttons
         Button toggleDrivingButton = (Button) findViewById(R.id.ToggleDrivingButton);
         toggleDrivingButton.setOnClickListener(ToggleDrivingListener);
 
         Button openMapButton = (Button) findViewById(R.id.OpenMapButton);
         openMapButton.setOnClickListener(OpenMapListener);
 
+        //Setup ListView
         ListView mainListView = (ListView) findViewById(R.id.MainListView);
         mMainListViewAdapter = new MainListViewAdapter(this, tripList);
         mainListView.setAdapter(mMainListViewAdapter);
         mainListView.setOnItemClickListener(MainListViewListener);
+        mainListView.setEmptyView(findViewById(R.id.MainListViewEmpty));
 
         //Listen for LocationService status messages
         mLocationServiceListener = new LocationServiceListener();
@@ -178,6 +179,13 @@ public class MainActivity extends AppCompatActivity {;
         if (mIsDriving) {
             toggleDrivingButton.setText(R.string.ToggleDrivingStop);
             openMapButton.setEnabled(true);
+
+            //TODO: Remove test shit
+            Trip trip3 = new Trip();
+            trip3.TripId = 3;
+            trip3.IsActive = true;
+            tripList.add(0, trip3);
+            mMainListViewAdapter.notifyDataSetChanged();
         } else {
             toggleDrivingButton.setText(R.string.ToggleDrivingStart);
             openMapButton.setEnabled(false);
