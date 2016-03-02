@@ -1,0 +1,113 @@
+<resources>
+    <!-- THINGS THAT MAY BE JUNK NOW -->
+    <!-- Text for MainListView -->
+    <string name="MainListViewTitle">Tur %d</string>
+    <string name="MainListViewDescription">Ingen beskrivelse</string>
+    <string name="MainListViewCost">%.2f Dkr</string>
+    <string name="MainListViewOptimality">%d%%</string>
+    <string name="MainListViewEmpty">Ingen ture kørt</string>
+
+    <!-- Logcat -->
+    <string name="LogFolder">/UbiForsikring</string>
+    <string name="LogFilename">Logcat</string>
+    <string name="LogFiletype">.txt</string>
+
+    <!-- ACTIVITY TITLES -->
+    <string name="title_activity_main_menu">UBI Forsikring</string>
+    <string name="title_activity_settings">Indstillinger</string>
+    <string name="title_activity_map">Kort</string>
+
+    <!-- MAIN MENU -->
+    <string name="ActionBarSettingsTitle">Indstillinger</string>
+
+    <string name="LogoDescription">Logo</string>
+
+    <string name="TripButtonTitleStart">Start Tur</string>
+    <string name="TripButtonTitleStop">Stop Tur</string>
+    <string name="ActiveTripButtonTitle">Vis på kort</string>
+    <string name="TripOverviewButtonTitle">Turoversigt</string>
+    <string name="CompetitionsButtonTitle">Konkurrencer</string>
+
+    <string name="TripStartToast">Starter tur</string>
+    <string name="TripStopToast">Stopper tur</string>
+    <string name="OnBackPressedToast">Stop venligst tur inden afslutning</string>
+
+    <!-- TRIP SERVICE -->
+    <string name="ServiceNotificationTitle">UBI Forsikring</string>
+    <string name="ServiceNotificationText">Din tur er aktiv</string>
+
+    <!-- LOCATION LISTENER -->
+    <string name="MovementNotificationTitle">Er din tur slut?</string>
+    <string name="MovementNotificationText">Tryk her for at slutte din tur</string>
+
+    <!-- STATUS BROADCAST -->
+    <string name="BroadcastStatusIntent">StatusIntent</string>
+    <string name="BroadcastIsConnected">IsConnected</string>
+    <string name="BroadcastIsTripActive">IsTripActive</string>
+    <string name="BroadcastIsProcessing">IsProcessing</string>
+    <string name="BroadcastLiveGpsIntent">LiveGpsIntent</string>
+    <string name="BroadcastLiveGpsLocation">LiveGpsPosition</string>
+    <string name="BroadcastRouteIntent">RouteIntent</string>
+    <string name="BroadcastRouteLocationList">RouteLocationList</string>
+
+    <!-- OTHER -->
+    <string name="app_name">UBI Forsikring</string>
+    <string name="DefaultText">DefaultText</string>
+
+    <!-- ANDROID GENERATED JUNK -->
+    <!-- Example General settings -->
+    <string name="pref_header_general">General</string>
+
+    <string name="pref_title_social_recommendations">Enable social recommendations</string>
+    <string name="pref_description_social_recommendations">Recommendations for people to contact
+        based on your message history
+    </string>
+
+    <string name="pref_title_display_name">Display name</string>
+    <string name="pref_default_display_name">John Smith</string>
+
+    <string name="pref_title_add_friends_to_messages">Add friends to messages</string>
+    <string-array name="pref_example_list_titles">
+        <item>Always</item>
+        <item>When possible</item>
+        <item>Never</item>
+    </string-array>
+    <string-array name="pref_example_list_values">
+        <item>1</item>
+        <item>0</item>
+        <item>-1</item>
+    </string-array>
+
+    <!-- Example settings for Data & Sync -->
+    <string name="pref_header_data_sync">Data &amp; sync</string>
+
+    <string name="pref_title_sync_frequency">Sync frequency</string>
+    <string-array name="pref_sync_frequency_titles">
+        <item>15 minutes</item>
+        <item>30 minutes</item>
+        <item>1 hour</item>
+        <item>3 hours</item>
+        <item>6 hours</item>
+        <item>Never</item>
+    </string-array>
+    <string-array name="pref_sync_frequency_values">
+        <item>15</item>
+        <item>30</item>
+        <item>60</item>
+        <item>180</item>
+        <item>360</item>
+        <item>-1</item>
+    </string-array>
+
+    <string name="pref_title_system_sync_settings">System sync settings</string>
+
+    <!-- Example settings for Notifications -->
+    <string name="pref_header_notifications">Notifications</string>
+
+    <string name="pref_title_new_message_notifications">New message notifications</string>
+
+    <string name="pref_title_ringtone">Ringtone</string>
+    <string name="pref_ringtone_silent">Silent</string>
+
+    <string name="pref_title_vibrate">Vibrate</string>
+</resources>
