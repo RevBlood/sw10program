@@ -128,7 +128,6 @@ public class LiveMapActivity extends FragmentActivity implements OnMapReadyCallb
         //Initialize the map with a polyline
         mMap = googleMap;
         mRouteLine = mMap.addPolyline(mRouteOptions);
-        mMap.moveCamera(CameraUpdateFactory.zoomTo(18));
     }
 
     //endregion
@@ -156,6 +155,7 @@ public class LiveMapActivity extends FragmentActivity implements OnMapReadyCallb
 
             //Move camera to the new position
             if (mKeepAnimating) {
+                mMap.moveCamera(CameraUpdateFactory.zoomTo(18));
                 mMap.animateCamera(CameraUpdateFactory.newLatLng(position), getResources().getInteger(R.integer.PositionInterval), mAnimationCallback);
             }
 
