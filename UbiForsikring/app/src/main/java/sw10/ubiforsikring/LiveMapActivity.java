@@ -49,7 +49,9 @@ public class LiveMapActivity extends FragmentActivity implements OnMapReadyCallb
     Polyline mRouteLine;
     PolylineOptions mRouteOptions;
     MarkerOptions mMarkerOptions;
+    MarkerOptions mStartMarkerOptions;
     Marker mMarker;
+    Marker mStartMarker;
     GoogleMap.CancelableCallback mAnimationCallback;
     boolean mKeepAnimating = true;
 
@@ -105,6 +107,11 @@ public class LiveMapActivity extends FragmentActivity implements OnMapReadyCallb
         mMarkerOptions = new MarkerOptions();
         mMarkerOptions.icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher));
         mMarkerOptions.anchor(0.5f, 0.5f);
+
+        //Define how the start marker looks
+        mStartMarkerOptions = new MarkerOptions();
+        mStartMarkerOptions.icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher));
+        mStartMarkerOptions.anchor(0.5f, 0.5f);
 
         //Get the map ready
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.LiveMap);
@@ -216,6 +223,12 @@ public class LiveMapActivity extends FragmentActivity implements OnMapReadyCallb
         //If mRouteLine is null, the GoogleMap is not ready yet - Skip the update
         if (mRouteLine != null) {
 
+            //If start marker does not exist, place it
+            if(mStartMarker == null) {
+                mStartMarkerOptions.position(mRoute.get(0));
+                mStartMarker = mMap.addMarker(mStartMarkerOptions);
+            }
+
             //Read newest position
             LatLng position = new LatLng(mRoute.get(mRoute.size() - 1).latitude, mRoute.get(mRoute.size() - 1).longitude);
 
@@ -225,7 +238,7 @@ public class LiveMapActivity extends FragmentActivity implements OnMapReadyCallb
             //Move camera to the new position
             if (mKeepAnimating) {
                 mMap.moveCamera(CameraUpdateFactory.zoomTo(18));
-                mMap.animateCamera(CameraUpdateFactory.newLatLng(position), getResources().getInteger(R.integer.PositionInterval), mAnimationCallback);
+                mMap.animateCamera(CameraUpdateFactory.newLatLng(position), getResources().getInteger(R.integer.AnimationSpeed), mAnimationCallback);
             }
 
             //If marker exists, remove it

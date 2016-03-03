@@ -5,6 +5,7 @@
 
     <!-- LIVE MAP -->
     <integer name="LiveGpsRouteWidth">12</integer>
+    <integer name="AnimationSpeed">800</integer>
 
     <!-- TRIP SERVICE -->
     <integer name="PositionInterval">1000</integer>
