@@ -32,6 +32,12 @@
     <string name="TripStopToast">Stopper tur</string>
     <string name="OnBackPressedToast">Stop venligst tur inden afslutning</string>
 
+    <!-- LIVE MAP -->
+    <string name="LiveDistanceText">%.1f km</string>
+    <string name="LiveDistanceDefaultText">-,- km</string>
+    <string name="LiveTimeText">HH:mm:ss</string>
+    <string name="LiveTimeDefaultText">--:--:--</string>
+
     <!-- TRIP SERVICE -->
     <string name="ServiceNotificationTitle">UBI Forsikring</string>
     <string name="ServiceNotificationText">Din tur er aktiv</string>
