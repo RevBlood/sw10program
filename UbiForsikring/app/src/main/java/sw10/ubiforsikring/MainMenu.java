@@ -69,17 +69,6 @@ public class MainMenu extends AppCompatActivity {
     }
 
     @Override
-    public void onDestroy() {
-        //If a trip was ongoing, make sure it is ended properly before application exit
-        if (mIsTripActive) {
-            EndTrip();
-            Log.i("Debug", "Ended trip on application exit");
-        }
-
-        super.onDestroy();
-    }
-
-    @Override
     public void onBackPressed() {
         //Deny application exit if trip is ongoing
         if (!mIsTripActive) {
@@ -201,7 +190,6 @@ public class MainMenu extends AppCompatActivity {
             Log.i("Debug", "TripService already running");
             InitializeTripServiceConnection();
             BindTripService();
-            UpdateStatusBroadcast();
         }
     }
 
@@ -214,6 +202,7 @@ public class MainMenu extends AppCompatActivity {
                 Button tripButton = (Button) findViewById(R.id.TripButton);
                 tripButton.setEnabled(true);
                 mMessenger = new Messenger(service);
+                UpdateStatusBroadcast();
             }
 
             @Override

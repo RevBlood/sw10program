@@ -15,11 +15,9 @@
         <activity
             android:name=".MainMenu"
             android:label="@string/title_activity_main_menu"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait">
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -27,11 +25,6 @@
             android:name=".MainActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
 
         <service android:name=".TripService" />
@@ -43,11 +36,10 @@
         <activity
             android:name=".LiveMapActivity"
             android:label="@string/title_activity_map"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait">
+            android:launchMode="singleTop">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="sw10.ubiforsikring.MainActivity" />
+                android:value="sw10.ubiforsikring.MainMenu" />
         </activity>
         <activity
             android:name=".SettingsActivity"
