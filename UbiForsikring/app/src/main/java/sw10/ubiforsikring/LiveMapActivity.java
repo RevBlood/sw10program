@@ -69,7 +69,7 @@ public class LiveMapActivity extends FragmentActivity implements OnMapReadyCallb
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_live_map);
         //Initialize variables for later use
-        mSdf = new SimpleDateFormat(getString(R.string.LiveTimeText));
+        mSdf = new SimpleDateFormat(getString(R.string.LiveTimeTextFormat));
         mTripTimer = new Handler();
         mRoute = new ArrayList<>();
         mAnimationCallback = new GoogleMap.CancelableCallback() {

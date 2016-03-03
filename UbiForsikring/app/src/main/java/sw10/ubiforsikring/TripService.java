@@ -204,7 +204,7 @@ public class TripService extends Service implements ConnectionCallbacks, OnConne
                 .setContentText(getString(R.string.ServiceNotificationText));
 
         //Create intent to launch MainMenu when notification is pressed
-        Intent intent = new Intent(this, MainMenu.class);
+        Intent intent = new Intent(this, MainMenuActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         notificationBuilder.setContentIntent(pendingIntent);
 

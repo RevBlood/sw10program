@@ -32,7 +32,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
-public class MainMenu extends AppCompatActivity {
+public class MainMenuActivity extends AppCompatActivity {
     Context mContext;
 
     //TripService communication
@@ -59,6 +59,9 @@ public class MainMenu extends AppCompatActivity {
 
         Button liveMapButton = (Button) findViewById(R.id.LiveMapButton);
         liveMapButton.setOnClickListener(LiveMapButtonListener);
+
+        Button tripOverviewButton = (Button) findViewById(R.id.TripOverviewButton);
+        tripOverviewButton.setOnClickListener(TripOverviewButtonListener);
 
         //Listen for TripService status messages
         mLocationServiceListener = new TripServiceListener();
@@ -120,6 +123,13 @@ public class MainMenu extends AppCompatActivity {
             startActivity(new Intent(mContext, LiveMapActivity.class));
         }
     };
+
+    Button.OnClickListener TripOverviewButtonListener = new Button.OnClickListener() {
+        public void onClick(View v) {
+            startActivity(new Intent(mContext, TripOverviewActivity.class));
+        }
+    };
+
 
     //endregion
 

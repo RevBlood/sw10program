@@ -64,7 +64,7 @@ public class LocationListener implements com.google.android.gms.location.Locatio
                 .setAutoCancel(true);
 
         //Create intent to launch Main Menu when notification is pressed
-        Intent intent = new Intent(mContext, MainMenu.class);
+        Intent intent = new Intent(mContext, MainMenuActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         notificationBuilder.setContentIntent(pendingIntent);
 

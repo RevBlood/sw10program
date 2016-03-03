@@ -1,13 +1,5 @@
 <resources>
-    <!-- THINGS THAT MAY BE JUNK NOW -->
-    <!-- Text for MainListView -->
-    <string name="MainListViewTitle">Tur %d</string>
-    <string name="MainListViewDescription">Ingen beskrivelse</string>
-    <string name="MainListViewCost">%.2f Dkr</string>
-    <string name="MainListViewOptimality">%d%%</string>
-    <string name="MainListViewEmpty">Ingen ture kørt</string>
-
-    <!-- Logcat -->
+    <!-- Logcat (Junk?) -->
     <string name="LogFolder">/UbiForsikring</string>
     <string name="LogFilename">Logcat</string>
     <string name="LogFiletype">.txt</string>
@@ -35,8 +27,20 @@
     <!-- LIVE MAP -->
     <string name="LiveDistanceText">%.1f km</string>
     <string name="LiveDistanceDefaultText">-,- km</string>
-    <string name="LiveTimeText">HH:mm:ss</string>
+    <string name="LiveTimeTextFormat">HH:mm:ss</string>
     <string name="LiveTimeDefaultText">--:--:--</string>
+
+
+    <!-- TRIP OVERVIEW -->
+    <string name="TripTitle">Tur %d</string>
+    <string name="TripCostText">%.2f Dkr</string>
+    <string name="TripOptimalityText">%d%%</string>
+    <string name="TripTimeTextFormat">HH:mm</string>
+    <string name="TripTimeText">%1$s - %2$s</string>
+    <string name="TripListEmptyText">Ingen ture kørt</string>
+    <string name="TripDistanceText">%.1f km</string>
+    <string name="NewTripTitle">Igangværende tur</string>
+    <string name="NewTripDistanceText">%.1f km kørt</string>
 
     <!-- TRIP SERVICE -->
     <string name="ServiceNotificationTitle">UBI Forsikring</string>
