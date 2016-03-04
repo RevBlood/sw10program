@@ -8,6 +8,7 @@
     <string name="title_activity_main_menu">UBI Forsikring</string>
     <string name="title_activity_settings">Indstillinger</string>
     <string name="title_activity_map">Kort</string>
+    <string name="title_activity_trip_overview">Turoversigt</string>
 
     <!-- MAIN MENU -->
     <string name="ActionBarSettingsTitle">Indstillinger</string>

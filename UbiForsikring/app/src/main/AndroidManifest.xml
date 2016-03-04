@@ -22,7 +22,7 @@
         <activity
             android:name=".MainMenuActivity"
             android:label="@string/title_activity_main_menu"
-            android:launchMode="singleTop">
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -32,19 +32,21 @@
         <activity
             android:name=".LiveMapActivity"
             android:label="@string/title_activity_map"
-            android:launchMode="singleTop">
+            android:launchMode="singleTask">
         </activity>
 
         <activity
             android:name=".TripOverviewActivity"
             android:parentActivityName=".MainMenuActivity"
-            android:launchMode="singleTop">
+            android:label="@string/title_activity_trip_overview"
+            android:launchMode="singleTask">
         </activity>
 
         <activity
             android:name=".SettingsActivity"
             android:parentActivityName=".MainMenuActivity"
-            android:label="@string/title_activity_settings">
+            android:label="@string/title_activity_settings"
+            android:launchMode="singleTask">
         </activity>
 
     </application>
