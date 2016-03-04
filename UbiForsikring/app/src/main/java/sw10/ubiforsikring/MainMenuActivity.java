@@ -64,7 +64,7 @@ public class MainMenuActivity extends AppCompatActivity {
         tripOverviewButton.setOnClickListener(TripOverviewButtonListener);
 
         //Listen for TripService status messages
-        mLocationServiceListener = new TripServiceListener();
+        mLocationServiceListener = new StatusReceiver();
         LocalBroadcastManager.getInstance(this).registerReceiver(mLocationServiceListener, new IntentFilter(getString(R.string.BroadcastStatusIntent)));
 
         //Start the TripService and/or bind it to the Menu
@@ -134,7 +134,7 @@ public class MainMenuActivity extends AppCompatActivity {
     //endregion
 
     //region INCOMING EVENTS
-    private class TripServiceListener extends BroadcastReceiver {
+    private class StatusReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
             mIsConnected = intent.getBooleanExtra(getString(R.string.BroadcastIsConnected), false);

@@ -1,19 +1,13 @@
 package sw10.ubiforsikring.Objects.TripObjects;
 
-import android.util.Log;
-
 import org.json.JSONObject;
-
-/**
- * Created by Casper on 15-02-2016.
- */
-
 
 public class Trip {
     public long TripId;
     public long PreviousTripId;
     public int CarId;
     public boolean IsActive = false;
+    public boolean IsProcessing = false;
 
     public Trip(){
 

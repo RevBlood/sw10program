@@ -68,35 +68,13 @@ public class LiveMapActivity extends FragmentActivity implements OnMapReadyCallb
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_live_map);
+
         //Initialize variables for later use
         mSdf = new SimpleDateFormat(getString(R.string.LiveTimeTextFormat));
         mTripTimer = new Handler();
         mRoute = new ArrayList<>();
-        mAnimationCallback = new GoogleMap.CancelableCallback() {
-            @Override
-            public void onFinish() {
-
-            }
-            @Override
-            public void onCancel() {
-                mKeepAnimating = false;
-            }
-        };
-        mTimerTask = new Runnable() {
-            @Override
-            public void run() {
-                //Get time since start of trip in UnixTime. Subtract one hour, so timer starts at 0
-                long elapsedTime = System.currentTimeMillis() - mTripStartTime - 3600000;
-
-                //Format the time and put it in the TextView
-                String formattedElapsedTime = mSdf.format(elapsedTime);
-                TextView liveTimeView = (TextView) findViewById(R.id.LiveTimeView);
-                liveTimeView.setText(formattedElapsedTime);
-
-                //Run the task each second
-                mTripTimer.postDelayed(this, 1000);
-            }
-        };
+        mTimerTask = new TimerTask();
+        mAnimationCallback = new AnimationCallback();
 
         //Define how the route looks on the map
         mRouteOptions = new PolylineOptions();
@@ -121,70 +99,12 @@ public class LiveMapActivity extends FragmentActivity implements OnMapReadyCallb
         InitializeTripServiceConnection();
         BindTripService();
 
-        //Define action upon retrieving route (Whatever was logged before opening the Live Map)
-        mRouteReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                List<Location> route = intent.getParcelableArrayListExtra(getString(R.string.BroadcastRouteLocationList));
-
-                if (!route.isEmpty()) {
-                    //Add all coordinates to the route
-                    for (int i = route.size() - 1; i >= 0; i--) {
-                        mRoute.add(0, new LatLng(route.get(i).getLatitude(), route.get(i).getLongitude()));
-                    }
-
-                    //Add all distance to the TripDistance
-                    for (int i = 1; i < route.size() - 1; i++) {
-                        mTripDistance += route.get(i).distanceTo(route.get(i-1));
-                    }
-
-                    //If start time of the trip has not been recorded yet, initialize the view for live time
-                    if (mTripStartTime == null) {
-                        mTripStartTime = route.get(0).getTime();
-                        InitializeLiveTime();
-                    }
-
-                    //Update Map UI
-                    UpdateRouteOnMap();
-                }
-            }
-        };
-
-        //Define action upon retrieving new locations
-        mLocationReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-
-                Location location = intent.getParcelableExtra(getString(R.string.BroadcastLiveGpsLocation));
-
-                if (!mRoute.isEmpty()) {
-                    //Add the new distance to TripDistance
-                    float[] result = new float[1];
-                    Location.distanceBetween(
-                            location.getLatitude(),
-                            location.getLongitude(),
-                            mRoute.get(mRoute.size() - 1).latitude,
-                            mRoute.get(mRoute.size() - 1).longitude,
-                            result);
-                    mTripDistance += result[0];
-                }
-
-                //Add new coordinate to the route
-                mRoute.add(new LatLng(location.getLatitude(), location.getLongitude()));
-
-                //If start time of the trip has not been recorded yet, initialize the view for live time
-                if (mTripStartTime == null) {
-                    mTripStartTime = location.getTime();
-                    InitializeLiveTime();
-                }
-
-                //Update map UI
-                UpdateRouteOnMap();
-            }
-        };
-
-        //Start listening for positions with the receivers
+        //Listen for route updates
+        mRouteReceiver = new RouteReceiver();
         LocalBroadcastManager.getInstance(this).registerReceiver(mRouteReceiver, new IntentFilter(getString(R.string.BroadcastRouteIntent)));
+
+        //Listen for position updates
+        mLocationReceiver = new PositionReceiver();
         LocalBroadcastManager.getInstance(this).registerReceiver(mLocationReceiver, new IntentFilter(getString(R.string.BroadcastLiveGpsIntent)));
 
         //Set a listener for the Floating Action Button
@@ -218,6 +138,134 @@ public class LiveMapActivity extends FragmentActivity implements OnMapReadyCallb
     };
 
     //endregion
+
+    //region INCOMING EVENTS
+
+    private class RouteReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            List<Location> route = intent.getParcelableArrayListExtra(getString(R.string.BroadcastRouteLocationList));
+
+            if (!route.isEmpty()) {
+                //Add all coordinates to the route
+                for (int i = route.size() - 1; i >= 0; i--) {
+                    mRoute.add(0, new LatLng(route.get(i).getLatitude(), route.get(i).getLongitude()));
+                }
+
+                //Add all distance to the TripDistance
+                for (int i = 1; i < route.size() - 1; i++) {
+                    mTripDistance += route.get(i).distanceTo(route.get(i - 1));
+                }
+
+                //If start time of the trip has not been recorded yet, initialize the view for live time
+                if (mTripStartTime == null) {
+                    mTripStartTime = route.get(0).getTime();
+                    InitializeLiveTime();
+                }
+
+                //Update Map UI
+                UpdateRouteOnMap();
+            }
+        }
+    }
+
+    private class PositionReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Location location = intent.getParcelableExtra(getString(R.string.BroadcastLiveGpsLocation));
+            LatLng position = new LatLng(location.getLatitude(), location.getLongitude());
+            if (!mRoute.isEmpty()) {
+                mTripDistance += DistanceBetweenLatLng(position, mRoute.get(mRoute.size() - 1));
+            }
+
+            //Add new coordinate to the route
+            mRoute.add(new LatLng(location.getLatitude(), location.getLongitude()));
+
+            //If start time of the trip has not been recorded yet, initialize the view for live time
+            if (mTripStartTime == null) {
+                mTripStartTime = location.getTime();
+                InitializeLiveTime();
+            }
+
+            //Update map UI
+            UpdateRouteOnMap();
+        }
+    }
+
+    //endregion
+
+    //region TRIP SERVICE
+
+    private void InitializeTripServiceConnection() {
+        //Create a connection and a messenger for communication with the service
+        //Enable/disable interaction with the service depending on connection status
+        mTripServiceConnection = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                mMessenger = new Messenger(service);
+
+                //As soon as the service is available, request the route that has been recorded so far
+                UpdateRouteBroadcast();
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+                mMessenger = null;
+            }
+        };
+    }
+
+    private void BindTripService(){
+        Intent intent = new Intent(this, TripService.class);
+        bindService(intent, mTripServiceConnection, Context.BIND_AUTO_CREATE);
+    }
+
+    private void UpdateRouteBroadcast() {
+        //Create message to TripService with intent to run case for UPDATE_ROUTE_BROADCAST
+        Message message = Message.obtain(null, TripService.UPDATE_ROUTE_BROADCAST, 0, 0);
+
+        //Send the Message to the Service
+        try {
+            mMessenger.send(message);
+        } catch (RemoteException e) {
+            Log.e("Debug", "Failed to contact TripService");
+        }
+    }
+
+    //endregion
+
+    //region OTHER
+
+    private class TimerTask implements Runnable {
+        @Override
+        public void run() {
+            //Get time since start of trip in UnixTime. Subtract one hour, so timer starts at 0
+            long elapsedTime = System.currentTimeMillis() - mTripStartTime - 3600000;
+
+            //Format the time and put it in the TextView
+            String formattedElapsedTime = mSdf.format(elapsedTime);
+            TextView liveTimeView = (TextView) findViewById(R.id.LiveTimeView);
+            liveTimeView.setText(formattedElapsedTime);
+
+            //Run the task each second
+            mTripTimer.postDelayed(this, 1000);
+        }
+    }
+
+    private class AnimationCallback implements GoogleMap.CancelableCallback {
+        @Override
+        public void onFinish() {
+
+        }
+        @Override
+        public void onCancel() {
+            mKeepAnimating = false;
+        }
+    }
+
+    private void InitializeLiveTime() {
+        mTripTimer.postDelayed(mTimerTask, 1000);
+    }
 
     private void UpdateRouteOnMap() {
         //If mRouteLine is null, the GoogleMap is not ready yet - Skip the update
@@ -257,46 +305,10 @@ public class LiveMapActivity extends FragmentActivity implements OnMapReadyCallb
         }
     }
 
-    private void InitializeLiveTime() {
-        mTripTimer.postDelayed(mTimerTask, 1000);
-    }
-
-    //region TRIP SERVICE
-
-    private void InitializeTripServiceConnection() {
-        //Create a connection and a messenger for communication with the service
-        //Enable/disable interaction with the service depending on connection status
-        mTripServiceConnection = new ServiceConnection() {
-            @Override
-            public void onServiceConnected(ComponentName name, IBinder service) {
-                mMessenger = new Messenger(service);
-
-                //As soon as the service is available, request the route that has been recorded so far
-                UpdateRouteBroadcast();
-            }
-
-            @Override
-            public void onServiceDisconnected(ComponentName name) {
-                mMessenger = null;
-            }
-        };
-    }
-
-    private void BindTripService(){
-        Intent intent = new Intent(this, TripService.class);
-        bindService(intent, mTripServiceConnection, Context.BIND_AUTO_CREATE);
-    }
-
-    private void UpdateRouteBroadcast() {
-        //Create message to TripService with intent to run case for UPDATE_ROUTE_BROADCAST
-        Message message = Message.obtain(null, TripService.UPDATE_ROUTE_BROADCAST, 0, 0);
-
-        //Send the Message to the Service
-        try {
-            mMessenger.send(message);
-        } catch (RemoteException e) {
-            Log.e("Debug", "Failed to contact TripService");
-        }
+    private double DistanceBetweenLatLng(LatLng first, LatLng second) {
+        float[] result = new float[1];
+        Location.distanceBetween(first.latitude, first.longitude, second.latitude, second.longitude, result);
+        return result[0];
     }
 
     //endregion
