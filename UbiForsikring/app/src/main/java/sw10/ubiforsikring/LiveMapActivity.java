@@ -299,9 +299,8 @@ public class LiveMapActivity extends FragmentActivity implements OnMapReadyCallb
             mMarker = mMap.addMarker(mMarkerOptions);
 
             //Update distance view
-            double distanceInKilometers = mTripDistance / 1000;
             TextView liveDistanceView = (TextView) findViewById(R.id.LiveDistanceView);
-            liveDistanceView.setText(getString(R.string.LiveDistanceText, distanceInKilometers));
+            liveDistanceView.setText(getString(R.string.LiveDistanceText, mTripDistance /1000));
         }
     }
 

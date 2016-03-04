@@ -129,14 +129,14 @@ public class TripOverviewActivity extends AppCompatActivity {
             if (!route.isEmpty()) {
                 //Add all distance to the active trip
                 for (int i = 1; i < route.size() - 1; i++) {
-                    mActiveTrip.Distance += route.get(i).distanceTo(route.get(i-1));
+                    mActiveTrip.Distance += route.get(i).distanceTo(route.get(i - 1));
                 }
 
                 //Update distance in the ListView
                 mTripOverviewAdapter.notifyDataSetChanged();
 
                 //Save last position as the previous for calculating further distances
-                mPreviousPosition = new LatLng(route.get(0).getLatitude(), route.get(0).getLongitude());
+                mPreviousPosition = new LatLng(route.get(route.size() - 1).getLatitude(), route.get(route.size() - 1).getLongitude());
             }
         }
     }
@@ -153,10 +153,10 @@ public class TripOverviewActivity extends AppCompatActivity {
 
                 //Update distance in the ListView
                 mTripOverviewAdapter.notifyDataSetChanged();
-            }
 
-            //Save position as the previous for calculating further distances
-            mPreviousPosition = position;
+                //Save position as the previous for calculating further distances
+                mPreviousPosition = position;
+            }
         }
     }
 
