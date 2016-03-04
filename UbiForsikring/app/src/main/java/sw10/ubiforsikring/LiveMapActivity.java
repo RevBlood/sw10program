@@ -37,6 +37,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LiveMapActivity extends FragmentActivity implements OnMapReadyCallback {
+    Context mContext;
+
     //TripService communication
     ServiceConnection mTripServiceConnection;
     Messenger mMessenger;
@@ -68,6 +70,7 @@ public class LiveMapActivity extends FragmentActivity implements OnMapReadyCallb
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_live_map);
+        mContext = this;
 
         //Initialize variables for later use
         mSdf = new SimpleDateFormat(getString(R.string.LiveTimeTextFormat));
@@ -165,6 +168,9 @@ public class LiveMapActivity extends FragmentActivity implements OnMapReadyCallb
 
                 //Update Map UI
                 UpdateRouteOnMap();
+
+                //Unregister the receiver - We only need the route once
+                LocalBroadcastManager.getInstance(mContext).unregisterReceiver(mRouteReceiver);
             }
         }
     }

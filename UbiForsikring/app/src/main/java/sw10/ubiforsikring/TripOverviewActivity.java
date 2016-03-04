@@ -138,6 +138,9 @@ public class TripOverviewActivity extends AppCompatActivity {
                 //Save last position as the previous for calculating further distances
                 mPreviousPosition = new LatLng(route.get(route.size() - 1).getLatitude(), route.get(route.size() - 1).getLongitude());
             }
+
+            //Unregister the receiver - We only need the route once
+            LocalBroadcastManager.getInstance(mContext).unregisterReceiver(mRouteReceiver);
         }
     }
 
