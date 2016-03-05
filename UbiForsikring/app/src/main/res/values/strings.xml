@@ -8,6 +8,7 @@
     <string name="title_activity_main_menu">UBI Forsikring</string>
     <string name="title_activity_settings">Indstillinger</string>
     <string name="title_activity_map">Kort</string>
+    <string name="title_activity_trip_list">Turliste</string>
     <string name="title_activity_trip_overview">Turoversigt</string>
 
     <!-- MAIN MENU -->
@@ -18,7 +19,7 @@
     <string name="TripButtonTitleStart">Start Tur</string>
     <string name="TripButtonTitleStop">Stop Tur</string>
     <string name="ActiveTripButtonTitle">Vis på kort</string>
-    <string name="TripOverviewButtonTitle">Turoversigt</string>
+    <string name="TripOverviewButtonTitle">Turliste</string>
     <string name="CompetitionsButtonTitle">Konkurrencer</string>
 
     <string name="TripStartToast">Starter tur</string>
@@ -32,7 +33,7 @@
     <string name="LiveTimeDefaultText">--:--:--</string>
 
 
-    <!-- TRIP OVERVIEW -->
+    <!-- TRIP LIST -->
     <string name="TripTitle">Tur %d</string>
     <string name="TripCostText">%.2f Dkr</string>
     <string name="TripOptimalityText">%d%%</string>

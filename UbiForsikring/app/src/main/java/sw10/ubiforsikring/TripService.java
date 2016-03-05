@@ -158,8 +158,9 @@ public class TripService extends Service implements ConnectionCallbacks, OnConne
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, mLocationListener);
         }
 
-        //Stop the LocationListener from issuing notifications
+        //Stop the LocationListener from issuing notifications and clear notification if present
         mLocationListener.DisableMovementTimer();
+        mLocationListener.ClearMovementNotification();
 
         //Get the logged entries from the LocationListener, and clear them afterwards
         List<Location> entries = mLocationListener.GetEntries();

@@ -11,15 +11,15 @@ import android.widget.TextView;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
-public class TripOverviewAdapter extends ArrayAdapter<TripOverviewEntry> {
+public class TripListAdapter extends ArrayAdapter<TripListEntry> {
     final static int VIEWTYPE_HISTORICAL = 0;
     final static int VIEWTYPE_CURRENT = 1;
 
     Context mContext;
-    List<TripOverviewEntry> mTrips;
+    List<TripListEntry> mTrips;
     SimpleDateFormat mSdf;
 
-    public TripOverviewAdapter(Context context, List<TripOverviewEntry> trips) {
+    public TripListAdapter(Context context, List<TripListEntry> trips) {
         super(context, -1, trips);
         mContext = context;
         mTrips = trips;
@@ -47,7 +47,7 @@ public class TripOverviewAdapter extends ArrayAdapter<TripOverviewEntry> {
         View rowView = convertView;
 
         //Fetch the relevant entry
-        TripOverviewEntry entry = mTrips.get(position);
+        TripListEntry entry = mTrips.get(position);
 
         //Layout depends on whether the trip is active or historical
         switch (this.getItemViewType(position)) {

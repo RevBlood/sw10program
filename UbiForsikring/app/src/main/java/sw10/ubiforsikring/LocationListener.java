@@ -97,6 +97,11 @@ public class LocationListener implements com.google.android.gms.location.Locatio
         mMovementTimer.removeCallbacks(mTimerTask);
     }
 
+    public void ClearMovementNotification() {
+        NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(mContext.NOTIFICATION_SERVICE);
+        notificationManager.cancel(0);
+    }
+
     public List<Location> GetEntries() {
         return mEntries;
     }

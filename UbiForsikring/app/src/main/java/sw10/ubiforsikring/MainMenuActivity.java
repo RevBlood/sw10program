@@ -50,7 +50,7 @@ public class MainMenuActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_mainmenu);
+        setContentView(R.layout.activity_main_menu);
         mContext = this;
 
         //Setup buttons
@@ -126,7 +126,7 @@ public class MainMenuActivity extends AppCompatActivity {
 
     Button.OnClickListener TripOverviewButtonListener = new Button.OnClickListener() {
         public void onClick(View v) {
-            startActivity(new Intent(mContext, TripOverviewActivity.class));
+            startActivity(new Intent(mContext, TripListActivity.class));
         }
     };
 

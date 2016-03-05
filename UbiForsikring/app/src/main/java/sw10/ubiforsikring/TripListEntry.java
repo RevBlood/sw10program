@@ -1,6 +1,6 @@
 package sw10.ubiforsikring;
 
-public class TripOverviewEntry {
+public class TripListEntry {
     public long TripId;
     public long TimeStarted;
     public Long TimeEnded;
@@ -11,12 +11,12 @@ public class TripOverviewEntry {
     public boolean IsActive = false;
     public boolean IsProcessing = false;
 
-    public TripOverviewEntry(boolean isActive, boolean isProcessing) {
+    public TripListEntry(boolean isActive, boolean isProcessing) {
         IsActive = isActive;
         IsProcessing = isProcessing;
     }
 
-    public TripOverviewEntry(long tripId, long timeStarted, long timeEnded, double distance, int optimality, double cost) {
+    public TripListEntry(long tripId, long timeStarted, long timeEnded, double distance, int optimality, double cost) {
         TripId = tripId;
         TimeStarted = timeStarted;
         TimeEnded = timeEnded;
