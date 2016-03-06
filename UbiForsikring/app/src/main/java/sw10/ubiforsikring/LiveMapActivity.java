@@ -71,6 +71,7 @@ public class LiveMapActivity extends FragmentActivity implements OnMapReadyCallb
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_live_map);
         mContext = this;
+        mRouteReceiver = new RouteReceiver();
 
         //Initialize variables for later use
         mSdf = new SimpleDateFormat(getString(R.string.LiveTimeTextFormat));
@@ -98,18 +99,6 @@ public class LiveMapActivity extends FragmentActivity implements OnMapReadyCallb
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.LiveMap);
         mapFragment.getMapAsync(this);
 
-        //Connect to the TripService
-        InitializeTripServiceConnection();
-        BindTripService();
-
-        //Listen for route updates
-        mRouteReceiver = new RouteReceiver();
-        LocalBroadcastManager.getInstance(this).registerReceiver(mRouteReceiver, new IntentFilter(getString(R.string.BroadcastRouteIntent)));
-
-        //Listen for position updates
-        mLocationReceiver = new PositionReceiver();
-        LocalBroadcastManager.getInstance(this).registerReceiver(mLocationReceiver, new IntentFilter(getString(R.string.BroadcastLiveGpsIntent)));
-
         //Set a listener for the Floating Action Button
         FloatingActionButton trackRouteButton = (FloatingActionButton) findViewById(R.id.TrackRouteButton);
         trackRouteButton.setOnClickListener(OnTrackRouteListener);
@@ -123,10 +112,26 @@ public class LiveMapActivity extends FragmentActivity implements OnMapReadyCallb
     }
 
     @Override
-    public void onDestroy() {
-        //Stop Live Time from updating
+    public void onResume() {
+        ////Whenever activity is resumed re-calculate distance before listening for new updates
+        LocalBroadcastManager.getInstance(this).registerReceiver(mRouteReceiver, new IntentFilter(getString(R.string.BroadcastRouteIntent)));
+
+        //Connect to the TripService
+        InitializeTripServiceConnection();
+        BindTripService();
+
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        //If activity is paused, stop listening for new locations
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mLocationReceiver);
+
+        //Stop Live Time from updating until activity is resumed
         mTripTimer.removeCallbacks(mTimerTask);
-        super.onDestroy();
+
+        super.onPause();
     }
 
     //endregion
@@ -149,16 +154,18 @@ public class LiveMapActivity extends FragmentActivity implements OnMapReadyCallb
         public void onReceive(Context context, Intent intent) {
             List<Location> route = intent.getParcelableArrayListExtra(getString(R.string.BroadcastRouteLocationList));
 
-            if (!route.isEmpty()) {
+            if(!route.isEmpty()) {
                 //Add all coordinates to the route
                 for (int i = route.size() - 1; i >= 0; i--) {
                     mRoute.add(0, new LatLng(route.get(i).getLatitude(), route.get(i).getLongitude()));
                 }
 
                 //Add all distance to the TripDistance
+                double test = mTripDistance;
                 for (int i = 1; i < route.size() - 1; i++) {
                     mTripDistance += route.get(i).distanceTo(route.get(i - 1));
                 }
+                Log.d("Debug", "Route: " + Double.toString(mTripDistance - test));
 
                 //If start time of the trip has not been recorded yet, initialize the view for live time
                 if (mTripStartTime == null) {
@@ -168,10 +175,14 @@ public class LiveMapActivity extends FragmentActivity implements OnMapReadyCallb
 
                 //Update Map UI
                 UpdateRouteOnMap();
-
-                //Unregister the receiver - We only need the route once
-                LocalBroadcastManager.getInstance(mContext).unregisterReceiver(mRouteReceiver);
             }
+
+            //Unregister the receiver - We only need the route once
+            LocalBroadcastManager.getInstance(mContext).unregisterReceiver(mRouteReceiver);
+
+            //Listen for position updates
+            mLocationReceiver = new PositionReceiver();
+            LocalBroadcastManager.getInstance(mContext).registerReceiver(mLocationReceiver, new IntentFilter(getString(R.string.BroadcastLiveGpsIntent)));
         }
     }
 
@@ -182,6 +193,8 @@ public class LiveMapActivity extends FragmentActivity implements OnMapReadyCallb
             LatLng position = new LatLng(location.getLatitude(), location.getLongitude());
             if (!mRoute.isEmpty()) {
                 mTripDistance += DistanceBetweenLatLng(position, mRoute.get(mRoute.size() - 1));
+
+                Log.d("Debug", "Position: " + Double.toString(DistanceBetweenLatLng(position, mRoute.get(mRoute.size() - 1))));
             }
 
             //Add new coordinate to the route

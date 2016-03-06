@@ -53,6 +53,7 @@ public class TripListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trip_list);
         mContext = this;
+        mStatusReceiver = new StatusReceiver();
 
         //TODO: Remove test data
         mTripList = new ArrayList<>();
@@ -70,21 +71,26 @@ public class TripListActivity extends AppCompatActivity {
         mainListView.setAdapter(mTripListAdapter);
         mainListView.setOnItemClickListener(MainListViewListener);
         mainListView.setEmptyView(findViewById(R.id.MainListViewEmpty));
+    }
+
+    @Override
+    public void onResume() {
+        //Whenever activity is resumed, re-assess statuses: Activeness of trip, distance
+        //Listen for TripService status
+        LocalBroadcastManager.getInstance(this).registerReceiver(mStatusReceiver, new IntentFilter(getString(R.string.BroadcastStatusIntent)));
 
         //Connect to the TripService
         InitializeTripServiceConnection();
         BindTripService();
 
-        //Listen for TripService status messages
-        mStatusReceiver = new StatusReceiver();
-        LocalBroadcastManager.getInstance(this).registerReceiver(mStatusReceiver, new IntentFilter(getString(R.string.BroadcastStatusIntent)));
+        super.onResume();
+    }
 
-        //Listen for route updates
-        mRouteReceiver = new RouteReceiver();
-        LocalBroadcastManager.getInstance(this).registerReceiver(mRouteReceiver, new IntentFilter(getString(R.string.BroadcastRouteIntent)));
-
-        //Listen for position updates
-        mLocationReceiver = new PositionReceiver();
+    @Override
+    public void onPause() {
+        //If activity is paused, stop listening for new locations
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mLocationReceiver);
+        super.onPause();
     }
 
     //endregion
@@ -112,6 +118,9 @@ public class TripListActivity extends AppCompatActivity {
     private class StatusReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
+            //Only need status once - Unregister the receiver afterwards
+            LocalBroadcastManager.getInstance(mContext).unregisterReceiver(mStatusReceiver);
+
             mIsTripActive = intent.getBooleanExtra(getString(R.string.BroadcastIsTripActive), false);
             mIsProcessing = intent.getBooleanExtra(getString(R.string.BroadcastIsProcessing), false);
 
@@ -125,7 +134,7 @@ public class TripListActivity extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             List<Location> route = intent.getParcelableArrayListExtra(getString(R.string.BroadcastRouteLocationList));
 
-            if (!route.isEmpty()) {
+            if(!route.isEmpty()) {
                 //Add all distance to the active trip
                 for (int i = 1; i < route.size() - 1; i++) {
                     mActiveTrip.Distance += route.get(i).distanceTo(route.get(i - 1));
@@ -140,6 +149,10 @@ public class TripListActivity extends AppCompatActivity {
 
             //Unregister the receiver - We only need the route once
             LocalBroadcastManager.getInstance(mContext).unregisterReceiver(mRouteReceiver);
+
+            //Register receiver for getting new positions
+            mLocationReceiver = new PositionReceiver();
+            LocalBroadcastManager.getInstance(mContext).registerReceiver(mLocationReceiver, new IntentFilter(getString(R.string.BroadcastLiveGpsIntent)));
         }
     }
 
@@ -149,9 +162,11 @@ public class TripListActivity extends AppCompatActivity {
             Location location = intent.getParcelableExtra(getString(R.string.BroadcastLiveGpsLocation));
             LatLng position = new LatLng(location.getLatitude(), location.getLongitude());
 
-            //If the route has been retrieved, start adding the distance from new positions
+            //If there is a previous position, start adding the distance to new positions
             if (mPreviousPosition != null) {
                 mActiveTrip.Distance += DistanceBetweenLatLng(position, mPreviousPosition);
+
+                Log.d("Debug", "Position: " + DistanceBetweenLatLng(position, mPreviousPosition));
 
                 //Update distance in the ListView
                 mTripListAdapter.notifyDataSetChanged();
@@ -171,11 +186,9 @@ public class TripListActivity extends AppCompatActivity {
             //Notify ListView of the change
             mTripListAdapter.notifyDataSetChanged();
 
-            //Start listening for positions with the receivers
+            //Listen for, and request the route so far, from the TripService
+            mRouteReceiver = new RouteReceiver();
             LocalBroadcastManager.getInstance(this).registerReceiver(mRouteReceiver, new IntentFilter(getString(R.string.BroadcastRouteIntent)));
-            LocalBroadcastManager.getInstance(this).registerReceiver(mLocationReceiver, new IntentFilter(getString(R.string.BroadcastLiveGpsIntent)));
-
-            //Request the route so far
             UpdateRouteBroadcast();
         }
     }
@@ -183,7 +196,6 @@ public class TripListActivity extends AppCompatActivity {
     private void HandleProcessingStatus() {
         if (mIsProcessing) {
             mActiveTrip = new TripListEntry(false, true);
-            mActiveTrip.SetFlags(false, true);
             mTripList.add(0, mActiveTrip);
 
             //Notify ListView of the change

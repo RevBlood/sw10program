@@ -50,7 +50,6 @@ public class LocationListener implements com.google.android.gms.location.Locatio
         BroadcastLiveGps(location);
 
         //Save the observed location
-        Log.d("Debug", location.getLatitude() + ", " + location.getLongitude());
         mEntries.add(location);
     }
 
