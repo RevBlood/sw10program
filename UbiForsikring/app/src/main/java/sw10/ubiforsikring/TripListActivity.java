@@ -75,6 +75,12 @@ public class TripListActivity extends AppCompatActivity {
 
     @Override
     public void onResume() {
+        //Remove active trip from list if relevant
+        if (mActiveTrip != null) {
+            mTripList.remove(mActiveTrip);
+            mTripListAdapter.notifyDataSetChanged();
+        }
+        
         //Whenever activity is resumed, re-assess statuses: Activeness of trip, distance
         //Listen for TripService status
         LocalBroadcastManager.getInstance(this).registerReceiver(mStatusReceiver, new IntentFilter(getString(R.string.BroadcastStatusIntent)));
