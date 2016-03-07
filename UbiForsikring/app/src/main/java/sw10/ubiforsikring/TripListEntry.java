@@ -24,9 +24,4 @@ public class TripListEntry {
         Optimality = optimality;
         Cost = cost;
     }
-
-    public void SetFlags(boolean isActive, boolean isProcessing) {
-        IsActive = isActive;
-        IsProcessing = isProcessing;
-    }
 }

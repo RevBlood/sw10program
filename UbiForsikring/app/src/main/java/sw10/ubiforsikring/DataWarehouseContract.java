@@ -1,12 +1,7 @@
 package sw10.ubiforsikring;
 
 import android.provider.BaseColumns;
-import android.provider.ContactsContract;
-import android.database.sqlite.*;
 
-/**
- * Created by Johan Leth Gregersen on 10-02-2016.
- */
 public final class DataWarehouseContract {
     public DataWarehouseContract(){}
 

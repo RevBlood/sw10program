@@ -19,7 +19,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -80,7 +79,7 @@ public class TripListActivity extends AppCompatActivity {
             mTripList.remove(mActiveTrip);
             mTripListAdapter.notifyDataSetChanged();
         }
-        
+
         //Whenever activity is resumed, re-assess statuses: Activeness of trip, distance
         //Listen for TripService status
         LocalBroadcastManager.getInstance(this).registerReceiver(mStatusReceiver, new IntentFilter(getString(R.string.BroadcastStatusIntent)));

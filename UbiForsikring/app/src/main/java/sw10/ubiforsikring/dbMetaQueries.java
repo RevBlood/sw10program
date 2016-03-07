@@ -1,13 +1,7 @@
 package sw10.ubiforsikring;
 
-import android.graphics.Region;
+//ALT POSTGRES RELATED ER BLOT GEMT I TEXT FORMAT ATM
 
-/**
- * Created by Johan Leth Gregersen on 10-02-2016.
- *
- * ALT POSTGRES RELATED ER BLOT GEMT I TEXT FORMAT ATM
- *
- */
 public class dbMetaQueries {
 
     private static final String COMMA_SEP = ",";
