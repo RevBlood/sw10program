@@ -105,13 +105,6 @@ public class LiveMapActivity extends FragmentActivity implements OnMapReadyCallb
     }
 
     @Override
-    public void onMapReady(GoogleMap googleMap) {
-        //Initialize the map with a polyline
-        mMap = googleMap;
-        mRouteLine = mMap.addPolyline(mRouteOptions);
-    }
-
-    @Override
     public void onResume() {
         //Whenever activity is resumed re-calculate distance before listening for new updates
         LocalBroadcastManager.getInstance(this).registerReceiver(mRouteReceiver, new IntentFilter(getString(R.string.BroadcastRouteIntent)));
@@ -133,16 +126,27 @@ public class LiveMapActivity extends FragmentActivity implements OnMapReadyCallb
         //If activity is paused, stop listening for new locations
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mLocationReceiver);
 
+        //Disconnect from the TripService
+        unbindService(mTripServiceConnection);
+
         //Clear data
         mMap.clear();
         mRoute.clear();
         mStartMarker = null;
         mMarker = null;
+        mTripDistance = 0;
 
         //Stop Live Time from updating until activity is resumed
         mTripTimer.removeCallbacks(mTimerTask);
 
         super.onPause();
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        //Initialize the map with a polyline
+        mMap = googleMap;
+        mRouteLine = mMap.addPolyline(mRouteOptions);
     }
 
     //endregion

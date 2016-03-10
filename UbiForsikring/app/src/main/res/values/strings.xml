@@ -32,7 +32,6 @@
     <string name="LiveTimeTextFormat">HH:mm:ss</string>
     <string name="LiveTimeDefaultText">--:--:--</string>
 
-
     <!-- TRIP LIST -->
     <string name="TripTitle">Tur %d</string>
     <string name="TripCostText">%.2f Dkr</string>
@@ -44,6 +43,23 @@
     <string name="CurrentTripTitle">Igangværende tur</string>
     <string name="CurrentTripDistanceText">%.1f km kørt</string>
     <string name="CurrentTripProcessingText">Tur afsluttet - Din score bliver udregnet</string>
+
+    <!-- TRIP OVERVIEW -->
+    <string name="ShowTripOnMapButtonText">Vis på kort</string>
+    <string name="TripStatisticsButtonText">Statistik</string>
+    <string name="BaseCostText">Kilometer kørt:</string>
+    <string name="BaseCostValue">%.1f km</string>
+    <string name="EnvironmentText">Miljø &amp; trafik:</string>
+    <string name="DrivingStyleText">Din kørsel:</string>
+    <string name="TotalCostText">Din Tur:</string>
+    <string name="CostPlusPercentage">(+%.1f%%) </string>
+    <string name="CostMinusPercentage">(-%.1f%%)</string>
+    <string name="CostPlusValue">+%.1f km</string>
+    <string name="CostMinusValue">-%.1f km</string>
+    <string name="TripIdIntentName">TripId</string>
+    <string name="TripStartText">Tur startet:</string>
+    <string name="TripEndText">Tur afsluttet:</string>
+    <string name="TripPeriodTextFormat">HH:mm dd/MM/yyyy</string>
 
     <!-- TRIP SERVICE -->
     <string name="ServiceNotificationTitle">UBI Forsikring</string>

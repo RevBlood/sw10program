@@ -12,49 +12,53 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <service android:name=".TripService" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
+        <service android:name=".TripService" />
+
         <activity
             android:name=".MainMenuActivity"
             android:label="@string/title_activity_main_menu"
             android:launchMode="singleTask">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
 
         <activity
             android:name=".LiveMapActivity"
             android:label="@string/title_activity_map"
-            android:launchMode="singleTask">
-        </activity>
+            android:launchMode="singleTask" />
 
         <activity
             android:name=".TripListActivity"
             android:label="@string/title_activity_trip_list"
             android:launchMode="singleTask"
-            android:parentActivityName=".MainMenuActivity">
-        </activity>
+            android:parentActivityName=".MainMenuActivity" />
 
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
             android:launchMode="singleTask"
-            android:parentActivityName=".MainMenuActivity">
-        </activity>
+            android:parentActivityName=".MainMenuActivity" />
 
         <activity
             android:name=".TripOverviewActivity"
             android:label="@string/title_activity_trip_overview"
             android:launchMode="singleTask"
-            android:parentActivityName=".TripListActivity">
-        </activity>
+            android:parentActivityName=".TripListActivity" />
+
+        <activity
+            android:name=".TripStatisticsActivity" />
+
+        <activity
+            android:name=".MapDisplayActivity" />
 
     </application>
 

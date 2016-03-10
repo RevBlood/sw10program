@@ -36,8 +36,8 @@ public class MainMenuActivity extends AppCompatActivity {
     Context mContext;
 
     //TripService communication
-    BroadcastReceiver mLocationServiceListener;
-    ServiceConnection mLocationServiceConnection;
+    BroadcastReceiver mStatusReceiver;
+    ServiceConnection mTripServiceConnection;
     static Messenger mMessenger;
 
     //TripService Status
@@ -52,6 +52,7 @@ public class MainMenuActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
         mContext = this;
+        mStatusReceiver = new StatusReceiver();
 
         //Setup buttons
         Button tripButton = (Button) findViewById(R.id.TripButton);
@@ -62,13 +63,28 @@ public class MainMenuActivity extends AppCompatActivity {
 
         Button tripOverviewButton = (Button) findViewById(R.id.TripOverviewButton);
         tripOverviewButton.setOnClickListener(TripOverviewButtonListener);
+    }
 
-        //Listen for TripService status messages
-        mLocationServiceListener = new StatusReceiver();
-        LocalBroadcastManager.getInstance(this).registerReceiver(mLocationServiceListener, new IntentFilter(getString(R.string.BroadcastStatusIntent)));
+    @Override
+    public void onResume() {
+        //Listen for TripService status updates
+        LocalBroadcastManager.getInstance(this).registerReceiver(mStatusReceiver, new IntentFilter(getString(R.string.BroadcastStatusIntent)));
 
-        //Start the TripService and/or bind it to the Menu
+        //Start the TripService and/or bind it to Activity
         InitializeTripService();
+
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        //Disconnect connection to the TripService
+        unbindService(mTripServiceConnection);
+
+        //Stop listening for status updates
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mStatusReceiver);
+
+        super.onPause();
     }
 
     @Override
@@ -206,7 +222,7 @@ public class MainMenuActivity extends AppCompatActivity {
     private void InitializeTripServiceConnection() {
         //Create a connection and a messenger for communication with the service
         //Enable/disable interaction with the service depending on connection status
-        mLocationServiceConnection = new ServiceConnection() {
+        mTripServiceConnection = new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
                 Button tripButton = (Button) findViewById(R.id.TripButton);
@@ -226,7 +242,7 @@ public class MainMenuActivity extends AppCompatActivity {
 
     private void BindTripService(){
         Intent intent = new Intent(this, TripService.class);
-        bindService(intent, mLocationServiceConnection, Context.BIND_AUTO_CREATE);
+        bindService(intent, mTripServiceConnection, Context.BIND_AUTO_CREATE);
     }
 
     private void BeginTrip() {

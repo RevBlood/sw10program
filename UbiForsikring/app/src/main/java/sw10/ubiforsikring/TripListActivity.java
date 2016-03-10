@@ -74,13 +74,12 @@ public class TripListActivity extends AppCompatActivity {
 
     @Override
     public void onResume() {
-        //Remove active trip from list if relevant
+        //Remove previously active trip from list if relevant
         if (mActiveTrip != null) {
             mTripList.remove(mActiveTrip);
             mTripListAdapter.notifyDataSetChanged();
         }
 
-        //Whenever activity is resumed, re-assess statuses: Activeness of trip, distance
         //Listen for TripService status
         LocalBroadcastManager.getInstance(this).registerReceiver(mStatusReceiver, new IntentFilter(getString(R.string.BroadcastStatusIntent)));
 
@@ -93,8 +92,12 @@ public class TripListActivity extends AppCompatActivity {
 
     @Override
     public void onPause() {
-        //If activity is paused, stop listening for new locations
+        //Stop listening for new locations
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mLocationReceiver);
+
+        //Disconnect from TripService
+        unbindService(mTripServiceConnection);
+
         super.onPause();
     }
 
@@ -111,7 +114,9 @@ public class TripListActivity extends AppCompatActivity {
             if(itemType == TripListAdapter.VIEWTYPE_CURRENT) {
                 startActivity(new Intent(mContext, LiveMapActivity.class));
             } else {
-                startActivity(new Intent(mContext, TripOverviewActivity.class));
+                Intent intent = new Intent(mContext, TripOverviewActivity.class);
+                intent.putExtra(getString(R.string.TripIdIntentName), mTripList.get(position).TripId);
+                startActivity(intent);
             }
         }
     };
@@ -231,7 +236,7 @@ public class TripListActivity extends AppCompatActivity {
         };
     }
 
-    private void BindTripService(){
+    private void BindTripService() {
         Intent intent = new Intent(this, TripService.class);
         bindService(intent, mTripServiceConnection, Context.BIND_AUTO_CREATE);
     }
