@@ -60,6 +60,12 @@
     <string name="TripStartText">Tur startet:</string>
     <string name="TripEndText">Tur afsluttet:</string>
     <string name="TripPeriodTextFormat">HH:mm dd/MM/yyyy</string>
+    <string name="SpeedMetricName">Hastighed</string>
+    <string name="AccelerationMetricName">Acceleration</string>
+    <string name="BrakeMetricName">Opbremsning</string>
+    <string name="JerkMetricName">Ryk</string>
+    <string name="RoadTypeMetricName">Vejtyper</string>
+    <string name="CriticalTimeMetricName">Tidsperioder</string>
 
     <!-- TRIP SERVICE -->
     <string name="ServiceNotificationTitle">UBI Forsikring</string>
