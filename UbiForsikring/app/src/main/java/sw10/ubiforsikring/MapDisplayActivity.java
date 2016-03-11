@@ -7,26 +7,32 @@ import android.support.v4.content.ContextCompat;
 import android.os.Bundle;
 import android.view.View;
 
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MapDisplayActivity extends FragmentActivity implements OnMapReadyCallback {
     long mTripId;
 
     //Map
     GoogleMap mMap;
+    List<LatLng> mRoute;
     Polyline mRouteLine;
     PolylineOptions mRouteOptions;
     MarkerOptions mStartMarkerOptions;
     MarkerOptions mEndMarkerOptions;
-    Marker mStartMarker;
-    Marker mEndMarker;
 
     //region ACTIVITY EVENTS
 
@@ -34,6 +40,7 @@ public class MapDisplayActivity extends FragmentActivity implements OnMapReadyCa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_display);
+        mRoute = new ArrayList<>();
 
         //Get trip id for which data to display
         Intent intent = getIntent();
@@ -65,12 +72,16 @@ public class MapDisplayActivity extends FragmentActivity implements OnMapReadyCa
 
     @Override
     public void onResume() {
-        //Redraw polyline, if GoogleMap is ready
-        if (mMap != null) {
-            mRouteLine = mMap.addPolyline(mRouteOptions);
-        }
+        //TODO: Fetch the actual route
+        mRoute.add(new LatLng(6.8, 4.4));
+        mRoute.add(new LatLng(6.7, 4.3));
 
-        //TODO: Fetch route here
+        //Draw on map, if ready
+        if (mMap != null) {
+            PlaceMarkers();
+            PlaceRoute();
+            CenterRoute();
+        }
 
         super.onResume();
     }
@@ -79,8 +90,7 @@ public class MapDisplayActivity extends FragmentActivity implements OnMapReadyCa
     public void onPause() {
         //Clear data from map
         mMap.clear();
-        mStartMarker = null;
-        mEndMarker = null;
+        mRoute.clear();
 
         super.onPause();
     }
@@ -89,7 +99,9 @@ public class MapDisplayActivity extends FragmentActivity implements OnMapReadyCa
     public void onMapReady(GoogleMap googleMap) {
         //Initialize the map with a polyline
         mMap = googleMap;
-        mRouteLine = mMap.addPolyline(mRouteOptions);
+        PlaceMarkers();
+        PlaceRoute();
+        mMap.setOnMapLoadedCallback(MapLoadedCallback);
     }
 
     //endregion
@@ -103,9 +115,35 @@ public class MapDisplayActivity extends FragmentActivity implements OnMapReadyCa
         }
     };
 
+    GoogleMap.OnMapLoadedCallback MapLoadedCallback = new GoogleMap.OnMapLoadedCallback() {
+        @Override
+        public void onMapLoaded() {
+            CenterRoute();
+        }
+    };
+
     //endregion
 
     private void CenterRoute() {
-        //TODO: Zoom to route
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+        for (LatLng position : mRoute) {
+            builder.include(position);
+        }
+
+        LatLngBounds bounds = builder.build();
+        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, getResources().getInteger(R.integer.ZoomToRoutePadding));
+        mMap.animateCamera(cu);
+    }
+
+    private void PlaceMarkers() {
+        mStartMarkerOptions.position(mRoute.get(0));
+        mEndMarkerOptions.position(mRoute.get(mRoute.size() - 1));
+        mMap.addMarker(mStartMarkerOptions);
+        mMap.addMarker(mEndMarkerOptions);
+    }
+
+    private void PlaceRoute() {
+        mRouteLine = mMap.addPolyline(mRouteOptions);
+        mRouteLine.setPoints(mRoute);
     }
 }
