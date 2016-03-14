@@ -151,7 +151,7 @@ public class MainMenuActivity extends AppCompatActivity {
 
     Button.OnClickListener CompetitionsButtonListener = new Button.OnClickListener() {
         public void onClick(View v) {
-            Toast.makeText(mContext, R.string.TripStartToast, Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, R.string.CompetitionsToast, Toast.LENGTH_SHORT).show();
         }
     };
 
