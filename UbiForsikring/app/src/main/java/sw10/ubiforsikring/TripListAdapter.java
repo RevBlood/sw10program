@@ -15,13 +15,15 @@ public class TripListAdapter extends ArrayAdapter<TripListEntry> {
     final static int VIEWTYPE_HISTORICAL = 0;
     final static int VIEWTYPE_CURRENT = 1;
 
-    Context mContext;
     List<TripListEntry> mTrips;
+    LayoutInflater mInflater;
+    Context mContext;
     SimpleDateFormat mSdf;
 
     public TripListAdapter(Context context, List<TripListEntry> trips) {
         super(context, -1, trips);
         mContext = context;
+        mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mTrips = trips;
 
         //Date format for printing out trip timestamps
@@ -54,8 +56,7 @@ public class TripListAdapter extends ArrayAdapter<TripListEntry> {
             case VIEWTYPE_HISTORICAL:
                 //If a ViewHolder does not exist for this view, create it
                 if (rowView == null) {
-                    LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                    rowView = inflater.inflate(R.layout.listitem_trip_historical, parent, false);
+                    rowView = mInflater.inflate(R.layout.listitem_trip_historical, parent, false);
 
                     HistoricalViewHolder historicalViewHolder = new HistoricalViewHolder();
                     historicalViewHolder.TripTitleView = (TextView) rowView.findViewById(R.id.TripTitleView);
@@ -82,8 +83,7 @@ public class TripListAdapter extends ArrayAdapter<TripListEntry> {
             case VIEWTYPE_CURRENT:
                 //If a ViewHolder does not exist for this view, create it
                 if (rowView == null) {
-                    LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                    rowView = inflater.inflate(R.layout.listitem_trip_current, parent, false);
+                    rowView = mInflater.inflate(R.layout.listitem_trip_current, parent, false);
 
                     CurrentViewHolder currentViewHolder = new CurrentViewHolder();
                     currentViewHolder.CurrentTripTitleView = (TextView) rowView.findViewById(R.id.CurrentTripTitleView);

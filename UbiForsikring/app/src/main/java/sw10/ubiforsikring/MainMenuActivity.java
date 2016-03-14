@@ -63,6 +63,9 @@ public class MainMenuActivity extends AppCompatActivity {
 
         Button tripOverviewButton = (Button) findViewById(R.id.TripOverviewButton);
         tripOverviewButton.setOnClickListener(TripOverviewButtonListener);
+
+        Button competitionsButton = (Button) findViewById(R.id.CompetitionsButton);
+        competitionsButton.setOnClickListener(CompetitionsButtonListener);
     }
 
     @Override
@@ -143,6 +146,12 @@ public class MainMenuActivity extends AppCompatActivity {
     Button.OnClickListener TripOverviewButtonListener = new Button.OnClickListener() {
         public void onClick(View v) {
             startActivity(new Intent(mContext, TripListActivity.class));
+        }
+    };
+
+    Button.OnClickListener CompetitionsButtonListener = new Button.OnClickListener() {
+        public void onClick(View v) {
+            Toast.makeText(mContext, R.string.TripStartToast, Toast.LENGTH_SHORT).show();
         }
     };
 

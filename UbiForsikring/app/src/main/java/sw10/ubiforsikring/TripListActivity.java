@@ -65,11 +65,11 @@ public class TripListActivity extends AppCompatActivity {
         mTripList.add(0, new TripListEntry(7, 10000000, 11000000, 20100, 39, 28.34));
 
         //Setup ListView
-        ListView mainListView = (ListView) findViewById(R.id.TripOverviewListView);
+        ListView tripListView = (ListView) findViewById(R.id.TripOverviewListView);
         mTripListAdapter = new TripListAdapter(this, mTripList);
-        mainListView.setAdapter(mTripListAdapter);
-        mainListView.setOnItemClickListener(MainListViewListener);
-        mainListView.setEmptyView(findViewById(R.id.MainListViewEmpty));
+        tripListView.setAdapter(mTripListAdapter);
+        tripListView.setOnItemClickListener(MainListViewListener);
+        tripListView.setEmptyView(findViewById(R.id.MainListViewEmpty));
     }
 
     @Override

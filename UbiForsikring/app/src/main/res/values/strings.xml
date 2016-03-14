@@ -24,6 +24,7 @@
 
     <string name="TripStartToast">Starter tur</string>
     <string name="TripStopToast">Stopper tur</string>
+    <string name="CompetitionsToast">Denne feature kommer snart</string>
     <string name="OnBackPressedToast">Stop venligst tur inden afslutning</string>
 
     <!-- LIVE MAP -->
@@ -66,6 +67,16 @@
     <string name="JerkMetricName">Ryk</string>
     <string name="RoadTypeMetricName">Vejtyper</string>
     <string name="CriticalTimeMetricName">Tidsperioder</string>
+
+    <!-- TRIP STATISTICS -->
+    <string name="DelinquencyOptimality">%d%%</string>
+    <string name="DelinquencyCost">%.2f Dkr</string>
+    <string name="DistancePerHundredText">%s km pr. 100 km</string>
+    <string name="CountPerHundredText">%s pr. 100 km</string>
+    <string name="RoadTypeText">Kørt mest på %s</string>
+    <string name="CriticalTimeText">Kørt %s</string>
+    <string name="SpeedText">%.1f km kørt for hurtigt</string>
+    <string name="AccelerationCountText">%d forseelser</string>
 
     <!-- TRIP SERVICE -->
     <string name="ServiceNotificationTitle">UBI Forsikring</string>
