@@ -155,7 +155,6 @@ public class MainMenuActivity extends AppCompatActivity {
         }
     };
 
-
     //endregion
 
     //region INCOMING EVENTS

@@ -18,13 +18,28 @@ public class TripStatisticsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trip_statistics);
+        mEntryList = new ArrayList<>();
 
         //Get trip id for which data to display
         Intent intent = getIntent();
         mTripId = intent.getLongExtra(getString(R.string.TripIdIntentName), -1);
 
+        //Setup ListView
+        ListView tripStatisticsListView = (ListView) findViewById(R.id.TripStatisticsListView);
+        mTripStatisticsAdapter = new TripStatisticsAdapter(this, mEntryList);
+        tripStatisticsListView.setAdapter(mTripStatisticsAdapter);
+
+        //Setup text
+        TextView tripTitleView = (TextView) findViewById(R.id.TripTitleView);
+        TextView tripDescriptionView = (TextView) findViewById(R.id.TripDescriptionView);
+        TextView totalCostView = (TextView) findViewById(R.id.TotalCostView);
+
+        tripTitleView.setText(String.format(getString(R.string.TripTitle), mTripId));
+    }
+
+    @Override
+    public void onResume() {
         //TODO: Remove test data
-        mEntryList = new ArrayList<>();
         mEntryList.add(new TripStatisticsEntry(getString(R.string.DrivingStyleText)));
         mEntryList.add(new TripStatisticsEntry(
                 getString(R.string.SpeedMetricName),
@@ -64,16 +79,14 @@ public class TripStatisticsActivity extends AppCompatActivity {
                 String.format(getString(R.string.CriticalTimeText), "om natten"),
                 ""));
 
-        //Setup ListView
-        ListView tripStatisticsListView = (ListView) findViewById(R.id.TripStatisticsListView);
-        mTripStatisticsAdapter = new TripStatisticsAdapter(this, mEntryList);
-        tripStatisticsListView.setAdapter(mTripStatisticsAdapter);
+        mTripStatisticsAdapter.notifyDataSetChanged();
+        super.onResume();
+    }
 
-        //Setup text
-        TextView tripTitleView = (TextView) findViewById(R.id.TripTitleView);
-        TextView tripDescriptionView = (TextView) findViewById(R.id.TripDescriptionView);
-        TextView totalCostView = (TextView) findViewById(R.id.TotalCostView);
-
-        tripTitleView.setText(String.format(getString(R.string.TripTitle), mTripId));
+    @Override
+    public void onPause() {
+        mEntryList.clear();
+        mTripStatisticsAdapter.notifyDataSetChanged();
+        super.onPause();
     }
 }
