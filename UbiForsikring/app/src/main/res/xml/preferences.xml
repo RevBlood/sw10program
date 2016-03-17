@@ -3,6 +3,16 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory
+        android:title="@string/SettingsCategoryUser">
+
+        <EditTextPreference
+            android:title="@string/UserIdTitle"
+            android:key="@string/UserIdTitle"
+            android:numeric="integer"
+            android:defaultValue="0"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory
         android:title="@string/SettingsCategoryStorage">
 
         <SwitchPreference

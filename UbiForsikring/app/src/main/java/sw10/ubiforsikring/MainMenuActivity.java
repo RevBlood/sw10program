@@ -14,6 +14,7 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
+import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
@@ -123,16 +124,20 @@ public class MainMenuActivity extends AppCompatActivity {
     //region LISTENERS
     Button.OnClickListener TripButtonListener = new Button.OnClickListener() {
         public void onClick(View v) {
-            //Send message to TripService to start/stop the trip
-            if (!mIsTripActive) {
-                //Ensure TripService is running before starting trip
-                InitializeTripService();
-
-                BeginTrip();
-                Toast.makeText(mContext, R.string.TripStartToast, Toast.LENGTH_SHORT).show();
+            if(!VerifyUserId()) {
+                Toast.makeText(mContext, getString(R.string.UserIdNotSetToast), Toast.LENGTH_SHORT).show();
             } else {
-                EndTrip();
-                Toast.makeText(mContext, R.string.TripStopToast, Toast.LENGTH_SHORT).show();
+                //Send message to TripService to start/stop the trip
+                if (!mIsTripActive) {
+                    //Ensure TripService is running before starting trip
+                    InitializeTripService();
+
+                    BeginTrip();
+                    Toast.makeText(mContext, R.string.TripStartToast, Toast.LENGTH_SHORT).show();
+                } else {
+                    EndTrip();
+                    Toast.makeText(mContext, R.string.TripStopToast, Toast.LENGTH_SHORT).show();
+                }
             }
         }
     };
@@ -291,6 +296,11 @@ public class MainMenuActivity extends AppCompatActivity {
         }
     }
     //endregion
+
+    private boolean VerifyUserId() {
+        int userId = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(this).getString(getString(R.string.UserIdTitle), "0"));
+        return userId != 0;
+    }
 
     //TODO: Delete logcat section?
     //region LOGCAT

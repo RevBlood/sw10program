@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.preference.SwitchPreference;
 import android.widget.Toast;
@@ -29,6 +30,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         //Listen for preference changes
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
         ToggleOfflineSettings();
+        UpdateUserIdSummary(PreferenceManager.getDefaultSharedPreferences(getActivity()));
 
         super.onResume();
     }
@@ -45,6 +47,10 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         if(key.equals(getString(R.string.SyncOnlineSettingTitle))) {
             ToggleOfflineSettings();
         }
+
+        if(key.equals(getString(R.string.UserIdTitle))) {
+            UpdateUserIdSummary(sharedPreferences);
+            }
     }
 
     private void ToggleOfflineSettings() {
@@ -55,6 +61,10 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         } else {
             getPreferenceScreen().findPreference(getString(R.string.DeleteAfterSettingTitle)).setEnabled(true);
         }
+    }
+
+    private void UpdateUserIdSummary(SharedPreferences sharedPreferences) {
+        getPreferenceScreen().findPreference(getString(R.string.UserIdTitle)).setSummary(sharedPreferences.getString(getString(R.string.UserIdTitle), "0"));
     }
 
     private Preference.OnPreferenceClickListener OnHelpClickListener = new Preference.OnPreferenceClickListener() {

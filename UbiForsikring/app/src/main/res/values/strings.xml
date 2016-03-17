@@ -22,6 +22,7 @@
     <string name="TripOverviewButtonTitle">Turliste</string>
     <string name="CompetitionsButtonTitle">Konkurrencer</string>
 
+    <string name="UserIdNotSetToast">Sæt venligst dit bruger ID under indstillinger før du starter en tur</string>
     <string name="TripStartToast">Starter tur</string>
     <string name="TripStopToast">Stopper tur</string>
     <string name="CompetitionsToast">Denne feature kommer snart</string>
@@ -79,10 +80,12 @@
     <string name="AccelerationCountText">%d forseelser</string>
 
     <!-- SETTINGS ACTIVITY -->
+    <string name="SettingsCategoryUser">Bruger</string>
     <string name="SettingsCategoryStorage">Lager</string>
     <string name="SettingsCategorySupport">Support</string>
     <string name="SettingsCategoryAbout">Om</string>
 
+    <string name="UserIdTitle">Bruger ID</string>
     <string name="SyncOnlineSettingTitle">Gem ture online</string>
     <string name="SyncOnlineSettingDescription">Spar plads på din enhed og gem dine ture i skyen</string>
     <string name="DeleteAfterSettingTitle">Slet ture på enhed efter</string>
