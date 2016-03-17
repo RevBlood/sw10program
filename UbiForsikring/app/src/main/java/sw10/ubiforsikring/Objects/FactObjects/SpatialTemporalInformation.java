@@ -15,7 +15,7 @@ public class SpatialTemporalInformation {
     public long TripId;
     public Location Point;
     public Location MPoint;
-    public double DistanceToLag;
+    public Double DistanceToLag;
     public String PathLine;
     public int SecondsToLag;
 
@@ -53,12 +53,21 @@ public class SpatialTemporalInformation {
     public JSONObject serializeSpatialToJSON(){
         JSONObject obj = new JSONObject();
         try{
-            obj.put("pointlat", Point.getLatitude());
-            obj.put("pointlng", Point.getLongitude());
-            obj.put("mpointlat", MPoint.getLatitude());
-            obj.put("mpointlng", MPoint.getLongitude());
-            obj.put("distancetolag", DistanceToLag);
-            obj.put("pathline", PathLine);
+            if(Point != null) {
+                obj.put("pointlat", Point.getLatitude());
+                obj.put("pointlng", Point.getLongitude());
+            }
+            if(MPoint != null) {
+                obj.put("mpointlat", MPoint.getLatitude());
+                obj.put("mpointlng", MPoint.getLongitude());
+            }
+            if(DistanceToLag != null) {
+                obj.put("distancetolag", DistanceToLag);
+
+            }
+            if(PathLine != null) {
+                obj.put("pathline", PathLine);
+            }
         } catch(Exception e) {
             Log.e("Debug", "SpatialInformation - Serialize:", e);
         }
