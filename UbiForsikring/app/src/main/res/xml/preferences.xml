@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="@string/SettingsCategoryUser">
+
+        <EditTextPreference
+            android:title="@string/UserIdTitle"
+            android:key="@string/UserIdTitle"
+            android:numeric="integer"
+            android:defaultValue="0"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/SettingsCategoryStorage">
+
+        <SwitchPreference
+            android:title="@string/SyncOnlineSettingTitle"
+            android:key="@string/SyncOnlineSettingTitle"
+            android:summary="@string/SyncOnlineSettingDescription"
+            android:defaultValue="false" />
+
+        <ListPreference
+            android:title="@string/DeleteAfterSettingTitle"
+            android:key="@string/DeleteAfterSettingTitle"
+            android:summary="%s"
+            android:entries="@array/DeleteAfterSettingOptions"
+            android:entryValues="@array/DeleteAfterSettingValues"
+            android:defaultValue="0"
+            android:enabled="false"
+            />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/SettingsCategorySupport" >
+
+        <Preference
+            android:title="@string/HelpSettingTitle"
+            android:key="@string/HelpSettingTitle"
+            />
+
+        <Preference
+            android:title="@string/FeedbackSettingTitle"
+            android:key="@string/FeedbackSettingTitle"
+            />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/SettingsCategoryAbout" >
+
+        <Preference
+            android:title="@string/AboutSettingTitle"
+            android:key="@string/AboutSettingTitle"
+            />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

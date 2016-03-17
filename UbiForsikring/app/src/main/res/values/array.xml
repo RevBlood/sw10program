@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="DeleteAfterSettingOptions">
+        <item>Aldrig</item>
+        <item>7 dage</item>
+        <item>14 dage</item>
+        <item>1 måned</item>
+        <item>3 måneder</item>
+        <item>6 måneder</item>
+        <item>1 år</item>
+    </string-array>
+
+    <string-array name="DeleteAfterSettingValues">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+    </string-array>
+
+</resources>

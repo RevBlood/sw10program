@@ -64,7 +64,7 @@
 
             <Button
                 android:id="@+id/TripButton"
-                android:layout_width="300dp"
+                android:layout_width="match_parent"
                 android:layout_height="120dp"
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="20dp"

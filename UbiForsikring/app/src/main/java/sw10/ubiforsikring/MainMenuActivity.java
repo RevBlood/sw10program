@@ -14,6 +14,7 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
+import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
@@ -36,8 +37,8 @@ public class MainMenuActivity extends AppCompatActivity {
     Context mContext;
 
     //TripService communication
-    BroadcastReceiver mLocationServiceListener;
-    ServiceConnection mLocationServiceConnection;
+    BroadcastReceiver mStatusReceiver;
+    ServiceConnection mTripServiceConnection;
     static Messenger mMessenger;
 
     //TripService Status
@@ -52,6 +53,7 @@ public class MainMenuActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
         mContext = this;
+        mStatusReceiver = new StatusReceiver();
 
         //Setup buttons
         Button tripButton = (Button) findViewById(R.id.TripButton);
@@ -63,12 +65,30 @@ public class MainMenuActivity extends AppCompatActivity {
         Button tripOverviewButton = (Button) findViewById(R.id.TripOverviewButton);
         tripOverviewButton.setOnClickListener(TripOverviewButtonListener);
 
-        //Listen for TripService status messages
-        mLocationServiceListener = new StatusReceiver();
-        LocalBroadcastManager.getInstance(this).registerReceiver(mLocationServiceListener, new IntentFilter(getString(R.string.BroadcastStatusIntent)));
+        Button competitionsButton = (Button) findViewById(R.id.CompetitionsButton);
+        competitionsButton.setOnClickListener(CompetitionsButtonListener);
+    }
 
-        //Start the TripService and/or bind it to the Menu
+    @Override
+    public void onResume() {
+        //Listen for TripService status updates
+        LocalBroadcastManager.getInstance(this).registerReceiver(mStatusReceiver, new IntentFilter(getString(R.string.BroadcastStatusIntent)));
+
+        //Start the TripService and/or bind it to Activity
         InitializeTripService();
+
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        //Disconnect connection to the TripService
+        unbindService(mTripServiceConnection);
+
+        //Stop listening for status updates
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mStatusReceiver);
+
+        super.onPause();
     }
 
     @Override
@@ -104,16 +124,20 @@ public class MainMenuActivity extends AppCompatActivity {
     //region LISTENERS
     Button.OnClickListener TripButtonListener = new Button.OnClickListener() {
         public void onClick(View v) {
-            //Send message to TripService to start/stop the trip
-            if (!mIsTripActive) {
-                //Ensure TripService is running before starting trip
-                InitializeTripService();
-
-                BeginTrip();
-                Toast.makeText(mContext, R.string.TripStartToast, Toast.LENGTH_SHORT).show();
+            if(!VerifyUserId()) {
+                Toast.makeText(mContext, getString(R.string.UserIdNotSetToast), Toast.LENGTH_SHORT).show();
             } else {
-                EndTrip();
-                Toast.makeText(mContext, R.string.TripStopToast, Toast.LENGTH_SHORT).show();
+                //Send message to TripService to start/stop the trip
+                if (!mIsTripActive) {
+                    //Ensure TripService is running before starting trip
+                    InitializeTripService();
+
+                    BeginTrip();
+                    Toast.makeText(mContext, R.string.TripStartToast, Toast.LENGTH_SHORT).show();
+                } else {
+                    EndTrip();
+                    Toast.makeText(mContext, R.string.TripStopToast, Toast.LENGTH_SHORT).show();
+                }
             }
         }
     };
@@ -130,6 +154,11 @@ public class MainMenuActivity extends AppCompatActivity {
         }
     };
 
+    Button.OnClickListener CompetitionsButtonListener = new Button.OnClickListener() {
+        public void onClick(View v) {
+            Toast.makeText(mContext, R.string.CompetitionsToast, Toast.LENGTH_SHORT).show();
+        }
+    };
 
     //endregion
 
@@ -206,7 +235,7 @@ public class MainMenuActivity extends AppCompatActivity {
     private void InitializeTripServiceConnection() {
         //Create a connection and a messenger for communication with the service
         //Enable/disable interaction with the service depending on connection status
-        mLocationServiceConnection = new ServiceConnection() {
+        mTripServiceConnection = new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
                 Button tripButton = (Button) findViewById(R.id.TripButton);
@@ -226,7 +255,7 @@ public class MainMenuActivity extends AppCompatActivity {
 
     private void BindTripService(){
         Intent intent = new Intent(this, TripService.class);
-        bindService(intent, mLocationServiceConnection, Context.BIND_AUTO_CREATE);
+        bindService(intent, mTripServiceConnection, Context.BIND_AUTO_CREATE);
     }
 
     private void BeginTrip() {
@@ -267,6 +296,11 @@ public class MainMenuActivity extends AppCompatActivity {
         }
     }
     //endregion
+
+    private boolean VerifyUserId() {
+        int userId = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(this).getString(getString(R.string.UserIdTitle), "0"));
+        return userId != 0;
+    }
 
     //TODO: Delete logcat section?
     //region LOGCAT

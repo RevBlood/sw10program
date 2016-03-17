@@ -50,10 +50,10 @@ public class LiveMapActivity extends FragmentActivity implements OnMapReadyCallb
     List<LatLng> mRoute;
     Polyline mRouteLine;
     PolylineOptions mRouteOptions;
-    MarkerOptions mMarkerOptions;
     MarkerOptions mStartMarkerOptions;
-    Marker mMarker;
+    MarkerOptions mCurrentMarkerOptions;
     Marker mStartMarker;
+    Marker mCurrentMarker;
     GoogleMap.CancelableCallback mAnimationCallback;
     boolean mKeepAnimating = true;
 
@@ -86,9 +86,9 @@ public class LiveMapActivity extends FragmentActivity implements OnMapReadyCallb
         mRouteOptions.width(getResources().getInteger(R.integer.LiveGpsRouteWidth));
 
         //Define how the position marker looks
-        mMarkerOptions = new MarkerOptions();
-        mMarkerOptions.icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher));
-        mMarkerOptions.anchor(0.5f, 0.5f);
+        mCurrentMarkerOptions = new MarkerOptions();
+        mCurrentMarkerOptions.icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher));
+        mCurrentMarkerOptions.anchor(0.5f, 0.5f);
 
         //Define how the start marker looks
         mStartMarkerOptions = new MarkerOptions();
@@ -102,13 +102,6 @@ public class LiveMapActivity extends FragmentActivity implements OnMapReadyCallb
         //Set a listener for the Floating Action Button
         FloatingActionButton trackRouteButton = (FloatingActionButton) findViewById(R.id.TrackRouteButton);
         trackRouteButton.setOnClickListener(OnTrackRouteListener);
-    }
-
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        //Initialize the map with a polyline
-        mMap = googleMap;
-        mRouteLine = mMap.addPolyline(mRouteOptions);
     }
 
     @Override
@@ -133,11 +126,15 @@ public class LiveMapActivity extends FragmentActivity implements OnMapReadyCallb
         //If activity is paused, stop listening for new locations
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mLocationReceiver);
 
+        //Disconnect from the TripService
+        unbindService(mTripServiceConnection);
+
         //Clear data
         mMap.clear();
         mRoute.clear();
         mStartMarker = null;
-        mMarker = null;
+        mCurrentMarker = null;
+        mTripDistance = 0;
 
         //Stop Live Time from updating until activity is resumed
         mTripTimer.removeCallbacks(mTimerTask);
@@ -145,9 +142,17 @@ public class LiveMapActivity extends FragmentActivity implements OnMapReadyCallb
         super.onPause();
     }
 
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        //Initialize the map with a polyline
+        mMap = googleMap;
+        mRouteLine = mMap.addPolyline(mRouteOptions);
+    }
+
     //endregion
 
     //region LISTENERS
+
     FloatingActionButton.OnClickListener OnTrackRouteListener = new FloatingActionButton.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -320,13 +325,13 @@ public class LiveMapActivity extends FragmentActivity implements OnMapReadyCallb
             }
 
             //If marker exists, remove it
-            if(mMarker != null) {
-                mMarker.remove();
+            if(mCurrentMarker != null) {
+                mCurrentMarker.remove();
             }
 
             //Place new marker
-            mMarkerOptions.position(position);
-            mMarker = mMap.addMarker(mMarkerOptions);
+            mCurrentMarkerOptions.position(position);
+            mCurrentMarker = mMap.addMarker(mCurrentMarkerOptions);
 
             //Update distance view
             TextView liveDistanceView = (TextView) findViewById(R.id.LiveDistanceView);
