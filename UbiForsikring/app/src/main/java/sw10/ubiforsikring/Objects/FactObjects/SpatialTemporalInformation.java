@@ -29,6 +29,10 @@ public class SpatialTemporalInformation {
         this.SecondsToLag = SecondsToLag;
     }
 
+    public SpatialTemporalInformation(Location point) {
+        Point = point;
+    }
+
     public SpatialTemporalInformation(JSONObject objSpatial, JSONObject objTemporal) {
         try {
             this.Point = new Location("");
