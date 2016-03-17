@@ -60,6 +60,7 @@ public class HTTPHelper {
     public static class HTTPGetTask extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... url) {
+
             try {
                 URL obj = new URL(url[0]);
                 HttpURLConnection con = (HttpURLConnection) obj.openConnection();
@@ -83,6 +84,7 @@ public class HTTPHelper {
                 }
 
                 in.close();
+                con.disconnect();
 
                 return response.toString();
 

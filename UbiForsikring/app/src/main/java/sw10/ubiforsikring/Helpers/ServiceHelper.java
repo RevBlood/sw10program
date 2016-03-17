@@ -5,19 +5,17 @@ import android.util.Log;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.List;
 
 import sw10.ubiforsikring.Objects.FactObjects.Fact;
-import sw10.ubiforsikring.Objects.TripObjects.Trip;
+import sw10.ubiforsikring.Objects.TripObjects.TripListItem;
 
 
 public class ServiceHelper {
-	//private static String ip = "192.168.87.102";
-	private static String ip = "192.168.43.123";
+	private static String ip = "192.168.87.102";
+	//private static String ip = "192.168.43.123";
 	//Getters
-	public static Trip GetTrip(int carid, int tripid){
+	public static TripListItem GetTrip(int carid, int tripid){
 		String response = null;
 		try {
 			response = HTTPHelper.HTTPGet("http://" + ip + ":8000/RestService/Trip/GetTrip?carid=" + carid + "&tripid=" + tripid);
@@ -26,16 +24,41 @@ public class ServiceHelper {
 			e.printStackTrace();
 		}
 		Log.i("Debug", response);
-		Trip trip = null;
+		TripListItem tripListItem = null;
 
 		try {
 			JSONObject js = new JSONObject(response);
-			trip = new Trip(js);
+			tripListItem = new TripListItem(js);
 		}
 		catch(Exception e) {
 
 		}
-		return trip;
+		return tripListItem;
+	}
+
+	public static ArrayList<TripListItem> GetTripsForListview(int carid, int offset){
+		String response = "Empty response";
+		try {
+			response = HTTPHelper.HTTPGet("http://" + ip + ":8000/RestService/Trip/GetTripsForOverview?carid=" + carid + "&offset=" + offset);
+			Log.i("Debug", response);
+		} catch (Exception e) {
+			Log.i("Debug", "Response failure:", e);
+		}
+
+		ArrayList<TripListItem> tripListItems = new ArrayList<TripListItem>();
+
+		try {
+			JSONArray jsonArr = new JSONArray(response);
+			for(int i = 0; i < jsonArr.length(); i++){
+				JSONObject obj = jsonArr.getJSONObject(i);
+				TripListItem tripListItem = new TripListItem(obj);
+				tripListItems.add(tripListItem);
+			}
+		}
+		catch(Exception e) {
+			Log.e("Debug", "GetTripsForListview:", e);
+		}
+		return tripListItems;
 	}
 
 	public static ArrayList<Fact> GetFacts(int carid, int tripid){

@@ -8,7 +8,7 @@ import java.util.Date;
 
 import sw10.ubiforsikring.Helpers.DateObjectHelper;
 
-public class Trip {
+public class TripListItem {
     public long TripId;
     public Date TripStart;
     public Date TripEnd;
@@ -18,28 +18,16 @@ public class Trip {
     public double OptimalScore;
     public double TripScore;
 
-    public double MetersSped;
-    public int AccelerationCount;
-    public int BrakeCount;
-    public int JerkCount;
-    public int RoadtypeMajority;
-    public int TimePeriodMajority;
-
-    public double SpeedingScore;
-    public double AccelerationScore;
-    public double BrakingScore;
-    public double JerkingScore;
-    public double RoadtypeScore;
-    public double TimePeriodScore;
-
+    public long PreviousTripId;
+    public int CarId;
     public boolean IsActive = false;
     public boolean IsProcessing = false;
 
-    public Trip(){
+    public TripListItem(){
 
     }
 
-    public Trip(JSONObject obj) {
+    public TripListItem(JSONObject obj) {
         try {
             this.TripId = obj.getLong("tripid");
             this.TripStart = DateObjectHelper.CreateDateObject(new JSONObject(obj.getString("starttemporal")).getString("timestamp"));
