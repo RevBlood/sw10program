@@ -12,6 +12,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
@@ -28,6 +29,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import sw10.ubiforsikring.Helpers.MeasureHelper;
+import sw10.ubiforsikring.Helpers.ServiceHelper;
+import sw10.ubiforsikring.Objects.FactObjects.Fact;
+import sw10.ubiforsikring.Objects.FactObjects.SpatialTemporalInformation;
 
 public class TripService extends Service implements ConnectionCallbacks, OnConnectionFailedListener {
     //Method Handles
@@ -38,7 +42,7 @@ public class TripService extends Service implements ConnectionCallbacks, OnConne
 
     //Status
     boolean mIsConnected = false;
-    boolean mIsDriving = false;
+    boolean mIsTripActive = false;
     boolean mIsProcessing = false;
 
     Messenger mMessenger = new Messenger(new IncomingHandler());
@@ -143,7 +147,7 @@ public class TripService extends Service implements ConnectionCallbacks, OnConne
         mLocationListener.UpdateMovementTimer();
 
         //Broadcast the new status
-        mIsDriving = true;
+        mIsTripActive = true;
         UpdateStatusBroadcast();
     }
 
@@ -163,11 +167,11 @@ public class TripService extends Service implements ConnectionCallbacks, OnConne
         mLocationListener.ClearMovementNotification();
 
         //Get the logged entries from the LocationListener, and clear them afterwards
-        List<Location> entries = mLocationListener.GetEntries();
+        List<Location> entries = new ArrayList<>(mLocationListener.GetEntries());
         mLocationListener.ClearEntries();
 
         //Broadcast the updated status and begin processing the trip
-        mIsDriving = false;
+        mIsTripActive = false;
         mIsProcessing = true;
         UpdateStatusBroadcast();
 
@@ -178,7 +182,7 @@ public class TripService extends Service implements ConnectionCallbacks, OnConne
         //Save status variables to intent
         Intent intent = new Intent(this.getString(R.string.BroadcastStatusIntent));
         intent.putExtra(getString(R.string.BroadcastIsConnected), mIsConnected);
-        intent.putExtra(getString(R.string.BroadcastIsTripActive), mIsDriving);
+        intent.putExtra(getString(R.string.BroadcastIsTripActive), mIsTripActive);
         intent.putExtra(getString(R.string.BroadcastIsProcessing), mIsProcessing);
 
         //Send the broadcast
@@ -213,6 +217,30 @@ public class TripService extends Service implements ConnectionCallbacks, OnConne
         mDrivingNotification = notificationBuilder.build();
     }
 
+    private void ProcessTripRaw(List<Location> entries) {
+        ArrayList<Fact> facts = new ArrayList<>();
+
+        int userId = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(this).getString(getString(R.string.UserIdTitle), "0"));
+
+
+        for (Location entry : entries) {
+            facts.add(new Fact(userId, new SpatialTemporalInformation(entry)));
+        }
+
+        ServiceHelper.PostFacts(facts);
+
+        //Finish up
+        mIsProcessing = false;
+        UpdateStatusBroadcast();
+        stopForeground(true);
+
+        try {
+            Thread.sleep(2000);
+        } catch(InterruptedException e) {
+
+        }
+    }
+
     private void ProcessTrip(List<Location> entries) {
         //Handle case: No entries in list
         if(!entries.isEmpty()) {
@@ -241,11 +269,14 @@ public class TripService extends Service implements ConnectionCallbacks, OnConne
                 Log.d("Debug", Long.toString(rowID));
             }
         }
+        try {
+            Thread.sleep(2000);
+        } catch(InterruptedException e) {
 
+        }
         //Finish up
         mIsProcessing = false;
         UpdateStatusBroadcast();
         stopForeground(true);
     }
-
 }

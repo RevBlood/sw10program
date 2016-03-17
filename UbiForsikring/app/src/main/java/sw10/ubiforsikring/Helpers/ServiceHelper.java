@@ -12,8 +12,8 @@ import sw10.ubiforsikring.Objects.TripObjects.TripListItem;
 
 
 public class ServiceHelper {
-	private static String ip = "192.168.87.102";
-	//private static String ip = "192.168.43.123";
+	private static String ip = "192.168.43.123";
+
 	//Getters
 	public static TripListItem GetTrip(int carid, int tripid){
 		String response = null;

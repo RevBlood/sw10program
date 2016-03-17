@@ -131,12 +131,13 @@ public class MainMenuActivity extends AppCompatActivity {
                 if (!mIsTripActive) {
                     //Ensure TripService is running before starting trip
                     InitializeTripService();
-
-                    BeginTrip();
-                    Toast.makeText(mContext, R.string.TripStartToast, Toast.LENGTH_SHORT).show();
+                    if(MessageTripService(TripService.BEGIN_TRIP)) {
+                        Toast.makeText(mContext, R.string.TripStartToast, Toast.LENGTH_SHORT).show();
+                    }
                 } else {
-                    EndTrip();
-                    Toast.makeText(mContext, R.string.TripStopToast, Toast.LENGTH_SHORT).show();
+                    if(MessageTripService(TripService.END_TRIP)) {
+                        Toast.makeText(mContext, R.string.TripStopToast, Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         }
@@ -172,7 +173,6 @@ public class MainMenuActivity extends AppCompatActivity {
 
             HandleConnectionStatus();
             HandleTripStatus();
-            HandleProcessingStatus();
         }
     }
 
@@ -195,14 +195,15 @@ public class MainMenuActivity extends AppCompatActivity {
             tripButton.setText(R.string.TripButtonTitleStop);
             tripButton.setBackground(ContextCompat.getDrawable(mContext, R.drawable.trip_button_stop_shape));
             liveMapButton.setEnabled(true);
+        } else if (mIsProcessing) {
+            tripButton.setText(R.string.TripButtonTitleStopping);
+            tripButton.setBackground(ContextCompat.getDrawable(mContext, R.drawable.trip_button_stopping_shape));
+            liveMapButton.setEnabled(false);
         } else {
             tripButton.setText(R.string.TripButtonTitleStart);
             tripButton.setBackground(ContextCompat.getDrawable(mContext, R.drawable.trip_button_start_shape));
             liveMapButton.setEnabled(false);
         }
-    }
-
-    private void HandleProcessingStatus() {
     }
 
     //endregion
@@ -241,7 +242,7 @@ public class MainMenuActivity extends AppCompatActivity {
                 Button tripButton = (Button) findViewById(R.id.TripButton);
                 tripButton.setEnabled(true);
                 mMessenger = new Messenger(service);
-                UpdateStatusBroadcast();
+                MessageTripService(TripService.UPDATE_STATUS_BROADCAST);
             }
 
             @Override
@@ -254,47 +255,25 @@ public class MainMenuActivity extends AppCompatActivity {
     }
 
     private void BindTripService(){
+
         Intent intent = new Intent(this, TripService.class);
         bindService(intent, mTripServiceConnection, Context.BIND_AUTO_CREATE);
     }
 
-    private void BeginTrip() {
+    private boolean MessageTripService(int messageId) {
         //Create message to TripService with intent to run case for BEGIN_TRIP
-        Message message = Message.obtain(null, TripService.BEGIN_TRIP, 0, 0);
+        Message message = Message.obtain(null, messageId, 0, 0);
 
         //Send the Message to the Service
         try {
             mMessenger.send(message);
-            Toast.makeText(mContext, R.string.TripStartToast, Toast.LENGTH_SHORT).show();
+            return true;
         } catch (RemoteException e) {
             Log.e("Debug", "Failed to contact TripService");
+            return false;
         }
     }
 
-    private void EndTrip() {
-        //Create message to TripService with intent to run case for END_TRIP
-        Message message = Message.obtain(null, TripService.END_TRIP, 0, 0);
-
-        //Send the Message to the Service
-        try {
-            mMessenger.send(message);
-            Toast.makeText(mContext, R.string.TripStopToast, Toast.LENGTH_SHORT).show();
-        } catch (RemoteException e) {
-            Log.e("Debug", "Failed to contact TripService");
-        }
-    }
-
-    private void UpdateStatusBroadcast() {
-        //Create message to TripService with intent to update the status broadcast
-        Message message = Message.obtain(null, TripService.UPDATE_STATUS_BROADCAST, 0, 0);
-
-        //Send the Message to the Service
-        try {
-            mMessenger.send(message);
-        } catch (RemoteException e) {
-            Log.e("Debug", "Failed to contact TripService");
-        }
-    }
     //endregion
 
     private boolean VerifyUserId() {

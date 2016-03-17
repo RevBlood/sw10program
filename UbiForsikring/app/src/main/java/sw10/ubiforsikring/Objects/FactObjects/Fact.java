@@ -25,6 +25,11 @@ public class Fact {
         this.SpatialTemporal = Spatial;
     }
 
+    public Fact(int carId, SpatialTemporalInformation spatialTemporalInformation) {
+        CarId = carId;
+        SpatialTemporal = spatialTemporalInformation;
+    }
+
     public Fact(JSONObject obj) {
         try {
             this.EntryId = obj.getLong("entryid");
