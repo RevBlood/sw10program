@@ -186,7 +186,7 @@ public class TripService extends Service implements ConnectionCallbacks, OnConne
         intent.putExtra(getString(R.string.BroadcastIsProcessing), mIsProcessing);
 
         //Send the broadcast
-        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+        sendBroadcast(intent);
     }
 
     private void UpdateRouteBroadcast() {
@@ -196,7 +196,7 @@ public class TripService extends Service implements ConnectionCallbacks, OnConne
         //Send the broadcast
         Intent intent = new Intent(getString(R.string.BroadcastRouteIntent));
         intent.putParcelableArrayListExtra(getString(R.string.BroadcastRouteLocationList), entries);
-        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+        sendBroadcast(intent);
     }
 
     //endregion

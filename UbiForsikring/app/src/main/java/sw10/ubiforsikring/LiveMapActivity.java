@@ -107,7 +107,7 @@ public class LiveMapActivity extends FragmentActivity implements OnMapReadyCallb
     @Override
     public void onResume() {
         //Whenever activity is resumed re-calculate distance before listening for new updates
-        LocalBroadcastManager.getInstance(this).registerReceiver(mRouteReceiver, new IntentFilter(getString(R.string.BroadcastRouteIntent)));
+        registerReceiver(mRouteReceiver, new IntentFilter(getString(R.string.BroadcastRouteIntent)));
 
         //Connect to the TripService
         InitializeTripServiceConnection();
@@ -124,7 +124,7 @@ public class LiveMapActivity extends FragmentActivity implements OnMapReadyCallb
     @Override
     public void onPause() {
         //If activity is paused, stop listening for new locations
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mLocationReceiver);
+        unregisterReceiver(mLocationReceiver);
 
         //Disconnect from the TripService
         unbindService(mTripServiceConnection);
@@ -194,11 +194,11 @@ public class LiveMapActivity extends FragmentActivity implements OnMapReadyCallb
             }
 
             //Unregister the receiver - We only need the route once
-            LocalBroadcastManager.getInstance(mContext).unregisterReceiver(mRouteReceiver);
+            unregisterReceiver(mRouteReceiver);
 
             //Listen for position updates
             mLocationReceiver = new PositionReceiver();
-            LocalBroadcastManager.getInstance(mContext).registerReceiver(mLocationReceiver, new IntentFilter(getString(R.string.BroadcastLiveGpsIntent)));
+            registerReceiver(mLocationReceiver, new IntentFilter(getString(R.string.BroadcastLiveGpsIntent)));
         }
     }
 
@@ -240,7 +240,7 @@ public class LiveMapActivity extends FragmentActivity implements OnMapReadyCallb
                 mMessenger = new Messenger(service);
 
                 //As soon as the service is available, request the route that has been recorded so far
-                UpdateRouteBroadcast();
+                MessageTripService(TripService.UPDATE_ROUTE_BROADCAST);
             }
 
             @Override
@@ -255,15 +255,17 @@ public class LiveMapActivity extends FragmentActivity implements OnMapReadyCallb
         bindService(intent, mTripServiceConnection, Context.BIND_AUTO_CREATE);
     }
 
-    private void UpdateRouteBroadcast() {
-        //Create message to TripService with intent to run case for UPDATE_ROUTE_BROADCAST
-        Message message = Message.obtain(null, TripService.UPDATE_ROUTE_BROADCAST, 0, 0);
+    private boolean MessageTripService(int messageId) {
+        //Create message to TripService with intent to run case for BEGIN_TRIP
+        Message message = Message.obtain(null, messageId, 0, 0);
 
         //Send the Message to the Service
         try {
             mMessenger.send(message);
+            return true;
         } catch (RemoteException e) {
             Log.e("Debug", "Failed to contact TripService");
+            return false;
         }
     }
 

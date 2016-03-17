@@ -81,7 +81,7 @@ public class TripListActivity extends AppCompatActivity {
         }
 
         //Listen for TripService status
-        LocalBroadcastManager.getInstance(this).registerReceiver(mStatusReceiver, new IntentFilter(getString(R.string.BroadcastStatusIntent)));
+        registerReceiver(mStatusReceiver, new IntentFilter(getString(R.string.BroadcastStatusIntent)));
 
         //Connect to the TripService
         InitializeTripServiceConnection();
@@ -93,7 +93,7 @@ public class TripListActivity extends AppCompatActivity {
     @Override
     public void onPause() {
         //Stop listening for new locations
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mLocationReceiver);
+        unregisterReceiver(mLocationReceiver);
 
         //Disconnect from TripService
         unbindService(mTripServiceConnection);
@@ -129,7 +129,7 @@ public class TripListActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             //Only need status once - Unregister the receiver afterwards
-            LocalBroadcastManager.getInstance(mContext).unregisterReceiver(mStatusReceiver);
+            unregisterReceiver(mStatusReceiver);
 
             mIsTripActive = intent.getBooleanExtra(getString(R.string.BroadcastIsTripActive), false);
             mIsProcessing = intent.getBooleanExtra(getString(R.string.BroadcastIsProcessing), false);
@@ -158,11 +158,11 @@ public class TripListActivity extends AppCompatActivity {
             }
 
             //Unregister the receiver - We only need the route once
-            LocalBroadcastManager.getInstance(mContext).unregisterReceiver(mRouteReceiver);
+            unregisterReceiver(mRouteReceiver);
 
             //Register receiver for getting new positions
             mLocationReceiver = new PositionReceiver();
-            LocalBroadcastManager.getInstance(mContext).registerReceiver(mLocationReceiver, new IntentFilter(getString(R.string.BroadcastLiveGpsIntent)));
+            registerReceiver(mLocationReceiver, new IntentFilter(getString(R.string.BroadcastLiveGpsIntent)));
         }
     }
 
@@ -198,8 +198,8 @@ public class TripListActivity extends AppCompatActivity {
 
             //Listen for, and request the route so far, from the TripService
             mRouteReceiver = new RouteReceiver();
-            LocalBroadcastManager.getInstance(this).registerReceiver(mRouteReceiver, new IntentFilter(getString(R.string.BroadcastRouteIntent)));
-            UpdateRouteBroadcast();
+            registerReceiver(mRouteReceiver, new IntentFilter(getString(R.string.BroadcastRouteIntent)));
+            MessageTripService(TripService.UPDATE_ROUTE_BROADCAST);
         }
     }
 
@@ -226,7 +226,7 @@ public class TripListActivity extends AppCompatActivity {
                 mMessenger = new Messenger(service);
 
                 //As soon as the service is available, request current status
-                UpdateStatusBroadcast();
+                MessageTripService(TripService.UPDATE_STATUS_BROADCAST);
             }
 
             @Override
@@ -241,27 +241,17 @@ public class TripListActivity extends AppCompatActivity {
         bindService(intent, mTripServiceConnection, Context.BIND_AUTO_CREATE);
     }
 
-    private void UpdateStatusBroadcast() {
-        //Create message to TripService with intent to update the status broadcast
-        Message message = Message.obtain(null, TripService.UPDATE_STATUS_BROADCAST, 0, 0);
+    private boolean MessageTripService(int messageId) {
+        //Create message to TripService
+        Message message = Message.obtain(null, messageId, 0, 0);
 
         //Send the Message to the Service
         try {
             mMessenger.send(message);
+            return true;
         } catch (RemoteException e) {
             Log.e("Debug", "Failed to contact TripService");
-        }
-    }
-
-    private void UpdateRouteBroadcast() {
-        //Create message to TripService with intent to run case for UPDATE_ROUTE_BROADCAST
-        Message message = Message.obtain(null, TripService.UPDATE_ROUTE_BROADCAST, 0, 0);
-
-        //Send the Message to the Service
-        try {
-            mMessenger.send(message);
-        } catch (RemoteException e) {
-            Log.e("Debug", "Failed to contact TripService");
+            return false;
         }
     }
 

@@ -72,7 +72,7 @@ public class MainMenuActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         //Listen for TripService status updates
-        LocalBroadcastManager.getInstance(this).registerReceiver(mStatusReceiver, new IntentFilter(getString(R.string.BroadcastStatusIntent)));
+        registerReceiver(mStatusReceiver, new IntentFilter(getString(R.string.BroadcastStatusIntent)));
 
         //Start the TripService and/or bind it to Activity
         InitializeTripService();
@@ -86,7 +86,7 @@ public class MainMenuActivity extends AppCompatActivity {
         unbindService(mTripServiceConnection);
 
         //Stop listening for status updates
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mStatusReceiver);
+        unregisterReceiver(mStatusReceiver);
 
         super.onPause();
     }
@@ -261,7 +261,7 @@ public class MainMenuActivity extends AppCompatActivity {
     }
 
     private boolean MessageTripService(int messageId) {
-        //Create message to TripService with intent to run case for BEGIN_TRIP
+        //Create message to TripService
         Message message = Message.obtain(null, messageId, 0, 0);
 
         //Send the Message to the Service
