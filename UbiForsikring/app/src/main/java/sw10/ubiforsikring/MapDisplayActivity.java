@@ -1,6 +1,9 @@
 package sw10.ubiforsikring;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
@@ -12,6 +15,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
@@ -48,17 +52,17 @@ public class MapDisplayActivity extends FragmentActivity implements OnMapReadyCa
 
         //Define how the route looks on the map
         mRouteOptions = new PolylineOptions();
-        mRouteOptions.color(ContextCompat.getColor(this, R.color.colorPrimary));
+        mRouteOptions.color(ContextCompat.getColor(this, R.color.black));
         mRouteOptions.width(getResources().getInteger(R.integer.LiveGpsRouteWidth));
 
         //Define how the start marker looks
         mStartMarkerOptions = new MarkerOptions();
-        mStartMarkerOptions.icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher));
+        mStartMarkerOptions.icon(DrawableToBitmap(R.drawable.marker_start));
         mStartMarkerOptions.anchor(0.5f, 0.5f);
 
         //Define how the end marker looks
         mEndMarkerOptions = new MarkerOptions();
-        mEndMarkerOptions.icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher));
+        mEndMarkerOptions.icon(DrawableToBitmap(R.drawable.marker_end));
         mEndMarkerOptions.anchor(0.5f, 0.5f);
 
         //Get the map ready
@@ -145,5 +149,14 @@ public class MapDisplayActivity extends FragmentActivity implements OnMapReadyCa
     private void PlaceRoute() {
         mRouteLine = mMap.addPolyline(mRouteOptions);
         mRouteLine.setPoints(mRoute);
+    }
+
+    private BitmapDescriptor DrawableToBitmap(int drawable) {
+        Bitmap bitmap = Bitmap.createBitmap(80, 80, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        Drawable shape = ContextCompat.getDrawable(this, drawable);
+        shape.setBounds(0, 0, bitmap.getWidth(), bitmap.getHeight());
+        shape.draw(canvas);
+        return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
 }

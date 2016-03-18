@@ -83,7 +83,7 @@ public class LocationListener implements com.google.android.gms.location.Locatio
     private void BroadcastLiveGps(Location location) {
         Intent intent = new Intent(mContext.getString(R.string.BroadcastLiveGpsIntent));
         intent.putExtra(mContext.getString(R.string.BroadcastLiveGpsLocation), location);
-        LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
+        mContext.sendBroadcast(intent);
     }
 
     public void UpdateMovementTimer() {

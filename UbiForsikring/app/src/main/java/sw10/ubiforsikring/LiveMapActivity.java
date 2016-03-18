@@ -6,6 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Handler;
 import android.os.IBinder;
@@ -25,6 +28,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -82,17 +86,17 @@ public class LiveMapActivity extends FragmentActivity implements OnMapReadyCallb
 
         //Define how the route looks on the map
         mRouteOptions = new PolylineOptions();
-        mRouteOptions.color(ContextCompat.getColor(this, R.color.colorPrimary));
+        mRouteOptions.color(ContextCompat.getColor(this, R.color.black));
         mRouteOptions.width(getResources().getInteger(R.integer.LiveGpsRouteWidth));
 
         //Define how the position marker looks
         mCurrentMarkerOptions = new MarkerOptions();
-        mCurrentMarkerOptions.icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher));
+        mCurrentMarkerOptions.icon(DrawableToBitmap(R.drawable.marker_end));
         mCurrentMarkerOptions.anchor(0.5f, 0.5f);
 
         //Define how the start marker looks
         mStartMarkerOptions = new MarkerOptions();
-        mStartMarkerOptions.icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher));
+        mStartMarkerOptions.icon(DrawableToBitmap(R.drawable.marker_start));
         mStartMarkerOptions.anchor(0.5f, 0.5f);
 
         //Get the map ready
@@ -345,6 +349,15 @@ public class LiveMapActivity extends FragmentActivity implements OnMapReadyCallb
         float[] result = new float[1];
         Location.distanceBetween(first.latitude, first.longitude, second.latitude, second.longitude, result);
         return result[0];
+    }
+
+    private BitmapDescriptor DrawableToBitmap(int drawable) {
+        Bitmap bitmap = Bitmap.createBitmap(80, 80, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        Drawable shape = ContextCompat.getDrawable(this, drawable);
+        shape.setBounds(0, 0, bitmap.getWidth(), bitmap.getHeight());
+        shape.draw(canvas);
+        return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
 
     //endregion

@@ -93,7 +93,9 @@ public class TripListActivity extends AppCompatActivity {
     @Override
     public void onPause() {
         //Stop listening for new locations
-        unregisterReceiver(mLocationReceiver);
+        if (mIsTripActive) {
+            unregisterReceiver(mLocationReceiver);
+        }
 
         //Disconnect from TripService
         unbindService(mTripServiceConnection);

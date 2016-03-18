@@ -175,7 +175,7 @@ public class TripService extends Service implements ConnectionCallbacks, OnConne
         mIsProcessing = true;
         UpdateStatusBroadcast();
 
-        ProcessTrip(entries);
+        ProcessTripRaw(entries);
     }
 
     private void UpdateStatusBroadcast() {
