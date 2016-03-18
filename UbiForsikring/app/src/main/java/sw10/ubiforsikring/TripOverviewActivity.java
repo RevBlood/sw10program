@@ -146,10 +146,10 @@ public class TripOverviewActivity extends AppCompatActivity {
     private int[] GetGraphColorArray() {
         int[] graphColors = new int[6];
         graphColors[0] = ContextCompat.getColor(this, R.color.graphColorRed);
-        graphColors[1] = ContextCompat.getColor(this, R.color.graphColorYellow);
-        graphColors[2] = ContextCompat.getColor(this, R.color.graphColorPurple);
+        graphColors[1] = ContextCompat.getColor(this, R.color.graphColorPurple);
+        graphColors[2] = ContextCompat.getColor(this, R.color.graphColorYellow);
         graphColors[3] = ContextCompat.getColor(this, R.color.graphColorGreen);
-        graphColors[4] = ContextCompat.getColor(this, R.color.graphColorTeal);
+        graphColors[4] = ContextCompat.getColor(this, R.color.graphColorBrown);
         graphColors[5] = ContextCompat.getColor(this, R.color.graphColorBlue);
         return graphColors;
     }

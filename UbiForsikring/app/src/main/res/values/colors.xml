@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
@@ -7,11 +8,11 @@
     <color name="black">#000000</color>
     <color name="transparent">#00FFFFFF</color>
 
-    <color name="graphColorRed">#FF0000</color>
-    <color name="graphColorYellow">#FFFF00</color>
-    <color name="graphColorPurple">#FF00FF</color>
-    <color name="graphColorGreen">#00FF00</color>
-    <color name="graphColorTeal">#00FFFF</color>
-    <color name="graphColorBlue">#0000FF</color>
+    <color name="graphColorRed">#F4511E</color>
+    <color name="graphColorPurple">#8E24AA</color>
+    <color name="graphColorYellow">#FFB300</color>
+    <color name="graphColorGreen">#43A047</color>
+    <color name="graphColorBrown">#6D4C41</color>
+    <color name="graphColorBlue">#039BE5</color>
 
 </resources>
