@@ -52,10 +52,13 @@ public class Fact {
             obj.put("tripid", TripId);
             obj.put("carid", CarId);
 
-            obj.put("flag", Flag.serializeToJSON());
-            obj.put("measure", Measure.serializeToJSON());
-            obj.put("spatial", SpatialTemporal.serializeSpatialToJSON());
             obj.put("temporal", SpatialTemporal.serializeTemporalToJSON());
+            obj.put("spatial", SpatialTemporal.serializeSpatialToJSON());
+
+            //.put("flag", Flag.serializeToJSON());
+            //obj.put("measure", Measure.serializeToJSON());
+
+
         } catch(Exception e) {
             Log.e("Debug", "Fact - Serialize:", e);
         }
