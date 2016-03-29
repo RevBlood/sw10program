@@ -2,6 +2,7 @@ package sw10.ubiforsikring;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,7 +73,7 @@ public class TripListAdapter extends ArrayAdapter<TripListEntry> {
                 //Populate ViewHolder with data
                 HistoricalViewHolder historicalViewHolder = (HistoricalViewHolder) rowView.getTag();
                 historicalViewHolder.TripTitleView.setText(String.format(mContext.getString(R.string.TripTitle), entry.TripId));
-                historicalViewHolder.TripDescriptionView.setText(mContext.getString(R.string.DefaultText));
+                historicalViewHolder.TripDescriptionView.setText("Beskrivelse");
                 historicalViewHolder.TripOptimalityView.setText(String.format(mContext.getString(R.string.TripOptimalityText), entry.Optimality));
                 historicalViewHolder.TripTimeView.setText(String.format(mContext.getString(R.string.TripTimeText), mSdf.format(entry.TimeStarted), mSdf.format(entry.TimeEnded)));
                 historicalViewHolder.TripDistanceView.setText(String.format(mContext.getString(R.string.TripDistanceText), entry.Distance / 1000));
@@ -128,30 +129,30 @@ public class TripListAdapter extends ArrayAdapter<TripListEntry> {
 
         //Red
         if (optimality >= sectionSize * 4) {
-            optimalityView.setTextColor(Color.rgb(255, 0, 0));
+            optimalityView.setTextColor(ContextCompat.getColor(mContext, R.color.graphColorRed));
             return;
         }
 
         //Orange
         if (optimality >= sectionSize * 3) {
-            optimalityView.setTextColor(Color.rgb(255, 165, 0));
+            optimalityView.setTextColor(ContextCompat.getColor(mContext, R.color.graphColorOrange));
             return;
         }
 
         //Yellow
         if (optimality >= sectionSize * 2) {
-            optimalityView.setTextColor(Color.rgb(255, 255, 0));
+            optimalityView.setTextColor(ContextCompat.getColor(mContext, R.color.graphColorYellow));
             return;
         }
 
-        //Chartreuse
+        //Lime
         if (optimality >= sectionSize * 1) {
-            optimalityView.setTextColor(Color.rgb(165, 255, 0));
+            optimalityView.setTextColor(ContextCompat.getColor(mContext, R.color.graphColorLime));
         }
 
         //Green
         else {
-            optimalityView.setTextColor(Color.rgb(0, 255, 0));
+            optimalityView.setTextColor(ContextCompat.getColor(mContext, R.color.graphColorGreen));
         }
     }
 }

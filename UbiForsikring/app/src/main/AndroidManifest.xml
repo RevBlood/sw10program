@@ -36,7 +36,8 @@
         <activity
             android:name=".LiveMapActivity"
             android:label="@string/title_activity_map"
-            android:launchMode="singleTask" />
+            android:launchMode="singleTask"
+            android:parentActivityName=".MainMenuActivity" />
 
         <activity
             android:name=".TripListActivity"
@@ -57,10 +58,16 @@
             android:parentActivityName=".TripListActivity" />
 
         <activity
-            android:name=".TripStatisticsActivity" />
+            android:name=".TripStatisticsActivity"
+            android:label="@string/title_activity_trip_overview"
+            android:launchMode="singleTask"
+            android:parentActivityName=".TripOverviewActivity" />
 
         <activity
-            android:name=".MapDisplayActivity" />
+            android:name=".MapDisplayActivity"
+            android:label="@string/title_activity_map"
+            android:launchMode="singleTask"
+            android:parentActivityName=".TripOverviewActivity"/>
 
     </application>
 

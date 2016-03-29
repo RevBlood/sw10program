@@ -1,7 +1,8 @@
 <RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
@@ -18,6 +19,7 @@
         android:layout_marginBottom="16dp"
         android:layout_marginEnd="16dp"
         android:src="@android:drawable/ic_menu_mylocation"
+        app:backgroundTint="@color/graphColorRed"
         android:scaleType="center"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"/>

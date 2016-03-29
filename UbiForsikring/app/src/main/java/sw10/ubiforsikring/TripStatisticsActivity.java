@@ -1,6 +1,7 @@
 package sw10.ubiforsikring;
 
 import android.content.Intent;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
@@ -35,6 +36,9 @@ public class TripStatisticsActivity extends AppCompatActivity {
         TextView totalCostView = (TextView) findViewById(R.id.TotalCostView);
 
         tripTitleView.setText(String.format(getString(R.string.TripTitle), mTripId));
+        tripDescriptionView.setText("Til Arbejde");
+        totalCostView.setText("43,00 Dkr");
+        totalCostView.setTextColor(ContextCompat.getColor(this, R.color.graphColorRed));
     }
 
     @Override

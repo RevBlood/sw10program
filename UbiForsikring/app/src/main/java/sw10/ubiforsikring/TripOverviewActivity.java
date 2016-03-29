@@ -58,6 +58,20 @@ public class TripOverviewActivity extends AppCompatActivity {
         TextView tripEndValueView = (TextView) findViewById(R.id.TripEndValueView);
 
         tripTitleView.setText(String.format(getString(R.string.TripTitle), mTripId));
+
+        tripDescriptionView.setText("Til Arbejde");
+        totalCostView.setText("43,00 Dkr");
+        totalCostView.setTextColor(ContextCompat.getColor(this, R.color.graphColorRed));
+        baseCostValueView.setText("14,2 km");
+        environmentCostPercentageView.setText("(+10,6%)");
+        environmentCostValueView.setText("+1,5 km");
+        drivingStyleCostPercentageView.setText("(+47,0%)");
+        drivingStyleCostPercentageView.setTextColor(ContextCompat.getColor(this, R.color.graphColorRed));
+        drivingStyleCostValueView.setText("+6,7 km");
+        totalCostPercentageView.setText("(+57,6%)");
+        totalCostValueView.setText("22,4 km");
+        tripStartValueView.setText("13:00 25/01/2016");
+        tripEndValueView.setText("13:45 25/01/2016");
     }
 
     @Override
@@ -114,6 +128,7 @@ public class TripOverviewActivity extends AppCompatActivity {
         //Style the PieChart itself
         PieChart pieChartView = (PieChart) findViewById(R.id.PieChartView);
         pieChartView.animateY(2000, Easing.EasingOption.EaseInQuad);
+        pieChartView.setTouchEnabled(false);
         pieChartView.setDrawHoleEnabled(false);
         pieChartView.setDrawSliceText(false);
         pieChartView.setUsePercentValues(true);
