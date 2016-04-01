@@ -10,6 +10,20 @@
     <string name="title_activity_map">Kort</string>
     <string name="title_activity_trip_list">Turliste</string>
     <string name="title_activity_trip_overview">Turoversigt</string>
+    <string name="title_activity_login">Login</string>
+
+    <!-- LOGIN -->
+    <string name="Authenticating">Logger ind&#8230;</string>
+    <string name="AuthenticationFailed">Forkert email eller password</string>
+    <string name="EmailError">Ugyldig email addresse</string>
+    <string name="PasswordError">Ugyldigt password</string>
+    <string name="EmailHint">Email</string>
+    <string name="PasswordHint">Password</string>
+    <string name="LoginButtonTitle">Log ind</string>
+    <string name="LoginStatus">LoginStatus</string>
+    <string name="StoredEmail">StoredEmail</string>
+    <string name="DefaultEmail">invalid@email.dk</string>
+    <string name="LoginPreferences">LoginPreferences</string>
 
     <!-- MAIN MENU -->
     <string name="ActionBarSettingsTitle">Indstillinger</string>
@@ -86,13 +100,14 @@
     <string name="SettingsCategorySupport">Support</string>
     <string name="SettingsCategoryAbout">Om</string>
 
-    <string name="UserIdTitle">Bruger ID</string>
+    <string name="UserLogoutTitle">Log ud</string>
     <string name="SyncOnlineSettingTitle">Gem ture online</string>
     <string name="SyncOnlineSettingDescription">Spar plads på din enhed og gem dine ture i skyen</string>
     <string name="DeleteAfterSettingTitle">Slet ture på enhed efter</string>
     <string name="HelpSettingTitle">Hjælp</string>
     <string name="FeedbackSettingTitle">Feedback</string>
     <string name="AboutSettingTitle">Om UBI Forsikring</string>
+    <string name="OnLogoutWhileTripActiveToast">Afslut venligst din tur før du logger ud</string>
 
     <!-- TRIP SERVICE -->
     <string name="ServiceNotificationTitle">UBI Forsikring</string>

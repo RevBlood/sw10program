@@ -124,20 +124,16 @@ public class MainMenuActivity extends AppCompatActivity {
     //region LISTENERS
     Button.OnClickListener TripButtonListener = new Button.OnClickListener() {
         public void onClick(View v) {
-            if(!VerifyUserId()) {
-                Toast.makeText(mContext, getString(R.string.UserIdNotSetToast), Toast.LENGTH_SHORT).show();
+            //Send message to TripService to start/stop the trip
+            if (!mIsTripActive) {
+                //Ensure TripService is running before starting trip
+                InitializeTripService();
+                if (MessageTripService(TripService.BEGIN_TRIP)) {
+                    Toast.makeText(mContext, R.string.TripStartToast, Toast.LENGTH_SHORT).show();
+                }
             } else {
-                //Send message to TripService to start/stop the trip
-                if (!mIsTripActive) {
-                    //Ensure TripService is running before starting trip
-                    InitializeTripService();
-                    if(MessageTripService(TripService.BEGIN_TRIP)) {
-                        Toast.makeText(mContext, R.string.TripStartToast, Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    if(MessageTripService(TripService.END_TRIP)) {
-                        Toast.makeText(mContext, R.string.TripStopToast, Toast.LENGTH_SHORT).show();
-                    }
+                if (MessageTripService(TripService.END_TRIP)) {
+                    Toast.makeText(mContext, R.string.TripStopToast, Toast.LENGTH_SHORT).show();
                 }
             }
         }
@@ -275,11 +271,6 @@ public class MainMenuActivity extends AppCompatActivity {
     }
 
     //endregion
-
-    private boolean VerifyUserId() {
-        int userId = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(this).getString(getString(R.string.UserIdTitle), "0"));
-        return userId != 0;
-    }
 
     //TODO: Delete logcat section?
     //region LOGCAT

@@ -175,7 +175,7 @@ public class TripService extends Service implements ConnectionCallbacks, OnConne
         mIsProcessing = true;
         UpdateStatusBroadcast();
 
-        ProcessTripRaw(entries);
+        ProcessTrip(entries);
     }
 
     private void UpdateStatusBroadcast() {
@@ -220,8 +220,7 @@ public class TripService extends Service implements ConnectionCallbacks, OnConne
     private void ProcessTripRaw(List<Location> entries) {
         ArrayList<Fact> facts = new ArrayList<>();
 
-        int userId = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(this).getString(getString(R.string.UserIdTitle), "0"));
-
+        int userId = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(this).getString(getString(R.string.StoredEmail), getString(R.string.DefaultEmail)));
 
         for (Location entry : entries) {
             facts.add(new Fact(userId, new SpatialTemporalInformation(entry)));
@@ -270,7 +269,7 @@ public class TripService extends Service implements ConnectionCallbacks, OnConne
             }
         }
         try {
-            Thread.sleep(2000);
+            Thread.sleep(3500);
         } catch(InterruptedException e) {
 
         }

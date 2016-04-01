@@ -3,13 +3,13 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory
-        android:title="@string/SettingsCategoryUser">
+        android:key="@string/SettingsCategoryUser">
 
-        <EditTextPreference
-            android:title="@string/UserIdTitle"
-            android:key="@string/UserIdTitle"
-            android:numeric="integer"
-            android:defaultValue="0"/>
+        <Preference
+            android:title="@string/UserLogoutTitle"
+            android:key="@string/UserLogoutTitle"
+            />
+
     </PreferenceCategory>
 
     <PreferenceCategory

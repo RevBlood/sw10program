@@ -227,26 +227,18 @@
 
             </RelativeLayout>
 
-            <android.support.percent.PercentRelativeLayout
-                android:id="@+id/PieChartLayout"
+            <com.github.mikephil.charting.charts.PieChart
+                android:id="@+id/PieChartView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/CostLayout"
-                android:paddingBottom="20dp">
-
-                <com.github.mikephil.charting.charts.PieChart
-                    android:id="@+id/PieChartView"
-                    app:layout_widthPercent="100%"
-                    app:layout_aspectRatio="160%"
-                    android:layout_centerHorizontal="true"/>
-
-            </android.support.percent.PercentRelativeLayout>
+                android:layout_height="240dp"
+                android:layout_below="@id/CostLayout" />
 
             <RelativeLayout
                 android:id="@+id/TripTimeLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/PieChartLayout" >
+                android:layout_below="@id/PieChartView"
+                android:paddingTop="20dp">
 
                 <LinearLayout
                     android:id="@+id/TripStartTimeLayout"

@@ -14,8 +14,8 @@
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/TrackRouteButton"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         android:layout_marginEnd="16dp"
         android:src="@android:drawable/ic_menu_mylocation"
@@ -29,7 +29,6 @@
         android:layout_height="55dp"
         android:layout_width="match_parent"
         android:layout_alignParentBottom="true"
-        android:elevation="4dp"
         android:layout_margin="16dp"
         android:baselineAligned="false"
         android:orientation="horizontal"
