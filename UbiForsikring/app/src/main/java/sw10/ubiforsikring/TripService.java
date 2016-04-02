@@ -221,7 +221,7 @@ public class TripService extends Service implements ConnectionCallbacks, OnConne
         mDrivingNotification = notificationBuilder.build();
     }
 
-    private void ProcessTripRaw(List<Location> entries) {
+    private void ProcessTripRaw(List<Location> entries) { 
         ArrayList<Fact> facts = new ArrayList<>();
 
         //int userId = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(this).getString(getString(R.string.StoredEmail), getString(R.string.DefaultEmail)));
