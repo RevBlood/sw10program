@@ -25,8 +25,11 @@ import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListe
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import sw10.ubiforsikring.Helpers.MeasureHelper;
 import sw10.ubiforsikring.Helpers.ServiceHelper;
@@ -175,7 +178,8 @@ public class TripService extends Service implements ConnectionCallbacks, OnConne
         mIsProcessing = true;
         UpdateStatusBroadcast();
 
-        ProcessTrip(entries);
+        //ProcessTrip(entries);
+        ProcessTripRaw(entries);
     }
 
     private void UpdateStatusBroadcast() {
@@ -220,12 +224,24 @@ public class TripService extends Service implements ConnectionCallbacks, OnConne
     private void ProcessTripRaw(List<Location> entries) {
         ArrayList<Fact> facts = new ArrayList<>();
 
-        int userId = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(this).getString(getString(R.string.StoredEmail), getString(R.string.DefaultEmail)));
+        //int userId = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(this).getString(getString(R.string.StoredEmail), getString(R.string.DefaultEmail)));
 
         for (Location entry : entries) {
-            facts.add(new Fact(userId, new SpatialTemporalInformation(entry)));
+            //facts.add(new Fact(userId, new SpatialTemporalInformation(entry)));
+            facts.add(new Fact(1, new SpatialTemporalInformation(entry)));
+
         }
 
+        DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(getApplicationContext());
+        Log.e("Debug", "Timestamp" + facts.get(1).SpatialTemporal.MPoint.getTime());
+        Log.e("Debug", "Timezone: " + TimeZone.getDefault().getDisplayName());
+        Log.e("Debug", "Timestamp with format" + dateFormat.format(facts.get(1).SpatialTemporal.MPoint.getTime()));
+        Log.e("Debug", "Number of entries: " + entries.size());
+
+        //Calculate Measures given the locations from logged data
+        MeasureHelper.CalculateMeasures(facts);
+
+        //Send the data to the server
         ServiceHelper.PostFacts(facts);
 
         //Finish up

@@ -10,6 +10,7 @@ import sw10.ubiforsikring.Helpers.DateObjectHelper;
 
 public class Trip {
     public long TripId;
+    public long LocalTripId;
     public Date TripStart;
     public Date TripEnd;
     public double MetersDriven;

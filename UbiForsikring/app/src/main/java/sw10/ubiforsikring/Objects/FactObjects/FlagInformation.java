@@ -17,14 +17,21 @@ public class FlagInformation {
     public Boolean Braking;
     public Boolean SteadySpeed;
 
-    public FlagInformation(long EntryId, long TripId, Boolean Speeding, Boolean Accelerating, Boolean Jerking, Boolean Braking, Boolean SteadySpeed){
+    public FlagInformation(long EntryId, long TripId, Boolean Speeding, Boolean Accelerating, Boolean Braking, Boolean Jerking, Boolean SteadySpeed){
         this.EntryId = EntryId;
         this.TripId = TripId;
         this.Speeding = Speeding;
         this.Accelerating = Accelerating;
-        this.Jerking = Jerking;
         this.Braking = Braking;
+        this.Jerking = Jerking;
         this.SteadySpeed = SteadySpeed;
+    }
+
+    public FlagInformation(Boolean Speeding, Boolean Accelerating, Boolean Braking, Boolean Jerking){
+        this.Speeding = Speeding;
+        this.Accelerating = Accelerating;
+        this.Braking = Braking;
+        this.Jerking = Jerking;
     }
 
     public FlagInformation(JSONObject obj) {
@@ -33,7 +40,7 @@ public class FlagInformation {
             this.Accelerating = obj.isNull("accelerating") ? false : obj.getBoolean("accelerating");
             this.Jerking = obj.isNull("jerking") ? false : obj.getBoolean("jerking");
             this.Braking = obj.isNull("braking") ? false : obj.getBoolean("braking");
-            this.SteadySpeed = obj.isNull("steadyspeed") ? false : obj.getBoolean("steadyspeed");
+            //this.SteadySpeed = obj.isNull("steadyspeed") ? false : obj.getBoolean("steadyspeed");
         }
         catch (Exception e){
             Log.e("Debug", "FlagInformation - JSONObject:", e);
@@ -45,9 +52,9 @@ public class FlagInformation {
         try{
             obj.put("speeding", Speeding);
             obj.put("accelerating", Accelerating);
-            obj.put("jerking", Jerking);
             obj.put("braking", Braking);
-            obj.put("steadyspeed", SteadySpeed);
+            obj.put("jerking", Jerking);
+            //obj.put("steadyspeed", SteadySpeed);
 
         } catch(Exception e) {
             Log.e("Debug", "FlagInformation - Serialize:", e);
@@ -62,9 +69,9 @@ public class FlagInformation {
         result.append("{" + NEW_LINE);
         result.append("  Speeding: " + Speeding + NEW_LINE);
         result.append("  Accelerating: " + Accelerating + NEW_LINE);
-        result.append("  Jerking: " + Jerking + NEW_LINE );
         result.append("  Braking: " + Braking + NEW_LINE);
-        result.append("  SteadySpeed: " + SteadySpeed);
+        result.append("  Jerking: " + Jerking + NEW_LINE );
+        //result.append("  SteadySpeed: " + SteadySpeed);
         result.append(" }");
 
         return result.toString();

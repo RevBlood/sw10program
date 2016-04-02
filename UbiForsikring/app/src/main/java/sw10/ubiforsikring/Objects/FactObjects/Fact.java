@@ -11,14 +11,15 @@ import org.json.JSONObject;
 public class Fact {
     public long EntryId;
     public long TripId;
+    public long LocalTripId;
     public int CarId;
     public FlagInformation Flag;
     public MeasureInformation Measure;
     public SpatialTemporalInformation SpatialTemporal;
 
-    public Fact(long EntryId, long TripId, int CarId, FlagInformation Flag, MeasureInformation Measure, SpatialTemporalInformation Spatial){
-        this.EntryId = EntryId;
+    public Fact(long TripId, long LocalTripId, int CarId, FlagInformation Flag, MeasureInformation Measure, SpatialTemporalInformation Spatial){
         this.TripId = TripId;
+        this.LocalTripId = LocalTripId;
         this.CarId = CarId;
         this.Flag = Flag;
         this.Measure = Measure;
@@ -34,6 +35,7 @@ public class Fact {
         try {
             this.EntryId = obj.getLong("entryid");
             this.TripId = obj.getLong("tripid");
+            this.LocalTripId = obj.getLong("localtripid");
             this.CarId = obj.getInt("carid");
 
             this.Flag = new FlagInformation(obj.getJSONObject("flag"));
@@ -48,15 +50,15 @@ public class Fact {
     public JSONObject serializeToJSON(){
         JSONObject obj = new JSONObject();
         try {
-            obj.put("entryid", EntryId);
             obj.put("tripid", TripId);
+            obj.put("localtripid", LocalTripId);
             obj.put("carid", CarId);
 
             obj.put("temporal", SpatialTemporal.serializeTemporalToJSON());
             obj.put("spatial", SpatialTemporal.serializeSpatialToJSON());
 
-            //.put("flag", Flag.serializeToJSON());
-            //obj.put("measure", Measure.serializeToJSON());
+            obj.put("flag", Flag.serializeToJSON());
+            obj.put("measure", Measure.serializeToJSON());
 
 
         } catch(Exception e) {
@@ -73,6 +75,7 @@ public class Fact {
         result.append(this.getClass().getName() + " Object {" + NEW_LINE);
         result.append(" EntryId: " + EntryId + NEW_LINE);
         result.append(" TripId: " + TripId + NEW_LINE);
+        result.append(" LocalTripId: " + LocalTripId + NEW_LINE);
         result.append(" CarId: " + CarId + NEW_LINE );
 
         result.append(" FlagInformation: " + Flag.toString() + NEW_LINE);
