@@ -20,13 +20,6 @@ public class TripListItem {
 
     public long PreviousTripId;
     public int CarId;
-    public boolean IsActive = false;
-    public boolean IsProcessing = false;
-
-    public TripListItem(boolean isActive, boolean isProcessing) {
-        IsActive = isActive;
-        IsProcessing = isProcessing;
-    }
 
     public TripListItem(JSONObject obj) {
         try {
