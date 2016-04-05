@@ -61,7 +61,9 @@ public final class MeasureHelper {
         double distance = MPoint.distanceTo(PrevMPoint);
 
         long differenceInSeconds = (MPoint.getTime() - PrevMPoint.getTime()) / 1000;
-
+        if(differenceInSeconds == 0) {
+            return 0;
+        }
         // Conversion from m/s to km/h
         //3.6 * m/s
 
