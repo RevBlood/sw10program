@@ -1,7 +1,6 @@
 package sw10.ubiforsikring;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,16 +11,18 @@ import android.widget.TextView;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
-public class TripListAdapter extends ArrayAdapter<TripListEntry> {
+import sw10.ubiforsikring.Objects.TripObjects.TripListItem;
+
+public class TripListAdapter extends ArrayAdapter<TripListItem> {
     final static int VIEWTYPE_HISTORICAL = 0;
     final static int VIEWTYPE_CURRENT = 1;
 
-    List<TripListEntry> mTrips;
+    List<TripListItem> mTrips;
     LayoutInflater mInflater;
     Context mContext;
     SimpleDateFormat mSdf;
 
-    public TripListAdapter(Context context, List<TripListEntry> trips) {
+    public TripListAdapter(Context context, List<TripListItem> trips) {
         super(context, -1, trips);
         mContext = context;
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -49,8 +50,8 @@ public class TripListAdapter extends ArrayAdapter<TripListEntry> {
     public View getView(int position, View convertView, ViewGroup parent) {
         View rowView = convertView;
 
-        //Fetch the relevant entry
-        TripListEntry entry = mTrips.get(position);
+        //Fetch the relevant item
+        TripListItem item = mTrips.get(position);
 
         //Layout depends on whether the trip is active or historical
         switch (this.getItemViewType(position)) {
@@ -72,13 +73,12 @@ public class TripListAdapter extends ArrayAdapter<TripListEntry> {
 
                 //Populate ViewHolder with data
                 HistoricalViewHolder historicalViewHolder = (HistoricalViewHolder) rowView.getTag();
-                historicalViewHolder.TripTitleView.setText(String.format(mContext.getString(R.string.TripTitle), entry.TripId));
+                historicalViewHolder.TripTitleView.setText(String.format(mContext.getString(R.string.TripTitle), item.TripId));
                 historicalViewHolder.TripDescriptionView.setText("Beskrivelse");
-                historicalViewHolder.TripOptimalityView.setText(String.format(mContext.getString(R.string.TripOptimalityText), entry.Optimality));
-                historicalViewHolder.TripTimeView.setText(String.format(mContext.getString(R.string.TripTimeText), mSdf.format(entry.TimeStarted), mSdf.format(entry.TimeEnded)));
-                historicalViewHolder.TripDistanceView.setText(String.format(mContext.getString(R.string.TripDistanceText), entry.Distance / 1000));
-                historicalViewHolder.TripCostView.setText(String.format(mContext.getString(R.string.TripCostText), entry.Cost));
-                SetTextColor(historicalViewHolder.TripOptimalityView, entry.Optimality);
+                historicalViewHolder.TripOptimalityView.setText(String.format(mContext.getString(R.string.TripOptimalityText), item.OptimalScore));
+                historicalViewHolder.TripTimeView.setText(String.format(mContext.getString(R.string.TripTimeText), mSdf.format(item.TripStart), mSdf.format(item.TripEnd)));
+                historicalViewHolder.TripDistanceView.setText(String.format(mContext.getString(R.string.TripDistanceText), item.MetersDriven / 1000));
+                SetTextColor(historicalViewHolder.TripOptimalityView, item.OptimalScore);
                 break;
 
             case VIEWTYPE_CURRENT:
@@ -98,7 +98,7 @@ public class TripListAdapter extends ArrayAdapter<TripListEntry> {
                 if (mTrips.get(position).IsProcessing) {
                     currentViewHolder.CurrentTripDescriptionView.setText(mContext.getString(R.string.CurrentTripProcessingText));
                 } else {
-                    currentViewHolder.CurrentTripDescriptionView.setText(String.format(mContext.getString(R.string.CurrentTripDistanceText), entry.Distance / 1000));
+                    currentViewHolder.CurrentTripDescriptionView.setText(String.format(mContext.getString(R.string.CurrentTripDistanceText), item.MetersDriven / 1000));
                 }
                     break;
         }
@@ -120,7 +120,7 @@ public class TripListAdapter extends ArrayAdapter<TripListEntry> {
         return 2;
     }
 
-    private void SetTextColor(TextView optimalityView, int optimality) {
+    private void SetTextColor(TextView optimalityView, double optimality) {
         //Get the limit where everything is just red
         int maxColor = mContext.getResources().getInteger(R.integer.OptimalityMaxColor);
 

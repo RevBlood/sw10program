@@ -1,5 +1,6 @@
 package sw10.ubiforsikring;
 
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -12,7 +13,6 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -25,14 +25,17 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.ArrayList;
 import java.util.List;
 
+import sw10.ubiforsikring.Helpers.ServiceHelper;
+import sw10.ubiforsikring.Objects.TripObjects.TripListItem;
+
 public class TripListActivity extends AppCompatActivity {
     Context mContext;
     ArrayAdapter mTripListAdapter;
-    List<TripListEntry> mTripList;
+    List<TripListItem> mTripList;
 
     //Active Trip
     LatLng mPreviousPosition;
-    TripListEntry mActiveTrip;
+    TripListItem mActiveTrip;
 
     //TripService communication
     ServiceConnection mTripServiceConnection;
@@ -53,32 +56,24 @@ public class TripListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_trip_list);
         mContext = this;
         mStatusReceiver = new StatusReceiver();
-
-        //TODO: Remove test data
         mTripList = new ArrayList<>();
-        mTripList.add(0, new TripListEntry(1, 1010101010, 1011111111, 10700, 47, 16.01));
-        mTripList.add(0, new TripListEntry(2, 1000101111, 1011110101, 10700, 35, 14.48));
-        mTripList.add(0, new TripListEntry(3, 1001101010, 1111111111, 7200, 25, 11.11));
-        mTripList.add(0, new TripListEntry(4, 1010101110, 1110000001, 4300, 13, 5.84));
-        mTripList.add(0, new TripListEntry(5, 1000100010, 1001110101, 5600, 4, 6.13));
-        mTripList.add(0, new TripListEntry(6, 100000000, 110000000, 20100, 10, 22.7));
-        mTripList.add(0, new TripListEntry(7, 10000000, 11000000, 20100, 39, 28.34));
 
         //Setup ListView
         ListView tripListView = (ListView) findViewById(R.id.TripOverviewListView);
         mTripListAdapter = new TripListAdapter(this, mTripList);
         tripListView.setAdapter(mTripListAdapter);
-        tripListView.setOnItemClickListener(MainListViewListener);
+        tripListView.setOnItemClickListener(TripListViewListener);
         tripListView.setEmptyView(findViewById(R.id.MainListViewEmpty));
     }
 
     @Override
     public void onResume() {
-        //Remove previously active trip from list if relevant
-        if (mActiveTrip != null) {
-            mTripList.remove(mActiveTrip);
-            mTripListAdapter.notifyDataSetChanged();
-        }
+        //Reset trip list
+        mTripList.clear();
+        mTripListAdapter.notifyDataSetChanged();
+        ListView tripListView = (ListView) findViewById(R.id.TripOverviewListView);
+        tripListView.setOnScrollListener(TripListViewScrollListener);
+        GetMoreTripsHelper(0);
 
         //Listen for TripService status
         registerReceiver(mStatusReceiver, new IntentFilter(getString(R.string.BroadcastStatusIntent)));
@@ -92,6 +87,10 @@ public class TripListActivity extends AppCompatActivity {
 
     @Override
     public void onPause() {
+        //Disable trip list from updating
+        ListView tripListView = (ListView) findViewById(R.id.TripOverviewListView);
+        tripListView.setOnScrollListener(null);
+
         //Stop listening for new locations
         if (mIsTripActive) {
             unregisterReceiver(mLocationReceiver);
@@ -107,7 +106,7 @@ public class TripListActivity extends AppCompatActivity {
 
     //region LISTENERS
 
-    ListView.OnItemClickListener MainListViewListener = new AdapterView.OnItemClickListener() {
+    ListView.OnItemClickListener TripListViewListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
             //Figure which type of layout was clicked. Then determine action based on that
@@ -120,6 +119,12 @@ public class TripListActivity extends AppCompatActivity {
                 intent.putExtra(getString(R.string.TripIdIntentName), mTripList.get(position).TripId);
                 startActivity(intent);
             }
+        }
+    };
+
+    ListView.OnScrollListener TripListViewScrollListener = new ListViewScrollListener(this, 5) {
+        @Override public void GetMoreTrips(int index) {
+            GetMoreTripsHelper(index);
         }
     };
 
@@ -149,7 +154,7 @@ public class TripListActivity extends AppCompatActivity {
             if(!route.isEmpty()) {
                 //Add all distance to the active trip
                 for (int i = 1; i < route.size() - 1; i++) {
-                    mActiveTrip.Distance += route.get(i).distanceTo(route.get(i - 1));
+                    mActiveTrip.MetersDriven += route.get(i).distanceTo(route.get(i - 1));
                 }
 
                 //Update distance in the ListView
@@ -176,7 +181,7 @@ public class TripListActivity extends AppCompatActivity {
 
             //If there is a previous position, start adding the distance to new positions
             if (mPreviousPosition != null) {
-                mActiveTrip.Distance += DistanceBetweenLatLng(position, mPreviousPosition);
+                mActiveTrip.MetersDriven += DistanceBetweenLatLng(position, mPreviousPosition);
 
                 Log.d("Debug", "Position: " + DistanceBetweenLatLng(position, mPreviousPosition));
 
@@ -192,7 +197,7 @@ public class TripListActivity extends AppCompatActivity {
     private void HandleTripStatus() {
         if (mIsTripActive) {
             //Update the ListView
-            mActiveTrip = new TripListEntry(true, false);
+            mActiveTrip = new TripListItem(true, false);
             mTripList.add(0, mActiveTrip);
 
             //Notify ListView of the change
@@ -207,7 +212,7 @@ public class TripListActivity extends AppCompatActivity {
 
     private void HandleProcessingStatus() {
         if (mIsProcessing) {
-            mActiveTrip = new TripListEntry(false, true);
+            mActiveTrip = new TripListItem(false, true);
             mTripList.add(0, mActiveTrip);
 
             //Notify ListView of the change
@@ -265,6 +270,24 @@ public class TripListActivity extends AppCompatActivity {
         float[] result = new float[1];
         Location.distanceBetween(first.latitude, first.longitude, second.latitude, second.longitude, result);
         return result[0];
+    }
+
+    private void GetMoreTripsHelper(final int index) {
+        final ProgressDialog progressDialog = new ProgressDialog(mContext);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage(mContext.getString(R.string.LoadingTrips));
+        progressDialog.show();
+
+        new android.os.Handler().post(
+            new Runnable() {
+                public void run() {
+                    List<TripListItem> items = ServiceHelper.GetTripsForListview(1, index);
+                    mTripList.addAll(ServiceHelper.GetTripsForListview(1, index));
+                    mTripListAdapter.notifyDataSetChanged();
+                    progressDialog.dismiss();
+                }
+            }
+        );
     }
 
     //endregion
