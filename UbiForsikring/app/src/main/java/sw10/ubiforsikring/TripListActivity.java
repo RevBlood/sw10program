@@ -1,6 +1,5 @@
 package sw10.ubiforsikring;
 
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -8,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Message;
@@ -15,10 +15,12 @@ import android.os.Messenger;
 import android.os.RemoteException;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -30,12 +32,17 @@ import sw10.ubiforsikring.Objects.TripObjects.TripListItem;
 
 public class TripListActivity extends AppCompatActivity {
     Context mContext;
+    View mFooterView;
+
+    //Trip list
     ArrayAdapter mTripListAdapter;
     List<TripListItem> mTripList;
+    ListView mTripListView;
 
     //Active Trip
+    TextView mCurrentTripDescriptionView;
     LatLng mPreviousPosition;
-    TripListItem mActiveTrip;
+    double mMetersDriven = 0;
 
     //TripService communication
     ServiceConnection mTripServiceConnection;
@@ -57,13 +64,14 @@ public class TripListActivity extends AppCompatActivity {
         mContext = this;
         mStatusReceiver = new StatusReceiver();
         mTripList = new ArrayList<>();
+        mCurrentTripDescriptionView = (TextView) findViewById(R.id.CurrentTripDescriptionView);
+        mFooterView = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.listitem_footer, null, false);
 
         //Setup ListView
-        ListView tripListView = (ListView) findViewById(R.id.TripOverviewListView);
+        mTripListView = (ListView) findViewById(R.id.TripOverviewListView);
         mTripListAdapter = new TripListAdapter(this, mTripList);
-        tripListView.setAdapter(mTripListAdapter);
-        tripListView.setOnItemClickListener(TripListViewListener);
-        tripListView.setEmptyView(findViewById(R.id.MainListViewEmpty));
+        mTripListView.setAdapter(mTripListAdapter);
+        mTripListView.setOnItemClickListener(TripListViewListener);
     }
 
     @Override
@@ -71,9 +79,15 @@ public class TripListActivity extends AppCompatActivity {
         //Reset trip list
         mTripList.clear();
         mTripListAdapter.notifyDataSetChanged();
-        ListView tripListView = (ListView) findViewById(R.id.TripOverviewListView);
-        tripListView.setOnScrollListener(TripListViewScrollListener);
-        GetMoreTripsHelper(0);
+
+        //Setup the list view again
+        mTripListView.setOnScrollListener(TripListViewScrollListener);
+        findViewById(R.id.TripListEmptyView).setVisibility(View.GONE);
+        mTripListView.setEmptyView(findViewById(R.id.TripListLoadingView));
+
+        //Get entries for trip list view
+        TripGetTask tripGetTask = new TripGetTask();
+        tripGetTask.execute(0);
 
         //Listen for TripService status
         registerReceiver(mStatusReceiver, new IntentFilter(getString(R.string.BroadcastStatusIntent)));
@@ -88,8 +102,7 @@ public class TripListActivity extends AppCompatActivity {
     @Override
     public void onPause() {
         //Disable trip list from updating
-        ListView tripListView = (ListView) findViewById(R.id.TripOverviewListView);
-        tripListView.setOnScrollListener(null);
+        mTripListView.setOnScrollListener(null);
 
         //Stop listening for new locations
         if (mIsTripActive) {
@@ -109,22 +122,22 @@ public class TripListActivity extends AppCompatActivity {
     ListView.OnItemClickListener TripListViewListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-            //Figure which type of layout was clicked. Then determine action based on that
-            int itemType = mTripListAdapter.getItemViewType(position);
-
-            if(itemType == TripListAdapter.VIEWTYPE_CURRENT) {
-                startActivity(new Intent(mContext, LiveMapActivity.class));
-            } else {
-                Intent intent = new Intent(mContext, TripOverviewActivity.class);
-                intent.putExtra(getString(R.string.TripIdIntentName), mTripList.get(position).TripId);
-                startActivity(intent);
-            }
+            Intent intent = new Intent(mContext, TripOverviewActivity.class);
+            intent.putExtra(getString(R.string.TripIdIntentName), mTripList.get(position).TripId);
+            startActivity(intent);
         }
     };
 
     ListView.OnScrollListener TripListViewScrollListener = new ListViewScrollListener(this, 5) {
         @Override public void GetMoreTrips(int index) {
-            GetMoreTripsHelper(index);
+            TripGetTask tripGetTask = new TripGetTask();
+            tripGetTask.execute(index);
+        }
+    };
+
+    View.OnClickListener CurrentTripClickListener = new View.OnClickListener(){
+        @Override public void onClick(View view) {
+            startActivity(new Intent(mContext, LiveMapActivity.class));
         }
     };
 
@@ -154,11 +167,10 @@ public class TripListActivity extends AppCompatActivity {
             if(!route.isEmpty()) {
                 //Add all distance to the active trip
                 for (int i = 1; i < route.size() - 1; i++) {
-                    mActiveTrip.MetersDriven += route.get(i).distanceTo(route.get(i - 1));
+                    mMetersDriven += route.get(i).distanceTo(route.get(i - 1));
                 }
 
-                //Update distance in the ListView
-                mTripListAdapter.notifyDataSetChanged();
+                mCurrentTripDescriptionView.setText(String.format(getString(R.string.CurrentTripDistanceText), mMetersDriven / 1000));
 
                 //Save last position as the previous for calculating further distances
                 mPreviousPosition = new LatLng(route.get(route.size() - 1).getLatitude(), route.get(route.size() - 1).getLongitude());
@@ -181,42 +193,46 @@ public class TripListActivity extends AppCompatActivity {
 
             //If there is a previous position, start adding the distance to new positions
             if (mPreviousPosition != null) {
-                mActiveTrip.MetersDriven += DistanceBetweenLatLng(position, mPreviousPosition);
+                mMetersDriven += DistanceBetweenLatLng(position, mPreviousPosition);
 
-                Log.d("Debug", "Position: " + DistanceBetweenLatLng(position, mPreviousPosition));
-
-                //Update distance in the ListView
-                mTripListAdapter.notifyDataSetChanged();
-
-                //Save position as the previous for calculating further distances
-                mPreviousPosition = position;
+                mCurrentTripDescriptionView.setText(String.format(getString(R.string.CurrentTripDistanceText), mMetersDriven / 1000));
             }
+
+            //Save position as the previous for calculating further distances
+            mPreviousPosition = position;
         }
     }
 
     private void HandleTripStatus() {
         if (mIsTripActive) {
-            //Update the ListView
-            mActiveTrip = new TripListItem(true, false);
-            mTripList.add(0, mActiveTrip);
-
-            //Notify ListView of the change
-            mTripListAdapter.notifyDataSetChanged();
-
             //Listen for, and request the route so far, from the TripService
             mRouteReceiver = new RouteReceiver();
             registerReceiver(mRouteReceiver, new IntentFilter(getString(R.string.BroadcastRouteIntent)));
             MessageTripService(TripService.UPDATE_ROUTE_BROADCAST);
+
+            //Show the relevant layout
+            View currentTripLayout = findViewById(R.id.CurrentTripLayout);
+            TextView currentTripTitleView = (TextView) findViewById(R.id.CurrentTripTitleView);
+            currentTripLayout.setVisibility(View.VISIBLE);
+            currentTripLayout.setOnClickListener(CurrentTripClickListener);
+            currentTripTitleView.setText(getString(R.string.CurrentTripTitle));
+            mCurrentTripDescriptionView.setText(getString(R.string.CurrentTripDistanceDefaultText));
         }
     }
 
     private void HandleProcessingStatus() {
         if (mIsProcessing) {
-            mActiveTrip = new TripListItem(false, true);
-            mTripList.add(0, mActiveTrip);
+            //Show the relevant layout
+            View activeTripLayout = findViewById(R.id.CurrentTripLayout);
+            activeTripLayout.setVisibility(View.VISIBLE);
 
-            //Notify ListView of the change
-            mTripListAdapter.notifyDataSetChanged();
+            //Show the relevant layout
+            View currentTripLayout = findViewById(R.id.CurrentTripLayout);
+            TextView currentTripTitleView = (TextView) findViewById(R.id.CurrentTripTitleView);
+            currentTripLayout.setVisibility(View.VISIBLE);
+            currentTripLayout.setOnClickListener(CurrentTripClickListener);
+            currentTripTitleView.setText(getString(R.string.CurrentTripTitle));
+            mCurrentTripDescriptionView.setText(getString(R.string.CurrentTripProcessingText));
         }
     }
 
@@ -272,22 +288,28 @@ public class TripListActivity extends AppCompatActivity {
         return result[0];
     }
 
-    private void GetMoreTripsHelper(final int index) {
-        final ProgressDialog progressDialog = new ProgressDialog(mContext);
-        progressDialog.setIndeterminate(true);
-        progressDialog.setMessage(mContext.getString(R.string.LoadingTrips));
-        progressDialog.show();
+    private class TripGetTask extends AsyncTask<Integer, Void, Integer> {
+        @Override
+        protected Integer doInBackground(Integer... index) {
+            mTripList.addAll(ServiceHelper.GetTripsForListview(1, index[0]));
+            return 0;
+        }
 
-        new android.os.Handler().post(
-            new Runnable() {
-                public void run() {
-                    List<TripListItem> items = ServiceHelper.GetTripsForListview(1, index);
-                    mTripList.addAll(ServiceHelper.GetTripsForListview(1, index));
-                    mTripListAdapter.notifyDataSetChanged();
-                    progressDialog.dismiss();
-                }
-            }
-        );
+        @Override
+        protected void onPostExecute(Integer result) {
+            mTripListView.removeFooterView(mFooterView);
+            mTripListView.setEmptyView(findViewById(R.id.TripListEmptyView));
+            mTripListAdapter.notifyDataSetChanged();
+        }
+
+        @Override
+        protected void onPreExecute() {
+            mTripListView.addFooterView(mFooterView);
+            mTripListAdapter.notifyDataSetChanged();
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {}
     }
 
     //endregion

@@ -56,11 +56,13 @@
     <string name="TripTimeTextFormat">HH:mm</string>
     <string name="TripTimeText">%1$s - %2$s</string>
     <string name="TripListEmptyText">Ingen ture kørt</string>
+    <string name="TripListLoadingText">Indlæser ture&#8230;</string>
     <string name="TripDistanceText">%.1f km</string>
     <string name="CurrentTripTitle">Igangværende tur</string>
     <string name="CurrentTripDistanceText">%.1f km kørt</string>
+    <string name="CurrentTripDistanceDefaultText">-,- km kørt</string>
     <string name="CurrentTripProcessingText">Tur afsluttet - Din score bliver udregnet</string>
-    <string name="LoadingTrips">Indlæser ture&#8230;</string>
+    <string name="LoadingTrips">Indlæser flere ture&#8230;</string>
 
     <!-- TRIP OVERVIEW -->
     <string name="ShowTripOnMapButtonText">Vis på kort</string>

@@ -9,20 +9,73 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".TripListActivity">
 
+    <RelativeLayout
+        android:id="@+id/CurrentTripLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/CurrentTripTitleView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:gravity="center_horizontal"
+            android:text="@string/DefaultText"
+            android:textColor="@color/white"
+            android:textSize="26sp" />
+
+        <TextView
+            android:id="@+id/CurrentTripDescriptionView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/CurrentTripTitleView"
+            android:gravity="center_horizontal"
+            android:text="@string/DefaultText"
+            android:textColor="@color/white"
+            android:textSize="18sp"/>
+    </RelativeLayout>
+
     <ListView
         android:id="@+id/TripOverviewListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/CurrentTripLayout"
         android:divider="@color/colorPrimaryDark"
         android:dividerHeight="1px"/>
 
     <TextView
-        android:id="@+id/MainListViewEmpty"
+        android:id="@+id/TripListEmptyView"
         android:layout_centerInParent="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
         android:text="@string/TripListEmptyText"
         android:textSize="26sp"/>
+
+    <LinearLayout
+        android:id="@+id/TripListLoadingView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:indeterminate="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/TripListLoadingText"
+            android:textSize="26sp" />
+
+    </LinearLayout>
+
 
 </RelativeLayout>

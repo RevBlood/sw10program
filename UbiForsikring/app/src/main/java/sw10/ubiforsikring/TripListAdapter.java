@@ -14,9 +14,6 @@ import java.util.List;
 import sw10.ubiforsikring.Objects.TripObjects.TripListItem;
 
 public class TripListAdapter extends ArrayAdapter<TripListItem> {
-    final static int VIEWTYPE_HISTORICAL = 0;
-    final static int VIEWTYPE_CURRENT = 1;
-
     List<TripListItem> mTrips;
     LayoutInflater mInflater;
     Context mContext;
@@ -32,18 +29,13 @@ public class TripListAdapter extends ArrayAdapter<TripListItem> {
         mSdf = new SimpleDateFormat(mContext.getString(R.string.TripTimeTextFormat));
     }
 
-    static class HistoricalViewHolder {
+    static class ViewHolder {
         public TextView TripTitleView;
         public TextView TripDescriptionView;
         public TextView TripOptimalityView;
         public TextView TripTimeView;
         public TextView TripDistanceView;
         public TextView TripCostView;
-    }
-
-    static class CurrentViewHolder {
-        public TextView CurrentTripTitleView;
-        public TextView CurrentTripDescriptionView;
     }
 
     @Override
@@ -53,71 +45,31 @@ public class TripListAdapter extends ArrayAdapter<TripListItem> {
         //Fetch the relevant item
         TripListItem item = mTrips.get(position);
 
-        //Layout depends on whether the trip is active or historical
-        switch (this.getItemViewType(position)) {
-            case VIEWTYPE_HISTORICAL:
-                //If a ViewHolder does not exist for this view, create it
-                if (rowView == null) {
-                    rowView = mInflater.inflate(R.layout.listitem_trip_historical, parent, false);
+        //If a ViewHolder does not exist for this view, create it
+        if (rowView == null) {
+            rowView = mInflater.inflate(R.layout.listitem_trip_historical, parent, false);
 
-                    HistoricalViewHolder historicalViewHolder = new HistoricalViewHolder();
-                    historicalViewHolder.TripTitleView = (TextView) rowView.findViewById(R.id.TripTitleView);
-                    historicalViewHolder.TripDescriptionView = (TextView) rowView.findViewById(R.id.TripDescriptionView);
-                    historicalViewHolder.TripOptimalityView = (TextView) rowView.findViewById(R.id.TripOptimalityView);
-                    historicalViewHolder.TripTimeView = (TextView) rowView.findViewById(R.id.TripTimeView);
-                    historicalViewHolder.TripDistanceView = (TextView) rowView.findViewById(R.id.TripDistanceView);
-                    historicalViewHolder.TripCostView = (TextView) rowView.findViewById(R.id.TripCostView);
+            ViewHolder viewHolder = new ViewHolder();
+            viewHolder.TripTitleView = (TextView) rowView.findViewById(R.id.TripTitleView);
+            viewHolder.TripDescriptionView = (TextView) rowView.findViewById(R.id.TripDescriptionView);
+            viewHolder.TripOptimalityView = (TextView) rowView.findViewById(R.id.TripOptimalityView);
+            viewHolder.TripTimeView = (TextView) rowView.findViewById(R.id.TripTimeView);
+            viewHolder.TripDistanceView = (TextView) rowView.findViewById(R.id.TripDistanceView);
+            viewHolder.TripCostView = (TextView) rowView.findViewById(R.id.TripCostView);
 
-                    rowView.setTag(historicalViewHolder);
-                }
-
-                //Populate ViewHolder with data
-                HistoricalViewHolder historicalViewHolder = (HistoricalViewHolder) rowView.getTag();
-                historicalViewHolder.TripTitleView.setText(String.format(mContext.getString(R.string.TripTitle), item.TripId));
-                historicalViewHolder.TripDescriptionView.setText("Beskrivelse");
-                historicalViewHolder.TripOptimalityView.setText(String.format(mContext.getString(R.string.TripOptimalityText), item.OptimalScore));
-                historicalViewHolder.TripTimeView.setText(String.format(mContext.getString(R.string.TripTimeText), mSdf.format(item.TripStart), mSdf.format(item.TripEnd)));
-                historicalViewHolder.TripDistanceView.setText(String.format(mContext.getString(R.string.TripDistanceText), item.MetersDriven / 1000));
-                SetTextColor(historicalViewHolder.TripOptimalityView, item.OptimalScore);
-                break;
-
-            case VIEWTYPE_CURRENT:
-                //If a ViewHolder does not exist for this view, create it
-                if (rowView == null) {
-                    rowView = mInflater.inflate(R.layout.listitem_trip_current, parent, false);
-
-                    CurrentViewHolder currentViewHolder = new CurrentViewHolder();
-                    currentViewHolder.CurrentTripTitleView = (TextView) rowView.findViewById(R.id.CurrentTripTitleView);
-                    currentViewHolder.CurrentTripDescriptionView = (TextView) rowView.findViewById(R.id.CurrentTripDescriptionView);
-                    rowView.setTag(currentViewHolder);
-                }
-
-                //Populate ViewHolder with data
-                CurrentViewHolder currentViewHolder = (CurrentViewHolder) rowView.getTag();
-                currentViewHolder.CurrentTripTitleView.setText(mContext.getString(R.string.CurrentTripTitle));
-                if (mTrips.get(position).IsProcessing) {
-                    currentViewHolder.CurrentTripDescriptionView.setText(mContext.getString(R.string.CurrentTripProcessingText));
-                } else {
-                    currentViewHolder.CurrentTripDescriptionView.setText(String.format(mContext.getString(R.string.CurrentTripDistanceText), item.MetersDriven / 1000));
-                }
-                    break;
+            rowView.setTag(viewHolder);
         }
+
+        //Populate ViewHolder with data
+        ViewHolder viewHolder = (ViewHolder) rowView.getTag();
+        viewHolder.TripTitleView.setText(String.format(mContext.getString(R.string.TripTitle), item.TripId));
+        viewHolder.TripDescriptionView.setText("Beskrivelse");
+        viewHolder.TripOptimalityView.setText(String.format(mContext.getString(R.string.TripOptimalityText), item.OptimalScore));
+        viewHolder.TripTimeView.setText(String.format(mContext.getString(R.string.TripTimeText), mSdf.format(item.TripStart), mSdf.format(item.TripEnd)));
+        viewHolder.TripDistanceView.setText(String.format(mContext.getString(R.string.TripDistanceText), item.MetersDriven / 1000));
+        SetTextColor(viewHolder.TripOptimalityView, item.OptimalScore);
 
         return rowView;
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-        if (mTrips.get(position).IsActive || mTrips.get(position).IsProcessing) {
-            return VIEWTYPE_CURRENT;
-        } else {
-            return VIEWTYPE_HISTORICAL;
-        }
-    }
-
-    @Override
-    public int getViewTypeCount() {
-        return 2;
     }
 
     private void SetTextColor(TextView optimalityView, double optimality) {
