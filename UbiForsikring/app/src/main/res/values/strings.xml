@@ -1,9 +1,4 @@
 <resources>
-    <!-- Logcat (Junk?) -->
-    <string name="LogFolder">/UbiForsikring</string>
-    <string name="LogFilename">Logcat</string>
-    <string name="LogFiletype">.txt</string>
-
     <!-- ACTIVITY TITLES -->
     <string name="title_activity_main_menu">UBI Forsikring</string>
     <string name="title_activity_settings">Indstillinger</string>
