@@ -1,8 +1,10 @@
 package sw10.ubiforsikring;
 
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
@@ -19,11 +21,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +37,7 @@ import sw10.ubiforsikring.Objects.TripObjects.TripListItem;
 public class TripListActivity extends AppCompatActivity {
     Context mContext;
     View mFooterView;
+    int mIndex;
 
     //Trip list
     ArrayAdapter mTripListAdapter;
@@ -288,18 +293,28 @@ public class TripListActivity extends AppCompatActivity {
         return result[0];
     }
 
-    private class TripGetTask extends AsyncTask<Integer, Void, Integer> {
+    private class TripGetTask extends AsyncTask<Integer, Void, Boolean> {
         @Override
-        protected Integer doInBackground(Integer... index) {
-            mTripList.addAll(ServiceHelper.GetTripsForListview(1, index[0]));
-            return 0;
+        protected Boolean doInBackground(Integer... index) {
+            try {
+                mTripList.addAll(ServiceHelper.GetTripsForListview(1, index[0]));
+                return true;
+            } catch (Exception e) {
+                mIndex = index[0];
+                return false;
+            }
         }
 
         @Override
-        protected void onPostExecute(Integer result) {
+        protected void onPostExecute(Boolean success) {
             mTripListView.removeFooterView(mFooterView);
+            findViewById(R.id.TripListLoadingView).setVisibility(View.GONE);
             mTripListView.setEmptyView(findViewById(R.id.TripListEmptyView));
-            mTripListAdapter.notifyDataSetChanged();
+            if(success) {
+                mTripListAdapter.notifyDataSetChanged();
+            } else {
+                BuildAlertDialog().show();
+            }
         }
 
         @Override
@@ -310,6 +325,24 @@ public class TripListActivity extends AppCompatActivity {
 
         @Override
         protected void onProgressUpdate(Void... values) {}
+    }
+
+    private AlertDialog BuildAlertDialog(){
+        return new AlertDialog.Builder(mContext)
+                .setTitle(getString(R.string.TripListLoadErrorText))
+                .setPositiveButton(getString(R.string.TripListRetryLoad), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        TripGetTask tripGetTask = new TripGetTask();
+                        tripGetTask.execute(mIndex);
+                        dialog.cancel();
+                    }
+                })
+                .setNegativeButton(getString(R.string.TripListCancelLoad), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                })
+                .create();
     }
 
     //endregion

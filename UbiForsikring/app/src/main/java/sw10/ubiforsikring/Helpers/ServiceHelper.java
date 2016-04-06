@@ -38,12 +38,8 @@ public class ServiceHelper {
 
 	public static ArrayList<TripListItem> GetTripsForListview(int carid, int offset){
 		String response = "Empty response";
-		try {
-			response = HTTPHelper.HTTPGet("http://" + ip + ":8000/RestService/Trip/GetTripsForOverview?carid=" + carid + "&offset=" + offset);
-			Log.i("Debug", response);
-		} catch (Exception e) {
-			Log.i("Debug", "Response failure:", e);
-		}
+        response = HTTPHelper.HTTPGet("http://" + ip + ":8000/RestService/Trip/GetTripsForOverview?carid=" + carid + "&offset=" + offset);
+        Log.i("Debug", response);
 
 		ArrayList<TripListItem> tripListItems = new ArrayList<TripListItem>();
 

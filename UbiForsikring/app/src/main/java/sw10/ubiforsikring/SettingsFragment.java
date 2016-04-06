@@ -122,7 +122,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
     private Preference.OnPreferenceClickListener OnHelpClickListener = new Preference.OnPreferenceClickListener() {
         @Override
         public boolean onPreferenceClick(Preference preference) {
-            Toast.makeText(getActivity(), getString(R.string.CompetitionsToast), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getString(R.string.UnfinishedFeatureText), Toast.LENGTH_SHORT).show();
             return true;
         }
     };
@@ -130,7 +130,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
     private Preference.OnPreferenceClickListener OnFeedbackClickListener = new Preference.OnPreferenceClickListener() {
         @Override
         public boolean onPreferenceClick(Preference preference) {
-            Toast.makeText(getActivity(), R.string.CompetitionsToast, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.UnfinishedFeatureText, Toast.LENGTH_SHORT).show();
             return true;
         }
     };
@@ -138,7 +138,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
     private Preference.OnPreferenceClickListener OnAboutClickListener = new Preference.OnPreferenceClickListener() {
         @Override
         public boolean onPreferenceClick(Preference preference) {
-            Toast.makeText(getActivity(), R.string.CompetitionsToast, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.UnfinishedFeatureText, Toast.LENGTH_SHORT).show();
             return true;
         }
     };

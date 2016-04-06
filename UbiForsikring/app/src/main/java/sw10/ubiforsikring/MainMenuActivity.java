@@ -1,9 +1,11 @@
 package sw10.ubiforsikring;
 
 import android.app.ActivityManager;
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
@@ -14,9 +16,8 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
-import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -35,6 +36,7 @@ import java.util.ArrayList;
 
 public class MainMenuActivity extends AppCompatActivity {
     Context mContext;
+    boolean mIsDialogOpen = false;
 
     //TripService communication
     BroadcastReceiver mStatusReceiver;
@@ -54,6 +56,10 @@ public class MainMenuActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main_menu);
         mContext = this;
         mStatusReceiver = new StatusReceiver();
+
+        if (savedInstanceState != null && savedInstanceState.getBoolean(getString(R.string.IsDialogOpen), false)) {
+            BuildAlertDialog().show();
+        }
 
         //Setup buttons
         Button tripButton = (Button) findViewById(R.id.TripButton);
@@ -92,6 +98,12 @@ public class MainMenuActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(getString(R.string.IsDialogOpen), mIsDialogOpen);
+    }
+
+    @Override
     public void onBackPressed() {
         //Deny application exit if trip is ongoing
         if (!mIsTripActive) {
@@ -118,7 +130,6 @@ public class MainMenuActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
     //endregion
 
     //region LISTENERS
@@ -128,6 +139,13 @@ public class MainMenuActivity extends AppCompatActivity {
             if (!mIsTripActive) {
                 //Ensure TripService is running before starting trip
                 InitializeTripService();
+
+                //Ensure GPS is enabled correctly before starting trip
+                if(!VerifyGPS()) {
+                    return;
+                }
+
+                //Begin or end trip
                 if (MessageTripService(TripService.BEGIN_TRIP)) {
                     Toast.makeText(mContext, R.string.TripStartToast, Toast.LENGTH_SHORT).show();
                 }
@@ -153,7 +171,7 @@ public class MainMenuActivity extends AppCompatActivity {
 
     Button.OnClickListener CompetitionsButtonListener = new Button.OnClickListener() {
         public void onClick(View v) {
-            Toast.makeText(mContext, R.string.CompetitionsToast, Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(mContext, CompetitionListActivity.class));
         }
     };
 
@@ -343,4 +361,38 @@ public class MainMenuActivity extends AppCompatActivity {
         return new File(dir, R.string.LogFilename + timestamp.toString() + R.string.LogFiletype);
     }
     //endregion
+
+    private boolean VerifyGPS() {
+        try {
+            if (Settings.Secure.getInt(getContentResolver(), Settings.Secure.LOCATION_MODE) != Settings.Secure.LOCATION_MODE_HIGH_ACCURACY) {
+                mIsDialogOpen = true;
+                BuildAlertDialog().show();
+                return false;
+            }
+        } catch (Settings.SettingNotFoundException e) {
+            //Ignore?
+        }
+
+        return true;
+    }
+
+    private AlertDialog BuildAlertDialog(){
+        return new AlertDialog.Builder(mContext)
+            .setTitle(getString(R.string.GPSDisabledDialogTitle))
+            .setMessage(getString(R.string.GPSDisabledDialogText))
+            .setPositiveButton(getString(R.string.GPSDisabledSettingsButtonText), new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    mIsDialogOpen = false;
+                    dialog.cancel();
+                }
+            })
+            .setNegativeButton(getString(R.string.GPSDisabledCancelButtonText), new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    mIsDialogOpen = false;
+                    dialog.cancel();
+                }
+            })
+            .create();
+    }
 }

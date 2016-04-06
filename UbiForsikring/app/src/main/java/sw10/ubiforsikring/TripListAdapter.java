@@ -47,7 +47,7 @@ public class TripListAdapter extends ArrayAdapter<TripListItem> {
 
         //If a ViewHolder does not exist for this view, create it
         if (rowView == null) {
-            rowView = mInflater.inflate(R.layout.listitem_trip_historical, parent, false);
+            rowView = mInflater.inflate(R.layout.listitem_trip, parent, false);
 
             ViewHolder viewHolder = new ViewHolder();
             viewHolder.TripTitleView = (TextView) rowView.findViewById(R.id.TripTitleView);

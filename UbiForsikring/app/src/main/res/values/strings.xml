@@ -40,8 +40,14 @@
     <string name="UserIdNotSetToast">Sæt venligst dit bruger ID under indstillinger før du starter en tur</string>
     <string name="TripStartToast">Starter tur</string>
     <string name="TripStopToast">Stopper tur</string>
-    <string name="CompetitionsToast">Denne feature kommer snart</string>
     <string name="OnBackPressedToast">Stop venligst tur inden afslutning</string>
+
+    <string name="GPSDisabledDialogTitle">GPS ikke indstillet korrekt</string>
+    <string name="GPSDisabledDialogText">Slå venligst GPS til med "Høj Præcision" før du starter din tur</string>
+    <string name="GPSDisabledSettingsButtonText">Gå til Indstillinger</string>
+    <string name="GPSDisabledCancelButtonText">Annuller</string>
+
+    <string name="IsDialogOpen">IsDialogOpen</string>
 
     <!-- LIVE MAP -->
     <string name="LiveDistanceText">%.1f km</string>
@@ -56,6 +62,9 @@
     <string name="TripTimeTextFormat">HH:mm</string>
     <string name="TripTimeText">%1$s - %2$s</string>
     <string name="TripListEmptyText">Ingen ture kørt</string>
+    <string name="TripListLoadErrorText">Kunne ikke indlæse ture</string>
+    <string name="TripListRetryLoad">Prøv igen</string>
+    <string name="TripListCancelLoad">Ignorer</string>
     <string name="TripListLoadingText">Indlæser ture&#8230;</string>
     <string name="TripDistanceText">%.1f km</string>
     <string name="CurrentTripTitle">Igangværende tur</string>
@@ -111,6 +120,7 @@
     <string name="FeedbackSettingTitle">Feedback</string>
     <string name="AboutSettingTitle">Om UBI Forsikring</string>
     <string name="OnLogoutWhileTripActiveToast">Afslut venligst din tur før du logger ud</string>
+    <string name="UnfinishedFeatureText">Denne feature kommer snart</string>
 
     <!-- TRIP SERVICE -->
     <string name="ServiceNotificationTitle">UBI Forsikring</string>
@@ -125,6 +135,7 @@
     <string name="BroadcastIsConnected">IsConnected</string>
     <string name="BroadcastIsTripActive">IsTripActive</string>
     <string name="BroadcastIsProcessing">IsProcessing</string>
+    <string name="BroadcastIsGPSActivated">IsGPSActivated</string>
     <string name="BroadcastLiveGpsIntent">LiveGpsIntent</string>
     <string name="BroadcastLiveGpsLocation">LiveGpsPosition</string>
     <string name="BroadcastRouteIntent">RouteIntent</string>

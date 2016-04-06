@@ -38,6 +38,7 @@
             android:layout_height="wrap_content"
             android:text="@string/DefaultText"
             android:textSize="26sp"
+            android:visibility="gone"
             android:layout_centerHorizontal="true"
             android:layout_below="@id/TripDescriptionView"/>
 

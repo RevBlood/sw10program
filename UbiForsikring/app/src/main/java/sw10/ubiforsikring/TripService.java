@@ -5,6 +5,7 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -12,22 +13,26 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
-import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResult;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -47,6 +52,7 @@ public class TripService extends Service implements ConnectionCallbacks, OnConne
     boolean mIsConnected = false;
     boolean mIsTripActive = false;
     boolean mIsProcessing = false;
+    Status mIsGPSActivated = null;
 
     Messenger mMessenger = new Messenger(new IncomingHandler());
     Notification mDrivingNotification;
@@ -62,10 +68,10 @@ public class TripService extends Service implements ConnectionCallbacks, OnConne
 
         //Initialize the GoogleApiClient, responsible for connecting to Google Location Services
         mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build();
+            .addConnectionCallbacks(this)
+            .addOnConnectionFailedListener(this)
+            .addApi(LocationServices.API)
+            .build();
         mGoogleApiClient.connect();
 
         //Initialize desired settings for location updates
@@ -81,7 +87,7 @@ public class TripService extends Service implements ConnectionCallbacks, OnConne
 
     @Override
     public void onConnected(Bundle connectionHint) {
-        //Broadcast the new status
+        //Connected to Google Play services and good to go
         mIsConnected = true;
         UpdateStatusBroadcast();
     }
@@ -188,6 +194,7 @@ public class TripService extends Service implements ConnectionCallbacks, OnConne
         intent.putExtra(getString(R.string.BroadcastIsConnected), mIsConnected);
         intent.putExtra(getString(R.string.BroadcastIsTripActive), mIsTripActive);
         intent.putExtra(getString(R.string.BroadcastIsProcessing), mIsProcessing);
+        intent.putExtra(getString(R.string.BroadcastIsGPSActivated), mIsGPSActivated);
 
         //Send the broadcast
         sendBroadcast(intent);
@@ -232,11 +239,12 @@ public class TripService extends Service implements ConnectionCallbacks, OnConne
 
         }
 
-        DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(getApplicationContext());
+        //TODO: Stop med at crashe vores app, Lau!
+        /*DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(getApplicationContext());
         Log.e("Debug", "Timestamp" + facts.get(1).SpatialTemporal.MPoint.getTime());
         Log.e("Debug", "Timezone: " + TimeZone.getDefault().getDisplayName());
         Log.e("Debug", "Timestamp with format" + dateFormat.format(facts.get(1).SpatialTemporal.MPoint.getTime()));
-        Log.e("Debug", "Number of entries: " + entries.size());
+        Log.e("Debug", "Number of entries: " + entries.size()); */
 
         //Calculate Measures given the locations from logged data
         MeasureHelper.CalculateMeasures(facts);

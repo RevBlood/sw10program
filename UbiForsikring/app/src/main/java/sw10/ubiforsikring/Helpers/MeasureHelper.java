@@ -9,14 +9,12 @@ import java.util.Date;
 
 import sw10.ubiforsikring.Objects.FactObjects.*;
 
-/**
- * Created by Casper on 11-02-2016.
- */
 public final class MeasureHelper {
 
     public static void CalculateMeasures(ArrayList<Fact> facts) {
         //Handling first case
         //Setting speed to be equal to the 2nd fact
+        //TODO: Lau, det her crasher når der ikke findes en 2nd fact.
         double speed2ndFact = Speed(facts.get(1).SpatialTemporal.MPoint, facts.get(0).SpatialTemporal.MPoint);
         facts.get(0).Measure = new MeasureInformation(speed2ndFact, 0, 0);
         facts.get(0).Flag = new FlagInformation(false, false, false, false);
