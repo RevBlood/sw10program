@@ -55,16 +55,25 @@
             android:launchMode="singleTask"
             android:parentActivityName=".TripOverviewActivity" />
         <activity
+            android:name=".CompetitionListActivity"
+            android:label="@string/title_activity_competition_list"
+            android:launchMode="singleTask"
+            android:parentActivityName=".MainMenuActivity"/>
+        <activity
+            android:name=".CompetitionOverviewActivity"
+            android:label="@string/title_activity_competition_overview"
+            android:launchMode="singleTask"
+            android:parentActivityName=".CompetitionListActivity" />
+
+        <activity
             android:name=".LoginActivity"
             android:label="@string/title_activity_main_menu"
             android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".CompetitionListActivity"></activity>
     </application>
 
 </manifest>

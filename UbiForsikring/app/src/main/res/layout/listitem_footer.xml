@@ -19,7 +19,7 @@
         android:layout_toStartOf="@id/ProgressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/LoadingTrips"
+        android:text="@string/LoadingTripsText"
         android:textSize="26sp" />
 
 </RelativeLayout>

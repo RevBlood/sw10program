@@ -6,6 +6,8 @@
     <string name="title_activity_trip_list">Turliste</string>
     <string name="title_activity_trip_overview">Turoversigt</string>
     <string name="title_activity_login">Login</string>
+    <string name="title_activity_competition_list">Konkurrencer</string>
+    <string name="title_activity_competition_overview">Overblik</string>
 
     <!-- LOGIN -->
     <string name="Authenticating">Logger ind&#8230;</string>
@@ -60,13 +62,12 @@
     <string name="TripListLoadErrorText">Kunne ikke indlæse ture</string>
     <string name="TripListRetryLoad">Prøv igen</string>
     <string name="TripListCancelLoad">Ignorer</string>
-    <string name="TripListLoadingText">Indlæser ture&#8230;</string>
     <string name="TripDistanceText">%.1f km</string>
     <string name="CurrentTripTitle">Igangværende tur</string>
     <string name="CurrentTripDistanceText">%.1f km kørt</string>
     <string name="CurrentTripDistanceDefaultText">-,- km kørt</string>
     <string name="CurrentTripProcessingText">Tur afsluttet - Din score bliver udregnet</string>
-    <string name="LoadingTrips">Indlæser flere ture&#8230;</string>
+    <string name="LoadingTripsText">Indlæser&#8230;</string>
 
     <!-- TRIP OVERVIEW -->
     <string name="ShowTripOnMapButtonText">Vis på kort</string>
@@ -100,6 +101,16 @@
     <string name="CriticalTimeText">Kørt %s</string>
     <string name="SpeedText">%.1f km kørt for hurtigt</string>
     <string name="AccelerationCountText">%d forseelser</string>
+
+    <!-- COMPETITION LIST -->
+    <string name="CompetitionListEmptyText">Der er ingen konkurrencer lige nu</string>
+    <string name="LoadingCompetitionsText">Indlæser&#8230;</string>
+    <string name="CompetitionIdIntentName">CompetitionId</string>
+    <string name="EnterCompetitionText">Deltag</string>
+    <string name="CompetitionAttemptCountText">%d forsøg</string>
+    <string name="CompetitionRankDescription">%1$,d / %2$,d</string>
+    <string name="CompetitionParticipantsDescription">%d deltagere</string>
+    <string name="CompetitionRankText">%d%%</string>
 
     <!-- SETTINGS ACTIVITY -->
     <string name="SettingsCategoryUser">Bruger</string>

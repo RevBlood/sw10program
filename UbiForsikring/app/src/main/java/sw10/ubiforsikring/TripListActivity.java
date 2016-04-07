@@ -21,13 +21,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import java.util.AbstractMap;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,7 +72,7 @@ public class TripListActivity extends AppCompatActivity {
         mFooterView = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.listitem_footer, null, false);
 
         //Setup ListView
-        mTripListView = (ListView) findViewById(R.id.TripOverviewListView);
+        mTripListView = (ListView) findViewById(R.id.TripListView);
         mTripListAdapter = new TripListAdapter(this, mTripList);
         mTripListView.setAdapter(mTripListAdapter);
         mTripListView.setOnItemClickListener(TripListViewListener);
@@ -87,11 +86,9 @@ public class TripListActivity extends AppCompatActivity {
 
         //Setup the list view again
         mTripListView.setOnScrollListener(TripListViewScrollListener);
-        findViewById(R.id.TripListEmptyView).setVisibility(View.GONE);
-        mTripListView.setEmptyView(findViewById(R.id.TripListLoadingView));
 
         //Get entries for trip list view
-        TripGetTask tripGetTask = new TripGetTask();
+        TripGetTask tripGetTask = new TripGetTask(this);
         tripGetTask.execute(0);
 
         //Listen for TripService status
@@ -134,8 +131,8 @@ public class TripListActivity extends AppCompatActivity {
     };
 
     ListView.OnScrollListener TripListViewScrollListener = new ListViewScrollListener(this, 5) {
-        @Override public void GetMoreTrips(int index) {
-            TripGetTask tripGetTask = new TripGetTask();
+        @Override public void GetMoreEntries(int index) {
+            TripGetTask tripGetTask = new TripGetTask(mContext);
             tripGetTask.execute(index);
         }
     };
@@ -294,6 +291,12 @@ public class TripListActivity extends AppCompatActivity {
     }
 
     private class TripGetTask extends AsyncTask<Integer, Void, Boolean> {
+        final WeakReference<Context> mContextReference;
+
+        public TripGetTask(Context context) {
+            mContextReference = new WeakReference<>(context);
+        }
+
         @Override
         protected Boolean doInBackground(Integer... index) {
             try {
@@ -307,18 +310,23 @@ public class TripListActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Boolean success) {
-            mTripListView.removeFooterView(mFooterView);
-            findViewById(R.id.TripListLoadingView).setVisibility(View.GONE);
-            mTripListView.setEmptyView(findViewById(R.id.TripListEmptyView));
-            if(success) {
-                mTripListAdapter.notifyDataSetChanged();
-            } else {
-                BuildAlertDialog().show();
+            if (mContextReference.get() != null) {
+                mTripListView.removeFooterView(mFooterView);
+                findViewById(R.id.TripListLoadingView).setVisibility(View.GONE);
+                mTripListView.setEmptyView(findViewById(R.id.TripListEmptyView));
+                if (success) {
+                    mTripListAdapter.notifyDataSetChanged();
+                } else {
+                    BuildAlertDialog().show();
+                }
             }
         }
 
         @Override
         protected void onPreExecute() {
+            findViewById(R.id.TripListEmptyView).setVisibility(View.GONE);
+            mTripListView.setEmptyView(findViewById(R.id.TripListLoadingView));
+
             mTripListView.addFooterView(mFooterView);
             mTripListAdapter.notifyDataSetChanged();
         }
@@ -332,7 +340,7 @@ public class TripListActivity extends AppCompatActivity {
                 .setTitle(getString(R.string.TripListLoadErrorText))
                 .setPositiveButton(getString(R.string.TripListRetryLoad), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        TripGetTask tripGetTask = new TripGetTask();
+                        TripGetTask tripGetTask = new TripGetTask(mContext);
                         tripGetTask.execute(mIndex);
                         dialog.cancel();
                     }

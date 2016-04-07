@@ -7,6 +7,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import sw10.ubiforsikring.Objects.CompetitionObjects.CompetitionListItem;
 import sw10.ubiforsikring.Objects.FactObjects.Fact;
 import sw10.ubiforsikring.Objects.TripObjects.TripListItem;
 
@@ -36,9 +37,10 @@ public class ServiceHelper {
 		return tripListItem;
 	}
 
-	public static ArrayList<TripListItem> GetTripsForListview(int carid, int offset){
+    //TODO: Få Lau til at sætte denne op på serveren, og parse til CompetitionListItem i stedet for tripListItem
+	public static ArrayList<TripListItem> GetTripsForListview(int carId, int offset){
 		String response = "Empty response";
-        response = HTTPHelper.HTTPGet("http://" + ip + ":8000/RestService/Trip/GetTripsForOverview?carid=" + carid + "&offset=" + offset);
+        response = HTTPHelper.HTTPGet("http://" + ip + ":8000/RestService/Trip/GetTripsForOverview?carid=" + carId + "&offset=" + offset);
         Log.i("Debug", response);
 
 		ArrayList<TripListItem> tripListItems = new ArrayList<TripListItem>();
@@ -48,13 +50,34 @@ public class ServiceHelper {
 			for(int i = 0; i < jsonArr.length(); i++){
 				JSONObject obj = jsonArr.getJSONObject(i);
 				TripListItem tripListItem = new TripListItem(obj);
-				tripListItems.add(tripListItem);
+                tripListItems.add(tripListItem);
 			}
 		}
 		catch(Exception e) {
 			Log.e("Debug", "GetTripsForListview:", e);
 		}
 		return tripListItems;
+	}
+
+	public static ArrayList<CompetitionListItem> GetCompetitionsForListview(int carId, int offset){
+		String response = "Empty response";
+		response = HTTPHelper.HTTPGet("http://" + ip + ":8000/RestService/Trip/GetCompetitionsForOverview?carid=" + carId + "&offset=" + offset);
+		Log.i("Debug", response);
+
+		ArrayList<CompetitionListItem> competitionListItems = new ArrayList<CompetitionListItem>();
+
+		try {
+			JSONArray jsonArr = new JSONArray(response);
+			for(int i = 0; i < jsonArr.length(); i++){
+				JSONObject obj = jsonArr.getJSONObject(i);
+                CompetitionListItem competitionListItem = new CompetitionListItem(obj);
+                competitionListItems.add(competitionListItem);
+			}
+		}
+		catch(Exception e) {
+			Log.e("Debug", "GetCompetitionsForListview:", e);
+		}
+		return competitionListItems;
 	}
 
 	public static ArrayList<Fact> GetFacts(int carid, int tripid){

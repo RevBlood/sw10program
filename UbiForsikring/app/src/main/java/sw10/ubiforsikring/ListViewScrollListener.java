@@ -27,7 +27,7 @@ public abstract class ListViewScrollListener implements AbsListView.OnScrollList
         // If not loading, check if more data should be loaded.
         if (!mLoading && mTotalItemCount - visibleItemCount <= firstVisibleItem + mLoadThreshold) {
             mLoading = true;
-            GetMoreTrips(mCurrentIndex);
+            GetMoreEntries(mCurrentIndex);
         }
     }
 
@@ -35,5 +35,5 @@ public abstract class ListViewScrollListener implements AbsListView.OnScrollList
     public void onScrollStateChanged(AbsListView view, int scrollState) {
     }
 
-    public abstract void GetMoreTrips(int index);
+    public abstract void GetMoreEntries(int index);
 }

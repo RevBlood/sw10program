@@ -9,4 +9,42 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".CompetitionListActivity">
 
+    <ListView
+        android:id="@+id/CompetitionListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="@color/colorPrimaryDark"
+        android:dividerHeight="1px"/>
+
+    <TextView
+        android:id="@+id/CompetitionListEmptyView"
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:text="@string/CompetitionListEmptyText"
+        android:textSize="26sp"/>
+
+    <LinearLayout
+        android:id="@+id/CompetitionListLoadingView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:indeterminate="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/LoadingCompetitionsText"
+            android:textSize="26sp" />
+
+    </LinearLayout>
+
 </RelativeLayout>
