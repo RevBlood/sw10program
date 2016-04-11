@@ -32,7 +32,6 @@ public final class MeasureHelper {
             facts.get(i).Measure.Acceleration = Acceleration(facts.get(i).Measure, facts.get(i - 1).Measure, facts.get(i).SpatialTemporal, facts.get(i - 1).SpatialTemporal);
             facts.get(i).Measure.Jerk = Jerk(facts.get(i).Measure, facts.get(i - 1).Measure, facts.get(i).SpatialTemporal, facts.get(i - 1).SpatialTemporal);
 
-
             //FlagInformation
             Boolean accelerating = Accelerating(facts.get(i).Measure);
             Boolean braking = Braking(facts.get(i).Measure);

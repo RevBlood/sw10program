@@ -327,7 +327,7 @@ public class TripListActivity extends AppCompatActivity {
             findViewById(R.id.TripListEmptyView).setVisibility(View.GONE);
             mTripListView.setEmptyView(findViewById(R.id.TripListLoadingView));
 
-            mTripListView.addFooterView(mFooterView);
+            mTripListView.addFooterView(mFooterView, null, false);
             mTripListAdapter.notifyDataSetChanged();
         }
 

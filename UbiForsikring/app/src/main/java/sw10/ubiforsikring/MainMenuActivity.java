@@ -1,5 +1,6 @@
 package sw10.ubiforsikring;
 
+import android.Manifest;
 import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
@@ -9,14 +10,15 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
-import android.net.Uri;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -26,17 +28,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.util.ArrayList;
-
 public class MainMenuActivity extends AppCompatActivity {
     Context mContext;
     boolean mIsDialogOpen = false;
+    boolean mHasFineLocationPermission = false;
+    final static int FINE_LOCATION_PERMISSION_REQUEST = 0;
 
     //TripService communication
     BroadcastReceiver mStatusReceiver;
@@ -130,6 +126,18 @@ public class MainMenuActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+        if (requestCode == FINE_LOCATION_PERMISSION_REQUEST) {
+            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                mHasFineLocationPermission = true;
+            } else {
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+            }
+        }
+    }
+
     //endregion
 
     //region LISTENERS
@@ -137,13 +145,16 @@ public class MainMenuActivity extends AppCompatActivity {
         public void onClick(View v) {
             //Send message to TripService to start/stop the trip
             if (!mIsTripActive) {
-                //Ensure TripService is running before starting trip
-                InitializeTripService();
+                //If GPS permission is not granted, request it
+                VerifyFineLocationPermission();
 
-                //Ensure GPS is enabled correctly before starting trip
-                if(!VerifyGPS()) {
+                //If GPS is diabled, or permission is not granted, don't start the trip
+                if(!VerifyGPS() || !mHasFineLocationPermission) {
                     return;
                 }
+
+                //Ensure TripService is running before starting trip
+                InitializeTripService();
 
                 //Begin or end trip
                 if (MessageTripService(TripService.BEGIN_TRIP)) {
@@ -302,6 +313,14 @@ public class MainMenuActivity extends AppCompatActivity {
         }
 
         return true;
+    }
+
+    private void VerifyFineLocationPermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, FINE_LOCATION_PERMISSION_REQUEST);
+        } else {
+            mHasFineLocationPermission = true;
+        }
     }
 
     private AlertDialog BuildAlertDialog(){

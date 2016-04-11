@@ -138,7 +138,7 @@ public class CompetitionListActivity extends AppCompatActivity {
 
         @Override
         protected void onPreExecute() {
-            mCompetitionListView.addFooterView(mFooterView);
+            mCompetitionListView.addFooterView(mFooterView, null, false);
             mCompetitionListAdapter.notifyDataSetChanged();
         }
 
