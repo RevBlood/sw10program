@@ -17,6 +17,7 @@ public class TripListItem {
     public double Price;
     public double OptimalScore;
     public double TripScore;
+    public double ScorePercentage;
 
     public long PreviousTripId;
     public int CarId;
@@ -30,6 +31,7 @@ public class TripListItem {
             this.Price = obj.getDouble("price");
             this.OptimalScore = obj.getDouble("optimalscore");
             this.TripScore = obj.getDouble("tripscore");
+            this.ScorePercentage = obj.getDouble("scorepercentage");
             //this.PreviousTripId = obj.getLong("prevtripid");
             //this.CarId = obj.getInt("carid");
         }
@@ -51,6 +53,7 @@ public class TripListItem {
         result.append(" Price: " + Price + NEW_LINE );
         result.append(" OptimalScore: " + OptimalScore + NEW_LINE );
         result.append(" TripScore: " + TripScore );
+        result.append(" ScorePercentage: " + ScorePercentage);
 
 
 
