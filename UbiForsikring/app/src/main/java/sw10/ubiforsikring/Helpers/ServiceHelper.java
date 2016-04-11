@@ -40,7 +40,7 @@ public class ServiceHelper {
     //TODO: Få Lau til at sætte denne op på serveren, og parse til CompetitionListItem i stedet for tripListItem
 	public static ArrayList<TripListItem> GetTripsForListview(int carId, int offset){
 		String response = "Empty response";
-        response = HTTPHelper.HTTPGet("http://" + ip + ":8000/RestService/Trip/GetTripsForOverview?carid=" + carId + "&offset=" + offset);
+        response = HTTPHelper.HTTPGet("http://" + ip + ":8000/RestService/Trip/GetTripsForList?carid=" + carId + "&offset=" + offset);
         Log.i("Debug", response);
 
 		ArrayList<TripListItem> tripListItems = new ArrayList<TripListItem>();
