@@ -4,9 +4,6 @@ import android.util.Log;
 
 import org.json.JSONObject;
 
-/**
- * Created by Casper on 11-02-2016.
- */
 public class FlagInformation {
 
     public long EntryId;

@@ -1,7 +1,6 @@
 package sw10.ubiforsikring.Helpers;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -60,7 +59,6 @@ public class HTTPHelper {
     public static class HTTPGetTask extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... url) {
-
             try {
                 URL obj = new URL(url[0]);
                 HttpURLConnection con = (HttpURLConnection) obj.openConnection();

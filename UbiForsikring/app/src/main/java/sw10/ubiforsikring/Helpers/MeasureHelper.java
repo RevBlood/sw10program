@@ -10,11 +10,12 @@ import java.util.Date;
 import sw10.ubiforsikring.Objects.FactObjects.*;
 
 public final class MeasureHelper {
-
     public static void CalculateMeasures(ArrayList<Fact> facts) {
-        //Handling first case
-        //Setting speed to be equal to the 2nd fact
-        //TODO: Lau, det her crasher når der ikke findes en 2nd fact.
+        if (facts.size() < 2) {
+            return;
+        }
+
+        //First case - Set speed equal to second fact and set flags to false. This is essentially a freebie
         double speed2ndFact = Speed(facts.get(1).SpatialTemporal.MPoint, facts.get(0).SpatialTemporal.MPoint);
         facts.get(0).Measure = new MeasureInformation(speed2ndFact, 0, 0);
         facts.get(0).Flag = new FlagInformation(false, false, false, false);
@@ -58,13 +59,13 @@ public final class MeasureHelper {
         double distance = MPoint.distanceTo(PrevMPoint);
 
         long differenceInSeconds = (MPoint.getTime() - PrevMPoint.getTime()) / 1000;
+
         if(differenceInSeconds == 0) {
             return 0;
+        } else {
+            // Conversion from m/s to km/h = (m/s) * 3.6
+            return (distance / differenceInSeconds) * 3.6;
         }
-        // Conversion from m/s to km/h
-        //3.6 * m/s
-
-        return (distance / differenceInSeconds) * 3.6;
     }
 
     public static double Acceleration(MeasureInformation CurrentMI, MeasureInformation PrevMI, SpatialTemporalInformation CurrentTI, SpatialTemporalInformation PrevTI){
@@ -74,9 +75,9 @@ public final class MeasureHelper {
 
         if(differenceInSeconds == 0){
             return 0;
+        } else {
+            return velocityChange / differenceInSeconds;
         }
-
-        return velocityChange / differenceInSeconds;
     }
 
     public static double Jerk(MeasureInformation CurrentMi, MeasureInformation PrevMI, SpatialTemporalInformation CurrentTI, SpatialTemporalInformation PrevTI){
@@ -86,9 +87,9 @@ public final class MeasureHelper {
 
         if(differenceInSeconds == 0){
             return 0;
+        } else {
+            return accelerationChange / differenceInSeconds;
         }
-
-        return accelerationChange / differenceInSeconds;
     }
 
     public static int DBDate(long unixTime) {
@@ -116,23 +117,14 @@ public final class MeasureHelper {
     }
 
     private static Boolean Accelerating(MeasureInformation MI) {
-        if(MI.Acceleration >= 5){
-            return true;
-        }
-        return false;
+        return MI.Acceleration >= 5;
     }
 
     private static Boolean Jerking(MeasureInformation MI) {
-        if(Math.abs(MI.Jerk) >= 5){
-            return true;
-        }
-        return false;
+        return Math.abs(MI.Jerk) >= 5;
     }
 
     private static Boolean Braking(MeasureInformation MI) {
-        if(MI.Acceleration <= -5){
-            return true;
-        }
-        return false;
+        return MI.Acceleration <= -5;
     }
 }

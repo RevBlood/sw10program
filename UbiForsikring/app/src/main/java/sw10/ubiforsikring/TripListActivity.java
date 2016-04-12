@@ -300,7 +300,7 @@ public class TripListActivity extends AppCompatActivity {
         @Override
         protected Boolean doInBackground(Integer... index) {
             try {
-                mTripList.addAll(ServiceHelper.GetTripsForListview(1, index[0]));
+                mTripList.addAll(ServiceHelper.GetTripsForListView(1, index[0]));
                 return true;
             } catch (Exception e) {
                 mIndex = index[0];

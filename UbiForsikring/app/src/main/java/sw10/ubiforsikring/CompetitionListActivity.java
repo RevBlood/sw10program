@@ -114,7 +114,7 @@ public class CompetitionListActivity extends AppCompatActivity {
         @Override
         protected Boolean doInBackground(Integer... index) {
             try {
-                mCompetitionList.addAll(ServiceHelper.GetCompetitionsForListview(1, index[0]));
+                mCompetitionList.addAll(ServiceHelper.GetCompetitionsForListView(1, index[0]));
                 return true;
             } catch (Exception e) {
                 mIndex = index[0];
