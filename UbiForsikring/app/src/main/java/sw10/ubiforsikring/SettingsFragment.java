@@ -13,7 +13,6 @@ import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
 import android.preference.Preference;
-import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
 import android.preference.SwitchPreference;
@@ -40,7 +39,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
 
         //Set listeners for links
         PreferenceScreen preferenceScreen = getPreferenceScreen();
-        preferenceScreen.findPreference(getString(R.string.UserLogoutTitle)).setOnPreferenceClickListener(OnLogoutClickListener);
+        //preferenceScreen.findPreference(getString(R.string.UserLogoutTitle)).setOnPreferenceClickListener(OnLogoutClickListener);
         preferenceScreen.findPreference(getString(R.string.HelpSettingTitle)).setOnPreferenceClickListener(OnHelpClickListener);
         preferenceScreen.findPreference(getString(R.string.FeedbackSettingTitle)).setOnPreferenceClickListener(OnFeedbackClickListener);
         preferenceScreen.findPreference(getString(R.string.AboutSettingTitle)).setOnPreferenceClickListener(OnAboutClickListener);
@@ -49,10 +48,18 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
     @Override
     public void onResume() {
         //Update titles
-        SharedPreferences preferences = getActivity().getSharedPreferences(getString(R.string.LoginPreferences), Context.MODE_PRIVATE);
+        /*SharedPreferences preferences = getActivity().getSharedPreferences(getString(R.string.LoginPreferences), Context.MODE_PRIVATE);
         String email = preferences.getString(getString(R.string.StoredEmail), getString(R.string.StoredEmail));
         PreferenceCategory category = (PreferenceCategory) findPreference(getString(R.string.SettingsCategoryUser));
-        category.setTitle(email);
+        category.setTitle(email); */
+
+        SharedPreferences preferences = getActivity().getSharedPreferences(getString(R.string.UsernamePreferences), Context.MODE_PRIVATE);
+        String username = preferences.getString(getString(R.string.StoredUsername), "");
+        Preference usernamePreference = findPreference(getString(R.string.UsernameTitle));
+        if (!username.isEmpty()) {
+            usernamePreference.setSummary(username);
+            usernamePreference.setEnabled(false);
+        }
 
         //Listen for preference changes
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);

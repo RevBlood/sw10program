@@ -3,12 +3,20 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory
+
+        android:title="@string/SettingsCategoryUser"
         android:key="@string/SettingsCategoryUser">
 
-        <Preference
+        <!-- <Preference
             android:title="@string/UserLogoutTitle"
             android:key="@string/UserLogoutTitle"
-            />
+            /> -->
+
+        <EditTextPreference
+            android:title="@string/UsernameTitle"
+            android:key="@string/UsernameTitle"
+            android:inputType="text"
+            android:maxLength="@integer/userNameMaxLength" />
 
     </PreferenceCategory>
 

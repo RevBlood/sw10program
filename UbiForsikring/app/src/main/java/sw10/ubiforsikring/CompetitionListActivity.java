@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +12,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import java.lang.ref.WeakReference;
@@ -68,6 +72,9 @@ public class CompetitionListActivity extends AppCompatActivity {
         mCompetitionList.add(testItemOne);
         mCompetitionList.add(testItemTwo);
         mCompetitionListAdapter.notifyDataSetChanged();
+
+        //Check if user has a username - Display dialog if not.
+        HandleUsername();
 
         super.onResume();
     }
@@ -164,5 +171,48 @@ public class CompetitionListActivity extends AppCompatActivity {
                 .create();
     }
 
+    private AlertDialog BuildUsernameDialog(){
+        final EditText inputView = new EditText(this);
+
+        final AlertDialog alertDialog = new AlertDialog.Builder(mContext)
+                .setTitle(getString(R.string.UsernameNotSetTitle))
+                .setMessage(getString(R.string.UsernameNotSetDescription))
+                .setPositiveButton(getString(R.string.UsernameOk), null)
+                .setNegativeButton(getString(R.string.UsernameGoBack), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                })
+                .create();
+
+        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialog) {
+                Button button = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (inputView.getText().toString().length() >= mContext.getResources().getInteger(R.integer.userNameMinLength)) {
+                            SharedPreferences.Editor editor = getSharedPreferences(getString(R.string.UsernamePreferences), Context.MODE_PRIVATE).edit();
+                            editor.putString(getString(R.string.StoredUsername), inputView.getText().toString()).apply();
+                            alertDialog.cancel();
+                        } else {
+                            inputView.setError(mContext.getString(R.string.UsernameTooShortError));
+                        }
+                    }
+                });
+            }
+        });
+
+        alertDialog.setView(inputView, 50, 0, 70, 0);
+        return alertDialog;
+    }
+
+    private void HandleUsername() {
+        SharedPreferences preferences = getSharedPreferences(getString(R.string.UsernamePreferences), Context.MODE_PRIVATE);
+        if (preferences.getString(getString(R.string.StoredUsername), "").isEmpty()) {
+            BuildUsernameDialog().show();
+        }
+    }
     //endregion
 }

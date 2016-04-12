@@ -3,6 +3,10 @@
     <!-- MAIN MENU -->
     <integer name="OnBackPressedTimer">2000</integer>
 
+    <!-- PREFERENCES -->
+    <integer name="userNameMinLength">4</integer>
+    <integer name="userNameMaxLength">32</integer>
+
     <!-- LIVE MAP -->
     <integer name="LiveGpsRouteWidth">12</integer>
     <integer name="AnimationSpeed">800</integer>
