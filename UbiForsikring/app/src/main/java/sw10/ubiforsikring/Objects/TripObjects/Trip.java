@@ -33,13 +33,6 @@ public class Trip {
     public double RoadtypeScore;
     public double TimePeriodScore;
 
-    public boolean IsActive = false;
-    public boolean IsProcessing = false;
-
-    public Trip(){
-
-    }
-
     public Trip(JSONObject obj) {
         try {
             this.TripId = obj.getLong("tripid");
@@ -51,33 +44,26 @@ public class Trip {
             this.TripScore = obj.getDouble("tripscore");
             //this.PreviousTripId = obj.getLong("prevtripid");
             //this.CarId = obj.getInt("carid");
-        }
-        catch (Exception e){
+        } catch (Exception e){
             Log.e("Debug", "Trip JsonObject Constructor: ", e);
         }
     }
 
-
     @Override public String toString() {
-        StringBuilder result = new StringBuilder();
+        String result = "";
         String NEW_LINE = System.getProperty("line.separator");
 
-        result.append(this.getClass().getName() + " Object {" + NEW_LINE);
-        result.append(" TripId: " + TripId + NEW_LINE);
-        result.append(" TripStart: " + TripStart.toString() + NEW_LINE );
-        result.append(" TripEnd: " + TripEnd.toString() + NEW_LINE );
-        result.append(" MetersDriven: " + MetersDriven + NEW_LINE );
-        result.append(" Price: " + Price + NEW_LINE );
-        result.append(" OptimalScore: " + OptimalScore + NEW_LINE );
-        result.append(" TripScore: " + TripScore );
+        result += this.getClass().getName() + " Object {" + NEW_LINE;
+        result += " TripId: " + TripId + NEW_LINE;
+        result += " TripStart: " + TripStart.toString() + NEW_LINE;
+        result += " TripEnd: " + TripEnd.toString() + NEW_LINE;
+        result += " MetersDriven: " + MetersDriven + NEW_LINE;
+        result += " Price: " + Price + NEW_LINE;
+        result += " OptimalScore: " + OptimalScore + NEW_LINE;
+        result += " TripScore: " + TripScore;
+        //result += " CarId: " + CarId + NEW_LINE;
 
-
-
-
-        //result.append(" CarId: " + CarId + NEW_LINE );
-
-
-        return result.toString();
+        return result;
     }
 
 }

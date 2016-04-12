@@ -36,18 +36,18 @@ public class CompetitionListItem {
     }
 
     @Override public String toString() {
-        StringBuilder result = new StringBuilder();
+        String result = "";
         String NEW_LINE = System.getProperty("line.separator");
 
-        result.append(this.getClass().getName() + " Object {" + NEW_LINE);
-        result.append(" CompetitionId: " + CompetitionId + NEW_LINE);
-        result.append(" CompetitionName: " + CompetitionName + NEW_LINE );
-        result.append(" ParticipantCount: " + ParticipantCount + NEW_LINE );
-        result.append(" IsParticipating: " + IsParticipating + NEW_LINE );
-        result.append(" Rank: " + Rank + NEW_LINE );
-        result.append(" AttemptCount: " + AttemptCount + NEW_LINE );
+        result += this.getClass().getName() + " Object {" + NEW_LINE;
+        result += " CompetitionId: " + CompetitionId + NEW_LINE;
+        result += " CompetitionName: " + CompetitionName + NEW_LINE;
+        result += " ParticipantCount: " + ParticipantCount + NEW_LINE;
+        result += " IsParticipating: " + IsParticipating + NEW_LINE;
+        result += " Rank: " + Rank + NEW_LINE;
+        result += " AttemptCount: " + AttemptCount + NEW_LINE;
 
-        return result.toString();
+        return result;
     }
 }
 

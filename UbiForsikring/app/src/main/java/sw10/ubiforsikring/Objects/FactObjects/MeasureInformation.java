@@ -25,40 +25,41 @@ public class MeasureInformation {
         this.Jerk = Jerk;
     }
 
-    public MeasureInformation(JSONObject obj) {
+    public MeasureInformation(JSONObject jsonObject) {
         try {
-            this.Speed = obj.isNull("speed") ? 0 : obj.getDouble("speed");
-            this.Acceleration = obj.isNull("acceleration") ? 0 : obj.getDouble("acceleration");
-            this.Jerk = obj.isNull("jerk") ? 0 : obj.getDouble("jerk");
-        }
-        catch (Exception e){
+            this.Speed = jsonObject.isNull("speed") ? 0 : jsonObject.getDouble("speed");
+            this.Acceleration = jsonObject.isNull("acceleration") ? 0 : jsonObject.getDouble("acceleration");
+            this.Jerk = jsonObject.isNull("jerk") ? 0 : jsonObject.getDouble("jerk");
+        } catch (Exception e){
             Log.e("Debug", "MeasureInformation - JSONObject:", e);
         }
     }
 
     public JSONObject serializeToJSON(){
-        JSONObject obj = new JSONObject();
+        JSONObject jsonObject = new JSONObject();
+
         try{
-            obj.put("speed", Speed);
-            obj.put("acceleration", Acceleration);
-            obj.put("jerk", Jerk);
+            jsonObject.put("speed", Speed);
+            jsonObject.put("acceleration", Acceleration);
+            jsonObject.put("jerk", Jerk);
         } catch(Exception e) {
             Log.e("Debug", "MeasureInformation - Serialize:", e);
         }
-        return obj;
+
+        return jsonObject;
     }
 
     @Override public String toString() {
-        StringBuilder result = new StringBuilder();
+        String result = "";
         String NEW_LINE = System.getProperty("line.separator");
 
-        result.append("{" + NEW_LINE);
-        result.append("  Speed: " + Speed + NEW_LINE);
-        result.append("  Acceleration: " + Acceleration + NEW_LINE);
-        result.append("  Jerk: " + Jerk);
-        result.append(" }");
+        result += "{" + NEW_LINE;
+        result += "  Speed: " + Speed + NEW_LINE;
+        result += "  Acceleration: " + Acceleration + NEW_LINE;
+        result += "  Jerk: " + Jerk;
+        result += " }";
 
-        return result.toString();
+        return result;
     }
 
 }

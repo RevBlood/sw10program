@@ -1,13 +1,9 @@
 package sw10.ubiforsikring.Objects.FactObjects;
 
-
 import android.util.Log;
 
 import org.json.JSONObject;
 
-/**
- * Created by Casper on 11-02-2016.
- */
 public class Fact {
     public long EntryId;
     public long TripId;
@@ -48,42 +44,40 @@ public class Fact {
     }
 
     public JSONObject serializeToJSON(){
-        JSONObject obj = new JSONObject();
+        JSONObject jsonObject = new JSONObject();
         try {
-            obj.put("tripid", TripId);
-            obj.put("localtripid", LocalTripId);
-            obj.put("carid", CarId);
+            jsonObject.put("tripid", TripId);
+            jsonObject.put("localtripid", LocalTripId);
+            jsonObject.put("carid", CarId);
 
-            obj.put("temporal", SpatialTemporal.serializeTemporalToJSON());
-            obj.put("spatial", SpatialTemporal.serializeSpatialToJSON());
+            jsonObject.put("temporal", SpatialTemporal.serializeTemporalToJSON());
+            jsonObject.put("spatial", SpatialTemporal.serializeSpatialToJSON());
 
-            obj.put("flag", Flag.serializeToJSON());
-            obj.put("measure", Measure.serializeToJSON());
-
-
+            jsonObject.put("flag", Flag.serializeToJSON());
+            jsonObject.put("measure", Measure.serializeToJSON());
         } catch(Exception e) {
             Log.e("Debug", "Fact - Serialize:", e);
         }
 
-        return obj;
+        return jsonObject;
     }
 
     @Override public String toString() {
-        StringBuilder result = new StringBuilder();
+        String result = "";
         String NEW_LINE = System.getProperty("line.separator");
 
-        result.append(this.getClass().getName() + " Object {" + NEW_LINE);
-        result.append(" EntryId: " + EntryId + NEW_LINE);
-        result.append(" TripId: " + TripId + NEW_LINE);
-        result.append(" LocalTripId: " + LocalTripId + NEW_LINE);
-        result.append(" CarId: " + CarId + NEW_LINE );
+        result += this.getClass().getName() + " Object {" + NEW_LINE;
+        result += " EntryId: " + EntryId + NEW_LINE;
+        result += " TripId: " + TripId + NEW_LINE;
+        result += " LocalTripId: " + LocalTripId + NEW_LINE;
+        result += " CarId: " + CarId + NEW_LINE;
 
-        result.append(" FlagInformation: " + Flag.toString() + NEW_LINE);
-        result.append(" MeasureInformation: " + Measure.toString() + NEW_LINE);
-        result.append(" SpatialTemporalInformation: " + SpatialTemporal.toString());
-        result.append("}");
+        result += " FlagInformation: " + Flag.toString() + NEW_LINE;
+        result += " MeasureInformation: " + Measure.toString() + NEW_LINE;
+        result += " SpatialTemporalInformation: " + SpatialTemporal.toString();
+        result += "}";
 
-        return result.toString();
+        return result;
     }
 
 
