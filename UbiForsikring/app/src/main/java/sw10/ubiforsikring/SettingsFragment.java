@@ -12,11 +12,17 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
+import android.preference.EditTextPreference;
 import android.preference.Preference;
+import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.preference.SwitchPreference;
+import android.text.InputFilter;
+import android.text.InputType;
 import android.util.Log;
+import android.widget.EditText;
 import android.widget.Toast;
 
 public class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -53,17 +59,12 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         PreferenceCategory category = (PreferenceCategory) findPreference(getString(R.string.SettingsCategoryUser));
         category.setTitle(email); */
 
-        SharedPreferences preferences = getActivity().getSharedPreferences(getString(R.string.UsernamePreferences), Context.MODE_PRIVATE);
-        String username = preferences.getString(getString(R.string.StoredUsername), "");
-        Preference usernamePreference = findPreference(getString(R.string.UsernameTitle));
-        if (!username.isEmpty()) {
-            usernamePreference.setSummary(username);
-            usernamePreference.setEnabled(false);
-        }
-
         //Listen for preference changes
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+
+        //Update fields depending on preferences
         ToggleOfflineSettings();
+        SetUsernameSettings();
 
         //Listen for TripService status
         getActivity().registerReceiver(mStatusReceiver, new IntentFilter(getString(R.string.BroadcastStatusIntent)));
@@ -91,6 +92,21 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         if(key.equals(getString(R.string.SyncOnlineSettingTitle))) {
             ToggleOfflineSettings();
         }
+
+        if(key.equals(getString(R.string.UsernameTitle))) {
+            SetUsernameSettings();
+        }
+    }
+
+    private void SetUsernameSettings() {
+        //Check if the settings should be disabled
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String username = preferences.getString(getString(R.string.UsernameTitle), "");
+        Preference usernamePreference = findPreference(getString(R.string.UsernameTitle));
+        if (!username.isEmpty()) {
+            usernamePreference.setSummary(username);
+            usernamePreference.setEnabled(false);
+        }
     }
 
     private void ToggleOfflineSettings() {
@@ -105,7 +121,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
 
     //region LISTENERS
 
-    private Preference.OnPreferenceClickListener OnLogoutClickListener = new Preference.OnPreferenceClickListener() {
+    /*private Preference.OnPreferenceClickListener OnLogoutClickListener = new Preference.OnPreferenceClickListener() {
         @Override
         public boolean onPreferenceClick(Preference preference) {
             if (mIsTripActive || mIsProcessing) {
@@ -123,7 +139,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
 
             return true;
         }
-    };
+    }; */
 
     private Preference.OnPreferenceClickListener OnHelpClickListener = new Preference.OnPreferenceClickListener() {
         @Override

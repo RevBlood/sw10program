@@ -15,6 +15,7 @@
         <EditTextPreference
             android:title="@string/UsernameTitle"
             android:key="@string/UsernameTitle"
+            android:summary="@string/UsernameDescription"
             android:inputType="text"
             android:maxLength="@integer/userNameMaxLength" />
 

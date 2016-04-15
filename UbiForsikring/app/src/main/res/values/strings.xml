@@ -125,9 +125,8 @@
     <string name="SettingsCategoryAbout">Om</string>
 
     <string name="UsernameTitle">Brugernavn til konkurrencer</string>
+    <string name="UsernameDescription">Vælg&#8230;</string>
     <string name="UserLogoutTitle">Log ud</string>
-    <string name="UsernamePreferences">UsernamePreferences</string>
-    <string name="StoredUsername">StoredUsername</string>
     <string name="SyncOnlineSettingTitle">Gem ture online</string>
     <string name="SyncOnlineSettingDescription">Spar plads på din enhed og gem dine ture i skyen</string>
     <string name="DeleteAfterSettingTitle">Slet ture på enhed efter</string>

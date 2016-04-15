@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -183,6 +184,7 @@ public class CompetitionListActivity extends AppCompatActivity {
                         finish();
                     }
                 })
+                .setCancelable(false)
                 .create();
 
         alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
@@ -193,8 +195,8 @@ public class CompetitionListActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         if (inputView.getText().toString().length() >= mContext.getResources().getInteger(R.integer.userNameMinLength)) {
-                            SharedPreferences.Editor editor = getSharedPreferences(getString(R.string.UsernamePreferences), Context.MODE_PRIVATE).edit();
-                            editor.putString(getString(R.string.StoredUsername), inputView.getText().toString()).apply();
+                            SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(mContext).edit();
+                            editor.putString(getString(R.string.UsernameTitle), inputView.getText().toString()).apply();
                             alertDialog.cancel();
                         } else {
                             inputView.setError(mContext.getString(R.string.UsernameTooShortError));
@@ -209,8 +211,8 @@ public class CompetitionListActivity extends AppCompatActivity {
     }
 
     private void HandleUsername() {
-        SharedPreferences preferences = getSharedPreferences(getString(R.string.UsernamePreferences), Context.MODE_PRIVATE);
-        if (preferences.getString(getString(R.string.StoredUsername), "").isEmpty()) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        if (preferences.getString(getString(R.string.UsernameTitle), "").isEmpty()) {
             BuildUsernameDialog().show();
         }
     }
