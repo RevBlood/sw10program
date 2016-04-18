@@ -12,7 +12,8 @@ import sw10.ubiforsikring.Objects.FactObjects.Fact;
 import sw10.ubiforsikring.Objects.TripObjects.TripListItem;
 
 public class ServiceHelper {
-	private static String ip = "62.107.99.175";
+	private static String ip = "stream.cs.aau.dk:9220";
+	//private static String ip = "62.107.99.175";
 
 	//region GET
 
@@ -21,7 +22,7 @@ public class ServiceHelper {
         TripListItem tripListItem = null;
 
 		try {
-			response = HTTPHelper.HTTPGet("http://" + ip + ":8000/RestService/Trip/GetTrip?carid=" + carId + "&tripid=" + tripId);
+			response = HTTPHelper.HTTPGet("http://" + ip + "/RestService/Trip/GetTrip?carid=" + carId + "&tripid=" + tripId);
 			System.out.println("Response: " + response);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -39,7 +40,7 @@ public class ServiceHelper {
 	}
 
 	public static ArrayList<TripListItem> GetTripsForListView(int carId, int offset){
-		String response = HTTPHelper.HTTPGet("http://" + ip + ":8000/RestService/Trip/GetTripsForList?carid=" + carId + "&offset=" + offset);
+		String response = HTTPHelper.HTTPGet("http://" + ip + "/RestService/Trip/GetTripsForList?carid=" + carId + "&offset=" + offset);
         Log.i("Debug", response);
 
 		ArrayList<TripListItem> tripListItems = new ArrayList<>();
@@ -59,7 +60,7 @@ public class ServiceHelper {
 
     //TODO: Få Lau til at sætte denne op på serveren, og parse til CompetitionListItem i stedet for tripListItem
 	public static ArrayList<CompetitionListItem> GetCompetitionsForListView(int carId, int offset){
-		String response = HTTPHelper.HTTPGet("http://" + ip + ":8000/RestService/Trip/GetCompetitionsForOverview?carid=" + carId + "&offset=" + offset);
+		String response = HTTPHelper.HTTPGet("http://" + ip + "/RestService/Trip/GetCompetitionsForOverview?carid=" + carId + "&offset=" + offset);
 		Log.i("Debug", response);
 
 		ArrayList<CompetitionListItem> competitionListItems = new ArrayList<>();
@@ -80,7 +81,7 @@ public class ServiceHelper {
 	public static ArrayList<Fact> GetFacts(int carid, int tripid){
 		String response = "Empty response";
 		try {
-			response = HTTPHelper.HTTPGet("http://" + ip + ":8000/RestService/Fact/GetFacts?carid=" + carid + "&tripid=" + tripid);
+			response = HTTPHelper.HTTPGet("http://" + ip + "/RestService/Fact/GetFacts?carid=" + carid + "&tripid=" + tripid);
 			Log.i("Debug", response);
 		} catch (Exception e) {
 			Log.i("Debug", "Response failure:", e);
@@ -114,7 +115,7 @@ public class ServiceHelper {
 
 		Log.i("Debug", "Serialized facts: " + jsonArray.toString());
 
-		String request = "http://" + ip + ":8000/RestService/Fact/AddFacts";
+		String request = "http://" + ip + "/RestService/Fact/AddFacts";
 		try {
 			String response = HTTPHelper.HTTPPost(request, jsonArray.toString());
 			System.out.println("Response: " + response);
