@@ -43,10 +43,13 @@ public class ServiceHelper {
 		String response = HTTPHelper.HTTPGet("http://" + ip + "/RestService/Trip/GetTripsForList?carid=" + carId + "&offset=" + offset);
         Log.i("Debug", response);
 
+		String prunedResponse = pruneXMLtags(response);
+		Log.i("Debug", prunedResponse);
+
 		ArrayList<TripListItem> tripListItems = new ArrayList<>();
 
 		try {
-			JSONArray jsonArray = new JSONArray(response);
+			JSONArray jsonArray = new JSONArray(prunedResponse);
 
 			for(int i = 0; i < jsonArray.length(); i++){
                 tripListItems.add(new TripListItem(jsonArray.getJSONObject(i)));
@@ -124,6 +127,10 @@ public class ServiceHelper {
 			Log.e("Debug", "AddFacts:", e);
 			return false;
 		}
+	}
+
+	public static String pruneXMLtags(String response) {
+		return response.replaceAll("<.*?>", "");
 	}
 
     //endregion

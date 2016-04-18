@@ -108,7 +108,7 @@ public class HTTPHelper {
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setDoOutput(true);
                 conn.setRequestMethod("POST");
-                conn.setRequestProperty("Content-Type", "application/json; charset=utf-8");
+                conn.setRequestProperty("Content-Type", "application/text; charset=utf-8");
 
                 OutputStream os = conn.getOutputStream();
                 os.write(jsonInput.getBytes());

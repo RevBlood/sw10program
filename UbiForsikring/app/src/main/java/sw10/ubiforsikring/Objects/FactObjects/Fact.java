@@ -7,15 +7,13 @@ import org.json.JSONObject;
 public class Fact {
     public long EntryId;
     public long TripId;
-    public long LocalTripId;
     public int CarId;
     public FlagInformation Flag;
     public MeasureInformation Measure;
     public SpatialTemporalInformation SpatialTemporal;
 
-    public Fact(long TripId, long LocalTripId, int CarId, FlagInformation Flag, MeasureInformation Measure, SpatialTemporalInformation Spatial){
+    public Fact(long TripId, int CarId, FlagInformation Flag, MeasureInformation Measure, SpatialTemporalInformation Spatial){
         this.TripId = TripId;
-        this.LocalTripId = LocalTripId;
         this.CarId = CarId;
         this.Flag = Flag;
         this.Measure = Measure;
@@ -31,7 +29,6 @@ public class Fact {
         try {
             this.EntryId = obj.getLong("entryid");
             this.TripId = obj.getLong("tripid");
-            this.LocalTripId = obj.getLong("localtripid");
             this.CarId = obj.getInt("carid");
 
             this.Flag = new FlagInformation(obj.getJSONObject("flag"));
@@ -47,7 +44,6 @@ public class Fact {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("tripid", TripId);
-            jsonObject.put("localtripid", LocalTripId);
             jsonObject.put("carid", CarId);
 
             jsonObject.put("temporal", SpatialTemporal.serializeTemporalToJSON());
@@ -69,7 +65,6 @@ public class Fact {
         result += this.getClass().getName() + " Object {" + NEW_LINE;
         result += " EntryId: " + EntryId + NEW_LINE;
         result += " TripId: " + TripId + NEW_LINE;
-        result += " LocalTripId: " + LocalTripId + NEW_LINE;
         result += " CarId: " + CarId + NEW_LINE;
 
         result += " FlagInformation: " + Flag.toString() + NEW_LINE;

@@ -35,7 +35,7 @@ public class TripListItem {
             //this.PreviousTripId = obj.getLong("prevtripid");
             //this.CarId = obj.getInt("carid");
         } catch (Exception e){
-            Log.e("Debug", "Trip JsonObject Constructor: ", e);
+            Log.e("Debug", "TripListItem JsonObject Constructor: ", e);
         }
     }
 
