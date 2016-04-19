@@ -27,7 +27,7 @@ public class SpatialTemporalInformation {
     }
 
     public SpatialTemporalInformation(Location point) {
-        MPoint = point;
+        Point = point;
     }
 
     public SpatialTemporalInformation(JSONObject objSpatial, JSONObject objTemporal) {
