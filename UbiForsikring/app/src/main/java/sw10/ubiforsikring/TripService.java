@@ -242,7 +242,9 @@ public class TripService extends Service implements ConnectionCallbacks, OnConne
             }
 
             //Calculate Measures given the locations from logged data
-            MeasureHelper.CalculateMeasures(facts);
+
+            //TODO: NO MEARURES ARE CALCULATED
+            //MeasureHelper.CalculateMeasures(facts);
 
             //Send the data to the server
             ServiceHelper.PostFacts(facts);

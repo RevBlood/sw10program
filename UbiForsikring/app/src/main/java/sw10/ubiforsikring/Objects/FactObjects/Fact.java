@@ -43,14 +43,14 @@ public class Fact {
     public JSONObject serializeToJSON(){
         JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("tripid", TripId);
+            //jsonObject.put("tripid", TripId);
             jsonObject.put("carid", CarId);
 
             jsonObject.put("temporal", SpatialTemporal.serializeTemporalToJSON());
             jsonObject.put("spatial", SpatialTemporal.serializeSpatialToJSON());
 
-            jsonObject.put("flag", Flag.serializeToJSON());
-            jsonObject.put("measure", Measure.serializeToJSON());
+            //jsonObject.put("flag", Flag.serializeToJSON());
+            //jsonObject.put("measure", Measure.serializeToJSON());
         } catch(Exception e) {
             Log.e("Debug", "Fact - Serialize:", e);
         }

@@ -57,7 +57,7 @@ public class SpatialTemporalInformation {
                 jsonObject.put("pointlat", Point.getLatitude());
                 jsonObject.put("pointlng", Point.getLongitude());
             }
-
+            /*
             if(MPoint != null) {
                 jsonObject.put("mpointlat", MPoint.getLatitude());
                 jsonObject.put("mpointlng", MPoint.getLongitude());
@@ -67,7 +67,7 @@ public class SpatialTemporalInformation {
                 jsonObject.put("distancetolag", DistanceToLag);
 
             }
-
+            */
             if(PathLine != null) {
                 jsonObject.put("pathline", PathLine);
             }
@@ -83,8 +83,8 @@ public class SpatialTemporalInformation {
         JSONObject jsonObject = new JSONObject();
 
         try{
-            jsonObject.put("timestamp", MPoint.getTime());
-            jsonObject.put("secondstolag", SecondsToLag);
+            jsonObject.put("timestamp", Point.getTime());
+            //jsonObject.put("secondstolag", SecondsToLag);
         } catch(Exception e) {
             Log.e("Debug", "TemporalInformation - Serialize:", e);
         }
