@@ -1,6 +1,8 @@
 package sw10.ubiforsikring.Helpers;
 
+import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -110,23 +112,25 @@ public class ServiceHelper {
 	//region POST
 
 	public static boolean PostFacts(ArrayList<Fact> facts) {
-		JSONArray jsonArray = new JSONArray();
 
-		for(int i = 0; i < facts.size(); i++) {
+
+        JSONArray jsonArray = new JSONArray();
+        for (int i = 0; i < facts.size(); i++) {
             jsonArray.put(facts.get(i).serializeToJSON());
-		}
+        }
 
-		Log.i("Debug", "Serialized facts: " + jsonArray.toString());
+        Log.i("Debug", "Serialized facts: " + jsonArray.toString());
 
-		String request = "http://" + ip + "/RestService/Fact/AddFacts";
-		try {
-			String response = HTTPHelper.HTTPPost(request, jsonArray.toString());
-			System.out.println("Response: " + response);
-			return true;
-		} catch(Exception e) {
-			Log.e("Debug", "AddFacts:", e);
-			return false;
-		}
+        String request = "http://" + ip + "/RestService/Fact/AddFacts";
+        try {
+            String response = HTTPHelper.HTTPPost(request, jsonArray.toString());
+            System.out.println("Response: " + response);
+            return true;
+        } catch (Exception e) {
+            Log.e("Debug", "AddFacts:", e);
+            return false;
+        }
+
 	}
 
 	public static String pruneXMLtags(String response) {

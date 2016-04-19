@@ -1,6 +1,7 @@
 package sw10.ubiforsikring;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -15,6 +16,7 @@ import android.os.Messenger;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -224,35 +226,44 @@ public class TripService extends Service implements ConnectionCallbacks, OnConne
 
         //int userId = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(this).getString(getString(R.string.StoredEmail), getString(R.string.DefaultEmail)));
 
-        for (Location entry : entries) {
-            //facts.add(new Fact(userId, new SpatialTemporalInformation(entry)));
-            facts.add(new Fact(1, new SpatialTemporalInformation(entry)));
-
-        }
-
-        //TODO: Stop med at crashe vores app, Lau!
+            //TODO: Stop med at crashe vores app, Lau!
         /*DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(getApplicationContext());
         Log.e("Debug", "Timestamp" + facts.get(1).SpatialTemporal.MPoint.getTime());
         Log.e("Debug", "Timezone: " + TimeZone.getDefault().getDisplayName());
         Log.e("Debug", "Timestamp with format" + dateFormat.format(facts.get(1).SpatialTemporal.MPoint.getTime()));
         Log.e("Debug", "Number of entries: " + entries.size()); */
 
-        //Calculate Measures given the locations from logged data
-        MeasureHelper.CalculateMeasures(facts);
+        if(entries.size() > 9) {
 
-        //Send the data to the server
-        ServiceHelper.PostFacts(facts);
+            for (Location entry : entries) {
+                //facts.add(new Fact(userId, new SpatialTemporalInformation(entry)));
+                facts.add(new Fact(1, new SpatialTemporalInformation(entry)));
 
-        //Finish up
-        mIsProcessing = false;
-        UpdateStatusBroadcast();
-        stopForeground(true);
+            }
 
-        try {
-            Thread.sleep(2000);
-        } catch(InterruptedException e) {
+            //Calculate Measures given the locations from logged data
+            MeasureHelper.CalculateMeasures(facts);
 
+            //Send the data to the server
+            ServiceHelper.PostFacts(facts);
+
+        } else {
+            Toast toast = Toast.makeText(getApplicationContext(), "Turen var ikke lang nok!", Toast.LENGTH_LONG);
+            toast.show();
+
+            Log.e("Debug","Not 10 or more facts");
         }
+
+            //Finish up
+            mIsProcessing = false;
+            UpdateStatusBroadcast();
+            stopForeground(true);
+
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+
+            }
     }
 
     private void ProcessTrip(List<Location> entries) {
