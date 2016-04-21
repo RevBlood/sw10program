@@ -66,8 +66,8 @@ public class TripListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trip_list);
         mContext = this;
+        mTripList = new ArrayList<>();
         mStatusReceiver = new StatusReceiver();
-        mTripList = ServiceHelper.GetTripsForListView(1,0);
         mCurrentTripDescriptionView = (TextView) findViewById(R.id.CurrentTripDescriptionView);
         mFooterView = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.listitem_footer, null, false);
 
