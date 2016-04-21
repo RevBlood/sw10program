@@ -64,10 +64,10 @@ public class TripListAdapter extends ArrayAdapter<TripListItem> {
         ViewHolder viewHolder = (ViewHolder) rowView.getTag();
         viewHolder.TripTitleView.setText(String.format(mContext.getString(R.string.TripTitle), item.TripId));
         viewHolder.TripDescriptionView.setText("Beskrivelse");
-        viewHolder.TripOptimalityView.setText(String.format(mContext.getString(R.string.TripOptimalityText), item.OptimalScore));
+        viewHolder.TripOptimalityView.setText(String.format(mContext.getString(R.string.TripOptimalityText), item.ScorePercentage));
         viewHolder.TripTimeView.setText(String.format(mContext.getString(R.string.TripTimeText), mSdf.format(item.TripStart), mSdf.format(item.TripEnd)));
         viewHolder.TripDistanceView.setText(String.format(mContext.getString(R.string.TripDistanceText), item.MetersDriven / 1000));
-        SetTextColor(viewHolder.TripOptimalityView, item.OptimalScore);
+        SetTextColor(viewHolder.TripOptimalityView, item.ScorePercentage);
 
         return rowView;
     }
