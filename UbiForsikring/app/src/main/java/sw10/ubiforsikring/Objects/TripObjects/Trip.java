@@ -27,10 +27,10 @@ public class Trip {
 
     public double SpeedingScore;
     public double AccelerationScore;
-    public double BrakingScore;
-    public double JerkingScore;
+    public double Brakescore;
+    public double Jerkscore;
     public double RoadtypeScore;
-    public double TimePeriodScore;
+    public double CriticalTimeScore;
 
     public Trip(JSONObject obj) {
         try {
@@ -43,6 +43,14 @@ public class Trip {
             this.TripScore = obj.getDouble("tripscore");
             //this.PreviousTripId = obj.getLong("prevtripid");
             //this.CarId = obj.getInt("carid");
+            this.RoadtypeScore = obj.getDouble("roadtypescore");
+            this.CriticalTimeScore = obj.getDouble("criticaltimescore");
+            this.SpeedingScore = obj.getDouble("speedingscore");
+            this.AccelerationScore = obj.getDouble("accelerationscore");
+            this.Brakescore = obj.getDouble("brakescore");
+            this.Jerkscore = obj.getDouble("jerkscore");
+
+
         } catch (Exception e){
             Log.e("Debug", "Trip JsonObject Constructor: ", e);
         }
@@ -59,7 +67,13 @@ public class Trip {
         result += " MetersDriven: " + MetersDriven + NEW_LINE;
         result += " Price: " + Price + NEW_LINE;
         result += " OptimalScore: " + OptimalScore + NEW_LINE;
-        result += " TripScore: " + TripScore;
+        result += " TripScore: " + TripScore + NEW_LINE;
+        result += " RoadtypeScore: " + RoadtypeScore + NEW_LINE;
+        result += " CriticalTimeScore: " + CriticalTimeScore + NEW_LINE;
+        result += " SpeedingScore: " + SpeedingScore + NEW_LINE;
+        result += " AccelerationScore: " + AccelerationScore + NEW_LINE;
+        result += " Brakescore: " + Brakescore + NEW_LINE;
+        result += " Jerkscore: " + Jerkscore;
         //result += " CarId: " + CarId + NEW_LINE;
 
         return result;
