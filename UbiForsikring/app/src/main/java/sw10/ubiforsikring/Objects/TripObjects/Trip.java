@@ -4,11 +4,12 @@ import android.util.Log;
 
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import sw10.ubiforsikring.Helpers.DateObjectHelper;
 
-public class Trip {
+public class Trip implements Serializable {
     public long TripId;
     public Date TripStart;
     public Date TripEnd;

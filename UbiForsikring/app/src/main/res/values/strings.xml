@@ -72,6 +72,9 @@
     <!-- TRIP OVERVIEW -->
     <string name="ShowTripOnMapButtonText">Vis på kort</string>
     <string name="TripStatisticsButtonText">Statistik</string>
+    <string name="TripStatisticsIntent">Statistik</string>
+    <string name="TripOverviewLoadErrorText">Kunne ikke indlæse turoversigt</string>
+    <string name="TripOverviewErrorGoBack">Gå tilbage</string>
     <string name="BaseCostText">Kilometer kørt:</string>
     <string name="BaseCostValue">%.1f km</string>
     <string name="EnvironmentText">Miljø &amp; trafik:</string>

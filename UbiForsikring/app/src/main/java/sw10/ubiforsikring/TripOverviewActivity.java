@@ -1,6 +1,8 @@
 package sw10.ubiforsikring;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -67,7 +69,7 @@ public class TripOverviewActivity extends AppCompatActivity {
     Button.OnClickListener MapDisplayListener = new Button.OnClickListener() {
         public void onClick(View v) {
             Intent intent = new Intent(mContext, MapDisplayActivity.class);
-            intent.putExtra(getString(R.string.TripIdIntentName), mTripId);
+            intent.putExtra(getString(R.string.TripStatisticsIntent), mTrip);
             startActivity(intent);
         }
     };
@@ -171,7 +173,12 @@ public class TripOverviewActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Boolean success) {
+
             if (mContextReference.get() != null) {
+                if(!success) {
+                    BuildAlertDialog().show();
+                }
+
                 // Find all views
                 TextView tripTitleView = (TextView) findViewById(R.id.TripTitleView);
                 //TextView tripDescriptionView = (TextView) findViewById(R.id.TripDescriptionView);
@@ -283,5 +290,23 @@ public class TripOverviewActivity extends AppCompatActivity {
         else {
             optimalityView.setTextColor(ContextCompat.getColor(mContext, R.color.graphColorGreen));
         }
+    }
+
+    private AlertDialog BuildAlertDialog(){
+        return new AlertDialog.Builder(mContext)
+                .setTitle(getString(R.string.TripOverviewLoadErrorText))
+                .setPositiveButton(getString(R.string.TripListRetryLoad), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        OverviewGetTask overviewGetTask = new OverviewGetTask(mContext);
+                        overviewGetTask.execute(mTripId);
+                        dialog.cancel();
+                    }
+                })
+                .setNegativeButton(getString(R.string.TripOverviewErrorGoBack), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                })
+                .create();
     }
 }

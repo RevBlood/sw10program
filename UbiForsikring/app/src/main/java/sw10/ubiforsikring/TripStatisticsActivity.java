@@ -1,7 +1,6 @@
 package sw10.ubiforsikring;
 
 import android.content.Intent;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
@@ -10,8 +9,10 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import sw10.ubiforsikring.Objects.TripObjects.Trip;
+
 public class TripStatisticsActivity extends AppCompatActivity {
-    long mTripId;
+    Trip mTrip;
     ArrayAdapter mTripStatisticsAdapter;
     ArrayList<TripStatisticsEntry> mEntryList;
 
@@ -23,7 +24,7 @@ public class TripStatisticsActivity extends AppCompatActivity {
 
         //Get trip id for which data to display
         Intent intent = getIntent();
-        mTripId = intent.getLongExtra(getString(R.string.TripIdIntentName), -1);
+        mTrip = (Trip) intent.getSerializableExtra(getString(R.string.TripStatisticsIntent));
 
         //Setup ListView
         ListView tripStatisticsListView = (ListView) findViewById(R.id.TripStatisticsListView);
@@ -32,55 +33,60 @@ public class TripStatisticsActivity extends AppCompatActivity {
 
         //Setup text
         TextView tripTitleView = (TextView) findViewById(R.id.TripTitleView);
-        TextView tripDescriptionView = (TextView) findViewById(R.id.TripDescriptionView);
+        //TextView tripDescriptionView = (TextView) findViewById(R.id.TripDescriptionView);
         TextView totalCostView = (TextView) findViewById(R.id.TotalCostView);
 
-        tripTitleView.setText(String.format(getString(R.string.TripTitle), mTripId));
-        tripDescriptionView.setText("Til Arbejde");
-        totalCostView.setText("43,00 Dkr");
-        totalCostView.setTextColor(ContextCompat.getColor(this, R.color.graphColorRed));
+        tripTitleView.setText(String.format(getString(R.string.TripTitle), mTrip.TripId));
+        //tripDescriptionView.setText("Til Arbejde");
+        //totalCostView.setText("43,00 Dkr");
+        //totalCostView.setTextColor(ContextCompat.getColor(this, R.color.graphColorRed));
     }
 
     @Override
     public void onResume() {
-        //TODO: Remove test data
+        double speedPercentage = (mTrip.SpeedingScore / mTrip.MetersDriven ) * 100;
+        double accelerationPercentage = (mTrip.AccelerationScore / mTrip.MetersDriven ) * 100;
+        double brakePercentage = (mTrip.Brakescore / mTrip.MetersDriven ) * 100;
+        double jerkPercentage = (mTrip.Jerkscore / mTrip.MetersDriven ) * 100;
+        double roadTypePercentage = (mTrip.RoadtypeScore / mTrip.MetersDriven ) * 100;
+        double criticalTimePercentage = (mTrip.CriticalTimeScore / mTrip.MetersDriven ) * 100;
+
+        double distancePerHundred = ((mTrip.MetersSped / mTrip.MetersDriven) * 100 ) / 1000;
+        double accelerationsPerHundred = (mTrip.AccelerationCount / (mTrip.MetersDriven / 1000 )) * 100;
+        double brakesPerHundred = (mTrip.BrakeCount / (mTrip.MetersDriven / 1000 )) * 100;
+        double jerksPerHundred = (mTrip.JerkCount / (mTrip.MetersDriven / 1000 )) * 100;
+
         mEntryList.add(new TripStatisticsEntry(getString(R.string.DrivingStyleText)));
         mEntryList.add(new TripStatisticsEntry(
                 getString(R.string.SpeedMetricName),
-                14,
-                1.6,
-                String.format(getString(R.string.SpeedText), 1.2),
-                String.format(getString(R.string.DistancePerHundredText), 15.1)));
+                speedPercentage,
+                String.format(getString(R.string.SpeedText), mTrip.MetersSped),
+                String.format(getString(R.string.DistancePerHundredText), distancePerHundred)));
         mEntryList.add(new TripStatisticsEntry(
                 getString(R.string.AccelerationMetricName),
-                5,
-                0.4,
-                String.format(getString(R.string.AccelerationCountText), 3),
-                String.format(getString(R.string.CountPerHundredText), 15.5)));
+                accelerationPercentage,
+                String.format(getString(R.string.AccelerationCountText), mTrip.AccelerationCount),
+                String.format(getString(R.string.CountPerHundredText), accelerationsPerHundred)));
         mEntryList.add(new TripStatisticsEntry(
                 getString(R.string.BrakeMetricName),
-                11,
-                1.2,
-                String.format(getString(R.string.AccelerationCountText), 5),
-                String.format(getString(R.string.CountPerHundredText), 23.3)));
+                brakePercentage,
+                String.format(getString(R.string.AccelerationCountText), mTrip.BrakeCount),
+                String.format(getString(R.string.CountPerHundredText), brakesPerHundred)));
         mEntryList.add(new TripStatisticsEntry(
                 getString(R.string.JerkMetricName),
-                7,
-                0.5,
-                String.format(getString(R.string.AccelerationCountText), 4),
-                String.format(getString(R.string.CountPerHundredText), 19.4)));
+                jerkPercentage,
+                String.format(getString(R.string.AccelerationCountText), mTrip.JerkCount),
+                String.format(getString(R.string.CountPerHundredText), jerksPerHundred)));
         mEntryList.add(new TripStatisticsEntry(getString(R.string.EnvironmentText)));
         mEntryList.add(new TripStatisticsEntry(
                 getString(R.string.RoadTypeMetricName),
-                30,
-                2.7,
-                String.format(getString(R.string.RoadTypeText), "Villavej"),
+                roadTypePercentage,
+                String.format(getString(R.string.RoadTypeText), mTrip.RoadtypeMajority),
                 ""));
         mEntryList.add(new TripStatisticsEntry(
                 getString(R.string.CriticalTimeMetricName),
-                0,
-                0,
-                String.format(getString(R.string.CriticalTimeText), "om natten"),
+                criticalTimePercentage,
+                String.format(getString(R.string.CriticalTimeText), mTrip.TimePeriodMajority),
                 ""));
 
         mTripStatisticsAdapter.notifyDataSetChanged();

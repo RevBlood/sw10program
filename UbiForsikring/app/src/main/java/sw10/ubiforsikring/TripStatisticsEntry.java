@@ -2,8 +2,8 @@ package sw10.ubiforsikring;
 
 public class TripStatisticsEntry {
     public String Title;
-    public int Optimality;
-    public double Price;
+    public double Optimality;
+    //public double Price;
     public String DescriptionText;
     public String PerHundredText;
 
@@ -14,10 +14,10 @@ public class TripStatisticsEntry {
         IsSection = true;
     }
 
-    public TripStatisticsEntry(String title, int optimality, double price, String descriptionText, String perHundredText) {
+    public TripStatisticsEntry(String title, double optimality, String descriptionText, String perHundredText) {
         Title = title;
         Optimality = optimality;
-        Price = price;
+        //Price = price;
         DescriptionText = descriptionText;
         PerHundredText = perHundredText;
     }
