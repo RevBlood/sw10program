@@ -11,6 +11,7 @@ import java.util.ArrayList;
 
 import sw10.ubiforsikring.Objects.CompetitionObjects.CompetitionListItem;
 import sw10.ubiforsikring.Objects.FactObjects.Fact;
+import sw10.ubiforsikring.Objects.TripObjects.Trip;
 import sw10.ubiforsikring.Objects.TripObjects.TripListItem;
 
 public class ServiceHelper {
@@ -19,9 +20,9 @@ public class ServiceHelper {
 
 	//region GET
 
-	public static TripListItem GetTrip(int carId, int tripId){
+	public static Trip GetTrip(int carId, int tripId){
 		String response = "Empty response";
-        TripListItem tripListItem = null;
+        Trip trip = null;
 
 		try {
 			response = HTTPHelper.HTTPGet("http://" + ip + "/RestService/Trip/GetTrip?carid=" + carId + "&tripid=" + tripId);
@@ -33,12 +34,12 @@ public class ServiceHelper {
 		Log.i("Debug", response);
 
 		try {
-			tripListItem = new TripListItem(new JSONObject(response));
+			trip = new Trip(new JSONObject(response));
 		} catch(Exception e) {
 			Log.e("Debug", "GetTrip:", e);
 		}
 
-		return tripListItem;
+		return trip;
 	}
 
 	public static ArrayList<TripListItem> GetTripsForListView(int carId, int offset){
