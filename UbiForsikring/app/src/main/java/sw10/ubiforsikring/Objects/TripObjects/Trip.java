@@ -14,7 +14,7 @@ public class Trip {
     public Date TripEnd;
     public double MetersDriven;
 
-    public double Price;
+    //public double Price;
     public double OptimalScore;
     public double TripScore;
 
@@ -38,7 +38,7 @@ public class Trip {
             this.TripStart = DateObjectHelper.CreateDateObject(new JSONObject(obj.getString("starttemporal")).getString("timestamp"));
             this.TripEnd = DateObjectHelper.CreateDateObject(new JSONObject(obj.getString("endtemporal")).getString("timestamp"));
             this.MetersDriven = obj.getDouble("metersdriven");
-            this.Price = obj.getDouble("price");
+            //this.Price = obj.getDouble("price");
             this.OptimalScore = obj.getDouble("optimalscore");
             this.TripScore = obj.getDouble("tripscore");
             //this.PreviousTripId = obj.getLong("prevtripid");
@@ -65,7 +65,7 @@ public class Trip {
         result += " TripStart: " + TripStart.toString() + NEW_LINE;
         result += " TripEnd: " + TripEnd.toString() + NEW_LINE;
         result += " MetersDriven: " + MetersDriven + NEW_LINE;
-        result += " Price: " + Price + NEW_LINE;
+        //result += " Price: " + Price + NEW_LINE;
         result += " OptimalScore: " + OptimalScore + NEW_LINE;
         result += " TripScore: " + TripScore + NEW_LINE;
         result += " RoadtypeScore: " + RoadtypeScore + NEW_LINE;
