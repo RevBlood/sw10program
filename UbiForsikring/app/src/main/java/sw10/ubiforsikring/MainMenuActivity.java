@@ -28,21 +28,24 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 public class MainMenuActivity extends AppCompatActivity {
-    Context mContext;
-    boolean mIsDialogOpen = false;
-    boolean mHasFineLocationPermission = false;
     final static int FINE_LOCATION_PERMISSION_REQUEST = 0;
     final static int PHONE_STATE_PERMISSION_REQUEST = 1;
+
+    //Activity information
+    Context mContext;
+    boolean mIsGPSDialogOpen = false;
 
     //TripService communication
     BroadcastReceiver mStatusReceiver;
     ServiceConnection mTripServiceConnection;
     static Messenger mMessenger;
 
-    //TripService Status
+    //TripService status
     boolean mIsConnected = false;
     boolean mIsTripActive = false;
     boolean mIsProcessing = false;
@@ -51,7 +54,6 @@ public class MainMenuActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
         mContext = this;
@@ -60,8 +62,9 @@ public class MainMenuActivity extends AppCompatActivity {
         //Verify IMEI is accessible, otherwise application won't work
         CheckIMEI();
 
-        if (savedInstanceState != null && savedInstanceState.getBoolean(getString(R.string.IsDialogOpen), false)) {
-            BuildAlertDialog().show();
+        //Recover any dialogs that were open
+        if (savedInstanceState != null && savedInstanceState.getBoolean(getString(R.string.IsGPSDialogOpen), false)) {
+            GPSDisabledDialog().show();
         }
 
         //Setup buttons
@@ -80,7 +83,6 @@ public class MainMenuActivity extends AppCompatActivity {
 
     @Override
     public void onResume() {
-
         //Listen for TripService status updates
         registerReceiver(mStatusReceiver, new IntentFilter(getString(R.string.BroadcastStatusIntent)));
 
@@ -103,8 +105,9 @@ public class MainMenuActivity extends AppCompatActivity {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
+        // If any dialogs are open, save that information so they can be recovered later
         super.onSaveInstanceState(outState);
-        outState.putBoolean(getString(R.string.IsDialogOpen), mIsDialogOpen);
+        outState.putBoolean(getString(R.string.IsGPSDialogOpen), mIsGPSDialogOpen);
     }
 
     @Override
@@ -119,13 +122,14 @@ public class MainMenuActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        //Pop the proper layout for the Actionbar
+        //Create the proper layout for the Actionbar
         getMenuInflater().inflate(R.menu.main_menu_actionbar, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        // Whenever an item on the Actionbar is clicked, check if it's Settings
         int id = item.getItemId();
 
         if (id == R.id.actionbar_settings) {
@@ -137,12 +141,16 @@ public class MainMenuActivity extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+        // If permission result is for FINE_LOCATION, save the status and start trip (This is where the permission was checked)
         if (requestCode == FINE_LOCATION_PERMISSION_REQUEST) {
             if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                mHasFineLocationPermission = true;
+                Button tripButton = (Button) findViewById(R.id.TripButton);
+                tripButton.performClick();
             }
         }
 
+        // If permission result is for PHONE_STATE, save & send to server is successful, otherwise display dialog
+        // Server communication blocks the UI on purpose because no other interaction should be possible at this point
         if (requestCode == PHONE_STATE_PERMISSION_REQUEST) {
             if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 SaveIMEI();
@@ -152,7 +160,7 @@ public class MainMenuActivity extends AppCompatActivity {
                     SendIMEIFailedDialog().show();
                 }
             } else {
-                NoIMEIDialog().show();
+                IMEIDeniedDialog().show();
             }
         }
 
@@ -162,22 +170,17 @@ public class MainMenuActivity extends AppCompatActivity {
     //endregion
 
     //region LISTENERS
+
     Button.OnClickListener TripButtonListener = new Button.OnClickListener() {
         public void onClick(View v) {
-            //Send message to TripService to start/stop the trip
+            //If about to start trip, verify everything is running and proper permissions are granted
             if (!mIsTripActive) {
-                //If GPS permission is not granted, request it
-                VerifyFineLocationPermission();
-
-                //If GPS is disabled, or permission is not granted, don't start the trip
-                if(!VerifyGPS() || !mHasFineLocationPermission) {
+                if(!CheckFineLocationPermission() || !CheckGPSEnabled()) {
                     return;
                 }
 
-                //Ensure TripService is running before starting trip
                 InitializeTripService();
 
-                //Begin or end trip
                 if (MessageTripService(TripService.BEGIN_TRIP)) {
                     Toast.makeText(mContext, R.string.TripStartToast, Toast.LENGTH_SHORT).show();
                 }
@@ -210,9 +213,11 @@ public class MainMenuActivity extends AppCompatActivity {
     //endregion
 
     //region INCOMING EVENTS
+
     private class StatusReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
+            // Save status variables - then handle relevant actions for these variables
             mIsConnected = intent.getBooleanExtra(getString(R.string.BroadcastIsConnected), false);
             mIsTripActive = intent.getBooleanExtra(getString(R.string.BroadcastIsTripActive), false);
             mIsProcessing = intent.getBooleanExtra(getString(R.string.BroadcastIsProcessing), false);
@@ -225,6 +230,7 @@ public class MainMenuActivity extends AppCompatActivity {
     private void HandleConnectionStatus() {
         Button tripButton = (Button) findViewById(R.id.TripButton);
 
+        // As soon as The Trip Service is connected to Google Play Services, it is safe to start a trip
         if (mIsConnected) {
             tripButton.setEnabled(true);
             Log.i("Debug", "Connected to Google Play Services");
@@ -234,9 +240,14 @@ public class MainMenuActivity extends AppCompatActivity {
     }
 
     private void HandleTripStatus() {
+        // Views to update
         Button tripButton = (Button) findViewById(R.id.TripButton);
         Button liveMapButton = (Button) findViewById(R.id.LiveMapButton);
+        RelativeLayout endingTripLayout = (RelativeLayout) findViewById(R.id.TripEndingLayout);
 
+        // If trip is active, enable the Live Map
+        // If trip is processing, disable and replace Live Map with progressbar
+        // If trip has ended, remove progressbar
         if (mIsTripActive) {
             tripButton.setText(R.string.TripButtonTitleStop);
             tripButton.setBackground(ContextCompat.getDrawable(mContext, R.drawable.trip_button_stop_shape));
@@ -245,10 +256,14 @@ public class MainMenuActivity extends AppCompatActivity {
             tripButton.setText(R.string.TripButtonTitleStopping);
             tripButton.setBackground(ContextCompat.getDrawable(mContext, R.drawable.trip_button_stopping_shape));
             liveMapButton.setEnabled(false);
+            liveMapButton.setVisibility(View.GONE);
+            endingTripLayout.setVisibility(View.VISIBLE);
         } else {
             tripButton.setText(R.string.TripButtonTitleStart);
             tripButton.setBackground(ContextCompat.getDrawable(mContext, R.drawable.trip_button_start_shape));
             liveMapButton.setEnabled(false);
+            liveMapButton.setVisibility(View.VISIBLE);
+            endingTripLayout.setVisibility(View.GONE);
         }
     }
 
@@ -322,34 +337,41 @@ public class MainMenuActivity extends AppCompatActivity {
 
     //endregion
 
-    private boolean VerifyGPS() {
+    // region PERMISSION & SETTINGS HANDLING
+
+    private boolean CheckGPSEnabled() {
         try {
+            // Return status depending on whether or not GPS is enabled and set to High Accuracy
             if (Settings.Secure.getInt(getContentResolver(), Settings.Secure.LOCATION_MODE) != Settings.Secure.LOCATION_MODE_HIGH_ACCURACY) {
-                mIsDialogOpen = true;
-                BuildAlertDialog().show();
+                mIsGPSDialogOpen = true;
+                GPSDisabledDialog().show();
                 return false;
             }
         } catch (Settings.SettingNotFoundException e) {
-            //Ignore?
+            //TODO: Verify if this can even happen
         }
 
         return true;
     }
 
-    private void VerifyFineLocationPermission() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, FINE_LOCATION_PERMISSION_REQUEST);
+    private boolean CheckFineLocationPermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            return true;
         } else {
-            mHasFineLocationPermission = true;
+            // If Fine Location permission is not given, start the request process
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, FINE_LOCATION_PERMISSION_REQUEST);
+            return false;
         }
     }
 
     private void VerifyPhoneStatePermission() {
+        // This permission MUST be given - If not, request it. If permission is granted, save and send it.
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
             SaveIMEI();
             try {
                 SendIMEI();
             } catch (Exception e) {
+                // Block user from proceeding with a dialog if IMEI could not be sent.
                 SendIMEIFailedDialog().show();
             }
         } else {
@@ -357,38 +379,41 @@ public class MainMenuActivity extends AppCompatActivity {
         }
     }
 
-    private AlertDialog BuildAlertDialog(){
+    private AlertDialog GPSDisabledDialog(){
         return new AlertDialog.Builder(mContext)
             .setTitle(getString(R.string.GPSDisabledDialogTitle))
             .setMessage(getString(R.string.GPSDisabledDialogText))
             .setPositiveButton(getString(R.string.GPSDisabledSettingsButtonText), new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
+                    // Let user go to settings to fix the GPS settings
                     startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-                    mIsDialogOpen = false;
+                    mIsGPSDialogOpen = false;
                     dialog.cancel();
                 }
             })
             .setNegativeButton(getString(R.string.GPSDisabledCancelButtonText), new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
-                    mIsDialogOpen = false;
+                    mIsGPSDialogOpen = false;
                     dialog.cancel();
                 }
             })
             .create();
     }
 
-    private AlertDialog NoIMEIDialog(){
+    private AlertDialog IMEIDeniedDialog(){
         return new AlertDialog.Builder(mContext)
                 .setTitle(getString(R.string.IMEIDialogTitle))
                 .setMessage(getString(R.string.IMEIDialogText))
                 .setPositiveButton(getString(R.string.IMEIRetryButtonText), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
+                        // Retry getting permission to access IMEI
                         VerifyPhoneStatePermission();
                         dialog.cancel();
                     }
                 })
                 .setNegativeButton(getString(R.string.IMEICancelButtonText), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
+                        // Close the program. It must not be used without IMEI
                         finish();
                     }
                 })
@@ -396,7 +421,7 @@ public class MainMenuActivity extends AppCompatActivity {
     }
 
     private void CheckIMEI(){
-        //Check IMEI is accessible
+        //Check IMEI is stored. If not, check if we have permission to get it
         SharedPreferences preferences = getSharedPreferences(getString(R.string.IMEIPreferences), Context.MODE_PRIVATE);
         if(!preferences.getBoolean(getString(R.string.IMEIStatus), false)) {
             VerifyPhoneStatePermission();
@@ -413,6 +438,7 @@ public class MainMenuActivity extends AppCompatActivity {
     }
 
     private void SendIMEI() {
+        //TODO: Send IMEI to server - Then save retreived CarId in SharedPreferences
         SharedPreferences preferences = getSharedPreferences(getString(R.string.IMEIPreferences), Context.MODE_PRIVATE);
         String imei = preferences.getString(getString(R.string.IMEIPreferences), null);
     }
@@ -424,9 +450,11 @@ public class MainMenuActivity extends AppCompatActivity {
                 .setPositiveButton(getString(R.string.SendIMEIRetryButtonText), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         try {
+                            // Retry sending IMEI to server
                             SendIMEI();
                         } catch (Exception e) {
-                            SendIMEIFailedDialog();
+                            // Pop dialog again if it fails
+                            SendIMEIFailedDialog().show();
                         }
 
                         dialog.cancel();
@@ -434,9 +462,12 @@ public class MainMenuActivity extends AppCompatActivity {
                 })
                 .setNegativeButton(getString(R.string.SendIMEICancelButtonText), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
+                        // Exit program. It must not be used without IMEI
                         finish();
                     }
                 })
                 .create();
     }
+
+    //endregion
 }

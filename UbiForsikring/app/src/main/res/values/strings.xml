@@ -30,6 +30,7 @@
     <string name="TripButtonTitleStart">Start Tur</string>
     <string name="TripButtonTitleStop">Stop Tur</string>
     <string name="TripButtonTitleStopping">Afslutter tur</string>
+    <string name ="TripStoppingText">Dette kan tage et par minutter</string>
     <string name="ActiveTripButtonTitle">Vis på kort</string>
     <string name="TripOverviewButtonTitle">Turliste</string>
     <string name="CompetitionsButtonTitle">Konkurrencer</string>
@@ -54,7 +55,7 @@
     <string name="SendIMEIRetryButtonText">Prøv igen</string>
     <string name="SendIMEICancelButtonText">Afslut</string>
 
-    <string name="IsDialogOpen">IsDialogOpen</string>
+    <string name="IsGPSDialogOpen">IsGPSDialogOpen</string>
     <string name="IMEIPreferences">IMEIPreferences</string>
     <string name="IMEIStatus">IMEIStatus</string>
     <string name="StoredIMEI">StoredIMEI</string>
