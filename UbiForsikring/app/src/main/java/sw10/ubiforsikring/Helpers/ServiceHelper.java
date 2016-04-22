@@ -108,6 +108,34 @@ public class ServiceHelper {
 		return facts;
 	}
 
+	public static ArrayList<Fact> GetFactsForMap(int carid, int tripid){
+		String response = "Empty response";
+
+		try {
+			response = HTTPHelper.HTTPGet("http://" + ip + "/RestService/Fact/GetFactsForMap?carid=" + carid + "&tripid=" + tripid);
+			Log.i("Debug", response);
+		} catch (Exception e) {
+			Log.i("Debug", "Response failure:", e);
+		}
+
+		ArrayList<Fact> facts = new ArrayList<>();
+
+		String prunedResponse = pruneXMLtags(response);
+		Log.i("Debug", prunedResponse);
+
+		try {
+			JSONArray jsonArray = new JSONArray(prunedResponse);
+
+			for(int i = 0; i < jsonArray.length(); i++){
+				facts.add(new Fact(jsonArray.getJSONObject(i)));
+			}
+		} catch(Exception e) {
+			Log.e("Debug", "GetFacts:", e);
+		}
+
+		return facts;
+	}
+
     //endregion
 
 	//region POST
