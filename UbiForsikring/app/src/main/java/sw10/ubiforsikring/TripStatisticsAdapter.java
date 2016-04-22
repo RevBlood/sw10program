@@ -73,7 +73,7 @@ class TripStatisticsAdapter extends ArrayAdapter<TripStatisticsEntry> {
                     itemViewHolder.DelinquencyDescriptionView = (TextView) rowView.findViewById(R.id.DelinquencyDescription);
                     itemViewHolder.DelinquencyOptimalityView = (TextView) rowView.findViewById(R.id.DelinquencyOptimality);
                     itemViewHolder.DelinquenciesPerHundredView = (TextView) rowView.findViewById(R.id.DelinquenciesPerHundred);
-                    itemViewHolder.DelinquencyCostView = (TextView) rowView.findViewById(R.id.DelinquencyCost);
+                    //itemViewHolder.DelinquencyCostView = (TextView) rowView.findViewById(R.id.DelinquencyCost);
                     rowView.setTag(itemViewHolder);
                 }
 
@@ -83,7 +83,7 @@ class TripStatisticsAdapter extends ArrayAdapter<TripStatisticsEntry> {
                 itemViewHolder.DelinquencyDescriptionView.setText(entry.DescriptionText);
                 itemViewHolder.DelinquencyOptimalityView.setText(String.format(mContext.getString(R.string.DelinquencyOptimality), entry.Optimality));
                 itemViewHolder.DelinquenciesPerHundredView.setText(entry.PerHundredText);
-                itemViewHolder.DelinquencyCostView.setText(String.format(mContext.getString(R.string.DelinquencyCost), entry.Price));
+                //itemViewHolder.DelinquencyCostView.setText(String.format(mContext.getString(R.string.DelinquencyCost), entry.Price));
 
                 break;
         }

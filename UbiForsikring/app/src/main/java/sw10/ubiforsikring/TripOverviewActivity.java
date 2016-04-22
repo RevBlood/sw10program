@@ -1,7 +1,10 @@
 package sw10.ubiforsikring;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -18,19 +21,29 @@ import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 
+import java.lang.ref.WeakReference;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+
+import sw10.ubiforsikring.Helpers.ServiceHelper;
+import sw10.ubiforsikring.Objects.TripObjects.Trip;
 
 public class TripOverviewActivity extends AppCompatActivity {
     Context mContext;
     long mTripId;
+    Trip mTrip;
+    SimpleDateFormat mSdf;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trip_overview);
         mContext = this;
+
+        //Date format for printing out trip timestamps
+        mSdf = new SimpleDateFormat(mContext.getString(R.string.TripPeriodTextFormat));
 
         //Get trip id for which data to display
         Intent intent = getIntent();
@@ -42,41 +55,14 @@ public class TripOverviewActivity extends AppCompatActivity {
 
         Button tripStatisticsButton = (Button) findViewById(R.id.TripStatisticsButton);
         tripStatisticsButton.setOnClickListener(TripStatisticsListener);
-
-        //Setup text
-        TextView tripTitleView = (TextView) findViewById(R.id.TripTitleView);
-        TextView tripDescriptionView = (TextView) findViewById(R.id.TripDescriptionView);
-        TextView totalCostView = (TextView) findViewById(R.id.TotalCostView);
-        TextView baseCostValueView = (TextView) findViewById(R.id.BaseCostValueView);
-        TextView environmentCostPercentageView = (TextView) findViewById(R.id.EnvironmentCostPercentageView);
-        TextView environmentCostValueView = (TextView) findViewById(R.id.EnvironmentCostValueView);
-        TextView drivingStyleCostPercentageView = (TextView) findViewById(R.id.DrivingStyleCostPercentageView);
-        TextView drivingStyleCostValueView = (TextView) findViewById(R.id.DrivingStyleCostValueView);
-        TextView totalCostPercentageView = (TextView) findViewById(R.id.TotalCostPercentageView);
-        TextView totalCostValueView = (TextView) findViewById(R.id.TotalCostValueView);
-        TextView tripStartValueView = (TextView) findViewById(R.id.TripStartValueView);
-        TextView tripEndValueView = (TextView) findViewById(R.id.TripEndValueView);
-
-        tripTitleView.setText(String.format(getString(R.string.TripTitle), mTripId));
-
-        tripDescriptionView.setText("Til Arbejde");
-        totalCostView.setText("43,00 Dkr");
-        totalCostView.setTextColor(ContextCompat.getColor(this, R.color.graphColorRed));
-        baseCostValueView.setText("14,2 km");
-        environmentCostPercentageView.setText("(+10,6%)");
-        environmentCostValueView.setText("+1,5 km");
-        drivingStyleCostPercentageView.setText("(+47,0%)");
-        drivingStyleCostPercentageView.setTextColor(ContextCompat.getColor(this, R.color.graphColorRed));
-        drivingStyleCostValueView.setText("+6,7 km");
-        totalCostPercentageView.setText("(+57,6%)");
-        totalCostValueView.setText("22,4 km");
-        tripStartValueView.setText("13:00 25/01/2016");
-        tripEndValueView.setText("13:45 25/01/2016");
     }
 
     @Override
     public void onResume() {
-        SetupPieChart();
+        //Get data for GUI
+        OverviewGetTask overviewGetTask = new OverviewGetTask(this);
+        overviewGetTask.execute(mTripId);
+
         super.onResume();
     }
 
@@ -91,21 +77,20 @@ public class TripOverviewActivity extends AppCompatActivity {
     Button.OnClickListener TripStatisticsListener = new Button.OnClickListener() {
         public void onClick(View v) {
             Intent intent = new Intent(mContext, TripStatisticsActivity.class);
-            intent.putExtra(getString(R.string.TripIdIntentName), mTripId);
+            intent.putExtra(getString(R.string.TripStatisticsIntent), mTrip);
             startActivity(intent);
         }
     };
 
     private void SetupPieChart() {
-        //TODO: Get proper data
         //Define data
         List<Entry> entries = new ArrayList<>();
-        entries.add(new Entry(70, 0));
-        entries.add(new Entry(20, 0));
-        entries.add(new Entry(15, 0));
-        entries.add(new Entry(10, 0));
-        entries.add(new Entry(10, 0));
-        entries.add(new Entry(5, 0));
+        entries.add(new Entry((float)mTrip.SpeedingScore, 0));
+        entries.add(new Entry((float)mTrip.AccelerationScore, 0));
+        entries.add(new Entry((float)mTrip.Brakescore, 0));
+        entries.add(new Entry((float)mTrip.Jerkscore, 0));
+        entries.add(new Entry((float)mTrip.RoadtypeScore, 0));
+        entries.add(new Entry((float)mTrip.CriticalTimeScore, 0));
 
         //Define labels for legend
         ArrayList<String> labels = new ArrayList<>();
@@ -167,5 +152,161 @@ public class TripOverviewActivity extends AppCompatActivity {
         graphColors[4] = ContextCompat.getColor(this, R.color.graphColorBrown);
         graphColors[5] = ContextCompat.getColor(this, R.color.graphColorBlue);
         return graphColors;
+    }
+
+    private class OverviewGetTask extends AsyncTask<Long, Void, Boolean> {
+        final WeakReference<Context> mContextReference;
+
+        public OverviewGetTask(Context context) {
+            mContextReference = new WeakReference<>(context);
+        }
+
+        @Override
+        protected Boolean doInBackground(Long... tripId) {
+            try {
+                mTrip = ServiceHelper.GetTrip(1, tripId[0]);
+                return true;
+            } catch (Exception e) {
+                return false;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Boolean success) {
+
+            if (mContextReference.get() != null) {
+                if(!success) {
+                    BuildAlertDialog().show();
+                }
+
+                // Find all views
+                TextView tripTitleView = (TextView) findViewById(R.id.TripTitleView);
+                //TextView tripDescriptionView = (TextView) findViewById(R.id.TripDescriptionView);
+                //TextView totalCostView = (TextView) findViewById(R.id.TotalCostView);
+                TextView baseCostValueView = (TextView) findViewById(R.id.BaseCostValueView);
+                TextView environmentCostPercentageView = (TextView) findViewById(R.id.EnvironmentCostPercentageView);
+                TextView environmentCostValueView = (TextView) findViewById(R.id.EnvironmentCostValueView);
+                TextView drivingStyleCostPercentageView = (TextView) findViewById(R.id.DrivingStyleCostPercentageView);
+                TextView drivingStyleCostValueView = (TextView) findViewById(R.id.DrivingStyleCostValueView);
+                TextView totalCostPercentageView = (TextView) findViewById(R.id.TotalCostPercentageView);
+                TextView totalCostValueView = (TextView) findViewById(R.id.TotalCostValueView);
+                TextView tripStartValueView = (TextView) findViewById(R.id.TripStartValueView);
+                TextView tripEndValueView = (TextView) findViewById(R.id.TripEndValueView);
+
+                // Trip Title
+                tripTitleView.setText(String.format(getString(R.string.TripTitle), mTripId));
+                // tripDescriptionView.setText("Til Arbejde");
+                // totalCostView.setText("43,00 Dkr");
+                // totalCostView.setTextColor(ContextCompat.getColor(mContextReference.get(), R.color.graphColorRed));
+
+                // Base Cost
+                baseCostValueView.setText(String.format(getString(R.string.BaseCostValue), mTrip.MetersDriven / 1000));
+
+                // Environment
+                double environmentCost = (mTrip.CriticalTimeScore + mTrip.RoadtypeScore) / 1000;
+                double environmentPercentage = (environmentCost / (mTrip.MetersDriven / 1000)) * 100;
+                if (environmentCost >= 0) {
+                    environmentCostValueView.setText(String.format(getString(R.string.CostPlusValue), environmentCost));
+                    environmentCostPercentageView.setText(String.format(getString(R.string.CostPlusPercentage), environmentPercentage));
+                } else {
+                    environmentCostValueView.setText(String.format(getString(R.string.CostMinusValue), environmentCost));
+                    environmentCostPercentageView.setText(String.format(getString(R.string.CostMinusPercentage), environmentPercentage));
+                }
+
+                // Driving Style
+                double drivingStyleCost = (mTrip.AccelerationScore +
+                                          mTrip.Brakescore +
+                                          mTrip.Jerkscore +
+                                          mTrip.SpeedingScore) / 1000;
+                double drivingStylePercentage = (drivingStyleCost / (mTrip.MetersDriven / 1000)) * 100;
+                SetTextColor(drivingStyleCostPercentageView, drivingStylePercentage);
+                if (drivingStyleCost >= 0) {
+                    drivingStyleCostValueView.setText(String.format(getString(R.string.CostPlusValue), drivingStyleCost));
+                    drivingStyleCostPercentageView.setText(String.format(getString(R.string.CostPlusPercentage), drivingStylePercentage));
+                } else {
+                    drivingStyleCostValueView.setText(String.format(getString(R.string.CostMinusValue), drivingStyleCost));
+                    drivingStyleCostPercentageView.setText(String.format(getString(R.string.CostMinusPercentage), drivingStylePercentage));
+                }
+
+                // Total Cost
+                double totalCost = (mTrip.MetersDriven / 1000) + (environmentCost + drivingStyleCost);
+                double totalCostPercentage = environmentPercentage + drivingStylePercentage;
+                if (totalCostPercentage >= 0) {
+                    totalCostValueView.setText(String.format(getString(R.string.BaseCostValue), totalCost));
+                    totalCostPercentageView.setText(String.format(getString(R.string.CostPlusPercentage), totalCostPercentage));
+                } else {
+                    totalCostValueView.setText(String.format(getString(R.string.CostMinusValue), totalCost));
+                    totalCostPercentageView.setText(String.format(getString(R.string.CostMinusPercentage), totalCostPercentage));
+                }
+
+                // Timestamps
+                tripStartValueView.setText(mSdf.format(mTrip.TripStart));
+                tripEndValueView.setText(mSdf.format(mTrip.TripEnd));
+
+                // PieChart
+                SetupPieChart();
+            }
+        }
+
+        @Override
+        protected void onPreExecute() {
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {}
+    }
+
+    private void SetTextColor(TextView optimalityView, double optimality) {
+        //Get the limit where everything is just red
+        int maxColor = mContext.getResources().getInteger(R.integer.OptimalityMaxColor);
+
+        //Define the sections of each color
+        double sectionSize = maxColor / 5;
+
+        //Red
+        if (optimality >= sectionSize * 4) {
+            optimalityView.setTextColor(ContextCompat.getColor(mContext, R.color.graphColorRed));
+            return;
+        }
+
+        //Orange
+        if (optimality >= sectionSize * 3) {
+            optimalityView.setTextColor(ContextCompat.getColor(mContext, R.color.graphColorOrange));
+            return;
+        }
+
+        //Yellow
+        if (optimality >= sectionSize * 2) {
+            optimalityView.setTextColor(ContextCompat.getColor(mContext, R.color.graphColorYellow));
+            return;
+        }
+
+        //Lime
+        if (optimality >= sectionSize * 1) {
+            optimalityView.setTextColor(ContextCompat.getColor(mContext, R.color.graphColorLime));
+        }
+
+        //Green
+        else {
+            optimalityView.setTextColor(ContextCompat.getColor(mContext, R.color.graphColorGreen));
+        }
+    }
+
+    private AlertDialog BuildAlertDialog(){
+        return new AlertDialog.Builder(mContext)
+                .setTitle(getString(R.string.TripOverviewLoadErrorText))
+                .setPositiveButton(getString(R.string.TripListRetryLoad), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        OverviewGetTask overviewGetTask = new OverviewGetTask(mContext);
+                        overviewGetTask.execute(mTripId);
+                        dialog.cancel();
+                    }
+                })
+                .setNegativeButton(getString(R.string.TripOverviewErrorGoBack), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                })
+                .create();
     }
 }

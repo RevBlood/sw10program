@@ -1,8 +1,6 @@
 package sw10.ubiforsikring.Helpers;
 
-import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -20,7 +18,7 @@ public class ServiceHelper {
 
 	//region GET
 
-	public static Trip GetTrip(int carId, int tripId){
+	public static Trip GetTrip(int carId, long tripId){
 		String response = "Empty response";
         Trip trip = null;
 
@@ -33,8 +31,10 @@ public class ServiceHelper {
 
 		Log.i("Debug", response);
 
+		String prunedResponse = pruneXMLtags(response);
+
 		try {
-			trip = new Trip(new JSONObject(response));
+			trip = new Trip(new JSONObject(prunedResponse));
 		} catch(Exception e) {
 			Log.e("Debug", "GetTrip:", e);
 		}
