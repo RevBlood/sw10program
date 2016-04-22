@@ -96,10 +96,10 @@
     <string name="CriticalTimeMetricName">Tidsperioder</string>
 
     <!-- TRIP STATISTICS -->
-    <string name="DelinquencyOptimality">%d%%</string>
+    <string name="DelinquencyOptimality">%.0f%%</string>
     <string name="DelinquencyCost">%.2f Dkr</string>
-    <string name="DistancePerHundredText">%s km pr. 100 km</string>
-    <string name="CountPerHundredText">%s pr. 100 km</string>
+    <string name="DistancePerHundredText">%.1f km pr. 100 km</string>
+    <string name="CountPerHundredText">%.1f pr. 100 km</string>
     <string name="RoadTypeText">Kørt mest på %s</string>
     <string name="CriticalTimeText">Kørt %s</string>
     <string name="SpeedText">%.1f km kørt for hurtigt</string>

@@ -50,7 +50,10 @@ public class Trip implements Serializable {
             this.AccelerationScore = obj.getDouble("accelerationscore");
             this.Brakescore = obj.getDouble("brakescore");
             this.Jerkscore = obj.getDouble("jerkscore");
-
+            this.MetersSped = obj.getInt("meterssped");
+            this.AccelerationCount = obj.getInt("accelerationcount");
+            this.BrakeCount = obj.getInt("brakecount");
+            this.JerkCount = obj.getInt("jerkcount");
 
         } catch (Exception e){
             Log.e("Debug", "Trip JsonObject Constructor: ", e);

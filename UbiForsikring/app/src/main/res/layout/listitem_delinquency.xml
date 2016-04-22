@@ -54,14 +54,14 @@
             android:textSize="18sp"
             android:text="@string/DefaultText" />
 
-        <TextView
+        <!-- <TextView
             android:id="@+id/DelinquencyCost"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
             android:textSize="18sp"
-            android:text="@string/DefaultText" />
+            android:text="@string/DefaultText" /> -->
 
     </LinearLayout>
 

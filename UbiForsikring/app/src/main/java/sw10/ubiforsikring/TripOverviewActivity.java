@@ -69,7 +69,7 @@ public class TripOverviewActivity extends AppCompatActivity {
     Button.OnClickListener MapDisplayListener = new Button.OnClickListener() {
         public void onClick(View v) {
             Intent intent = new Intent(mContext, MapDisplayActivity.class);
-            intent.putExtra(getString(R.string.TripStatisticsIntent), mTrip);
+            intent.putExtra(getString(R.string.TripIdIntentName), mTripId);
             startActivity(intent);
         }
     };
@@ -77,7 +77,7 @@ public class TripOverviewActivity extends AppCompatActivity {
     Button.OnClickListener TripStatisticsListener = new Button.OnClickListener() {
         public void onClick(View v) {
             Intent intent = new Intent(mContext, TripStatisticsActivity.class);
-            intent.putExtra(getString(R.string.TripIdIntentName), mTripId);
+            intent.putExtra(getString(R.string.TripStatisticsIntent), mTrip);
             startActivity(intent);
         }
     };
