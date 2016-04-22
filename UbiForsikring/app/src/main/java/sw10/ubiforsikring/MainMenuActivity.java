@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -21,6 +22,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -33,6 +35,7 @@ public class MainMenuActivity extends AppCompatActivity {
     boolean mIsDialogOpen = false;
     boolean mHasFineLocationPermission = false;
     final static int FINE_LOCATION_PERMISSION_REQUEST = 0;
+    final static int PHONE_STATE_PERMISSION_REQUEST = 1;
 
     //TripService communication
     BroadcastReceiver mStatusReceiver;
@@ -48,10 +51,14 @@ public class MainMenuActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
         mContext = this;
         mStatusReceiver = new StatusReceiver();
+
+        //Verify IMEI is accessible, otherwise application won't work
+        CheckIMEI();
 
         if (savedInstanceState != null && savedInstanceState.getBoolean(getString(R.string.IsDialogOpen), false)) {
             BuildAlertDialog().show();
@@ -73,6 +80,7 @@ public class MainMenuActivity extends AppCompatActivity {
 
     @Override
     public void onResume() {
+
         //Listen for TripService status updates
         registerReceiver(mStatusReceiver, new IntentFilter(getString(R.string.BroadcastStatusIntent)));
 
@@ -132,10 +140,23 @@ public class MainMenuActivity extends AppCompatActivity {
         if (requestCode == FINE_LOCATION_PERMISSION_REQUEST) {
             if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 mHasFineLocationPermission = true;
-            } else {
-                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
             }
         }
+
+        if (requestCode == PHONE_STATE_PERMISSION_REQUEST) {
+            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                SaveIMEI();
+                try {
+                    SendIMEI();
+                } catch (Exception e) {
+                    SendIMEIFailedDialog().show();
+                }
+            } else {
+                NoIMEIDialog().show();
+            }
+        }
+
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     //endregion
@@ -148,7 +169,7 @@ public class MainMenuActivity extends AppCompatActivity {
                 //If GPS permission is not granted, request it
                 VerifyFineLocationPermission();
 
-                //If GPS is diabled, or permission is not granted, don't start the trip
+                //If GPS is disabled, or permission is not granted, don't start the trip
                 if(!VerifyGPS() || !mHasFineLocationPermission) {
                     return;
                 }
@@ -323,6 +344,19 @@ public class MainMenuActivity extends AppCompatActivity {
         }
     }
 
+    private void VerifyPhoneStatePermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
+            SaveIMEI();
+            try {
+                SendIMEI();
+            } catch (Exception e) {
+                SendIMEIFailedDialog().show();
+            }
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, PHONE_STATE_PERMISSION_REQUEST);
+        }
+    }
+
     private AlertDialog BuildAlertDialog(){
         return new AlertDialog.Builder(mContext)
             .setTitle(getString(R.string.GPSDisabledDialogTitle))
@@ -341,5 +375,68 @@ public class MainMenuActivity extends AppCompatActivity {
                 }
             })
             .create();
+    }
+
+    private AlertDialog NoIMEIDialog(){
+        return new AlertDialog.Builder(mContext)
+                .setTitle(getString(R.string.IMEIDialogTitle))
+                .setMessage(getString(R.string.IMEIDialogText))
+                .setPositiveButton(getString(R.string.IMEIRetryButtonText), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        VerifyPhoneStatePermission();
+                        dialog.cancel();
+                    }
+                })
+                .setNegativeButton(getString(R.string.IMEICancelButtonText), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                })
+                .create();
+    }
+
+    private void CheckIMEI(){
+        //Check IMEI is accessible
+        SharedPreferences preferences = getSharedPreferences(getString(R.string.IMEIPreferences), Context.MODE_PRIVATE);
+        if(!preferences.getBoolean(getString(R.string.IMEIStatus), false)) {
+            VerifyPhoneStatePermission();
+        }
+    }
+
+    private void SaveIMEI() {
+        SharedPreferences preferences = getSharedPreferences(getString(R.string.IMEIPreferences), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+        editor.putBoolean(getString(R.string.IMEIStatus), true);
+        editor.putString(getString(R.string.StoredIMEI), telephonyManager.getDeviceId());
+        editor.apply();
+    }
+
+    private void SendIMEI() {
+        SharedPreferences preferences = getSharedPreferences(getString(R.string.IMEIPreferences), Context.MODE_PRIVATE);
+        String imei = preferences.getString(getString(R.string.IMEIPreferences), null);
+    }
+
+    private AlertDialog SendIMEIFailedDialog(){
+        return new AlertDialog.Builder(mContext)
+                .setTitle(getString(R.string.SendIMEIDialogTitle))
+                .setMessage(getString(R.string.SendIMEIDialogText))
+                .setPositiveButton(getString(R.string.SendIMEIRetryButtonText), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        try {
+                            SendIMEI();
+                        } catch (Exception e) {
+                            SendIMEIFailedDialog();
+                        }
+
+                        dialog.cancel();
+                    }
+                })
+                .setNegativeButton(getString(R.string.SendIMEICancelButtonText), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                })
+                .create();
     }
 }

@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -47,7 +48,7 @@ public class TripOverviewActivity extends AppCompatActivity {
 
         //Get trip id for which data to display
         Intent intent = getIntent();
-        mTripId = intent.getLongExtra(getString(R.string.TripIdIntentName), -1);
+        mTripId = intent.getLongExtra(getString(R.string.TripOverviewIntent), -1);
 
         //Setup buttons
         Button showTripOnMapButton = (Button) findViewById(R.id.ShowTripOnMapButton);
@@ -69,7 +70,7 @@ public class TripOverviewActivity extends AppCompatActivity {
     Button.OnClickListener MapDisplayListener = new Button.OnClickListener() {
         public void onClick(View v) {
             Intent intent = new Intent(mContext, MapDisplayActivity.class);
-            intent.putExtra(getString(R.string.TripIdIntentName), mTripId);
+            intent.putExtra(getString(R.string.MapDisplayIntent), mTripId);
             startActivity(intent);
         }
     };

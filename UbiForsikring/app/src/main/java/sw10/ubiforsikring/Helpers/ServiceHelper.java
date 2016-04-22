@@ -113,8 +113,6 @@ public class ServiceHelper {
 	//region POST
 
 	public static boolean PostFacts(ArrayList<Fact> facts) {
-
-
         JSONArray jsonArray = new JSONArray();
         for (int i = 0; i < facts.size(); i++) {
             jsonArray.put(facts.get(i).serializeToJSON());

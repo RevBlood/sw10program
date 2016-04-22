@@ -44,7 +44,20 @@
     <string name="GPSDisabledSettingsButtonText">Gå til Indstillinger</string>
     <string name="GPSDisabledCancelButtonText">Annuller</string>
 
+    <string name="IMEIDialogTitle">Mangler tilladelse</string>
+    <string name="IMEIDialogText">Drive-LaB kræver information om telefonen for at kunne fungere</string>
+    <string name="IMEIRetryButtonText">Giv tilladelse</string>
+    <string name="IMEICancelButtonText">Afslut</string>
+
+    <string name="SendIMEIDialogTitle">Ingen forbindelse</string>
+    <string name="SendIMEIDialogText">Drive-LaB kunne ikke oprette forbindelse til serveren</string>
+    <string name="SendIMEIRetryButtonText">Prøv igen</string>
+    <string name="SendIMEICancelButtonText">Afslut</string>
+
     <string name="IsDialogOpen">IsDialogOpen</string>
+    <string name="IMEIPreferences">IMEIPreferences</string>
+    <string name="IMEIStatus">IMEIStatus</string>
+    <string name="StoredIMEI">StoredIMEI</string>
 
     <!-- LIVE MAP -->
     <string name="LiveDistanceText">%.1f km</string>
@@ -68,6 +81,7 @@
     <string name="CurrentTripDistanceDefaultText">-,- km kørt</string>
     <string name="CurrentTripProcessingText">Tur afsluttet - Din score bliver udregnet</string>
     <string name="LoadingTripsText">Indlæser&#8230;</string>
+    <string name="TripOverviewIntent">TripOverview</string>
 
     <!-- TRIP OVERVIEW -->
     <string name="ShowTripOnMapButtonText">Vis på kort</string>
@@ -84,7 +98,7 @@
     <string name="CostMinusPercentage">(-%.1f%%)</string>
     <string name="CostPlusValue">+%.1f km</string>
     <string name="CostMinusValue">-%.1f km</string>
-    <string name="TripIdIntentName">TripId</string>
+    <string name="MapDisplayIntent">MapDisplay</string>
     <string name="TripStartText">Tur startet:</string>
     <string name="TripEndText">Tur afsluttet:</string>
     <string name="TripPeriodTextFormat">HH:mm dd/MM/yyyy</string>
@@ -104,6 +118,10 @@
     <string name="CriticalTimeText">Kørt %s</string>
     <string name="SpeedText">%.1f km kørt for hurtigt</string>
     <string name="AccelerationCountText">%d forseelser</string>
+
+    <!-- MAP DISPLAY -->
+    <string name="MapDisplayLoadErrorText">Kunne ikke indlæse rute</string>
+
 
     <!-- COMPETITION LIST -->
     <string name="CompetitionListEmptyText">Der er ingen konkurrencer lige nu</string>

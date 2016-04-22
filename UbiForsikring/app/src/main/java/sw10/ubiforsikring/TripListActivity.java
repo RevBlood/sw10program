@@ -125,7 +125,7 @@ public class TripListActivity extends AppCompatActivity {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
             Intent intent = new Intent(mContext, TripOverviewActivity.class);
-            intent.putExtra(getString(R.string.TripIdIntentName), mTripList.get(position).TripId);
+            intent.putExtra(getString(R.string.TripOverviewIntent), mTripList.get(position).TripId);
             startActivity(intent);
         }
     };

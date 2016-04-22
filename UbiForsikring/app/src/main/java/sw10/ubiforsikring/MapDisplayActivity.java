@@ -1,14 +1,19 @@
 package sw10.ubiforsikring;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -23,10 +28,14 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
+import sw10.ubiforsikring.Helpers.ServiceHelper;
+
 public class MapDisplayActivity extends AppCompatActivity implements OnMapReadyCallback {
+    Context mContext;
     long mTripId;
 
     //Map
@@ -43,11 +52,12 @@ public class MapDisplayActivity extends AppCompatActivity implements OnMapReadyC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_display);
+        mContext = this;
         mRoute = new ArrayList<>();
 
         //Get trip id for which data to display
         Intent intent = getIntent();
-        mTripId = intent.getLongExtra(getString(R.string.TripIdIntentName), -1);
+        mTripId = intent.getLongExtra(getString(R.string.MapDisplayIntent), -1);
 
         //Define how the route looks on the map
         mRouteOptions = new PolylineOptions();
@@ -75,15 +85,10 @@ public class MapDisplayActivity extends AppCompatActivity implements OnMapReadyC
 
     @Override
     public void onResume() {
-        //TODO: Fetch the actual route
-        mRoute.add(new LatLng(6.8, 4.4));
-        mRoute.add(new LatLng(6.7, 4.3));
-
-        //Draw on map, if ready
-        if (mMap != null) {
-            PlaceMarkers();
-            PlaceRoute();
-            CenterRoute();
+        //Fetch route to display
+        if (mRoute.isEmpty()) {
+            RouteGetTask routeGetTask = new RouteGetTask(this);
+            routeGetTask.execute(mTripId);
         }
 
         super.onResume();
@@ -102,8 +107,12 @@ public class MapDisplayActivity extends AppCompatActivity implements OnMapReadyC
     public void onMapReady(GoogleMap googleMap) {
         //Initialize the map with a polyline
         mMap = googleMap;
-        PlaceMarkers();
-        PlaceRoute();
+
+        if(!mRoute.isEmpty()) {
+            PlaceMarkers();
+            PlaceRoute();
+        }
+
         mMap.setOnMapLoadedCallback(MapLoadedCallback);
     }
 
@@ -157,5 +166,67 @@ public class MapDisplayActivity extends AppCompatActivity implements OnMapReadyC
         shape.setBounds(0, 0, bitmap.getWidth(), bitmap.getHeight());
         shape.draw(canvas);
         return BitmapDescriptorFactory.fromBitmap(bitmap);
+    }
+
+    private class RouteGetTask extends AsyncTask<Long, Void, Boolean> {
+        final WeakReference<Context> mContextReference;
+
+        public RouteGetTask(Context context) {
+            mContextReference = new WeakReference<>(context);
+        }
+
+        @Override
+        protected Boolean doInBackground(Long... tripId) {
+            try {
+                //TODO This
+                //mRoute = ServiceHelper.GetTrip(1, tripId[0]);
+                return true;
+            } catch (Exception e) {
+                return false;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Boolean success) {
+
+            if (mContextReference.get() != null) {
+                if(!success) {
+                    BuildAlertDialog().show();
+                    return;
+                }
+
+                //Draw the route if Map is ready
+                if (mMap != null) {
+                    PlaceMarkers();
+                    PlaceRoute();
+                    CenterRoute();
+                }
+            }
+        }
+
+        @Override
+        protected void onPreExecute() {
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {}
+    }
+
+    private AlertDialog BuildAlertDialog(){
+        return new AlertDialog.Builder(mContext)
+                .setTitle(getString(R.string.TripOverviewLoadErrorText))
+                .setPositiveButton(getString(R.string.TripOverviewErrorGoBack), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        RouteGetTask routeGetTaskGetTask = new RouteGetTask(mContext);
+                        routeGetTaskGetTask.execute(mTripId);
+                        dialog.cancel();
+                    }
+                })
+                .setNegativeButton(getString(R.string.TripOverviewErrorGoBack), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                })
+                .create();
     }
 }
