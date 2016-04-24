@@ -123,7 +123,6 @@
     <!-- MAP DISPLAY -->
     <string name="MapDisplayLoadErrorText">Kunne ikke indlæse rute</string>
 
-
     <!-- COMPETITION LIST -->
     <string name="CompetitionListEmptyText">Der er ingen konkurrencer lige nu</string>
     <string name="LoadingCompetitionsText">Indlæser&#8230;</string>
@@ -161,6 +160,10 @@
     <!-- TRIP SERVICE -->
     <string name="ServiceNotificationTitle">UBI Forsikring</string>
     <string name="ServiceNotificationText">Din tur er aktiv</string>
+
+    <string name="FailedTripPreferences">FailedTripPreferences</string>
+    <string name="FailedTripStatus">FailedTripStatus</string>
+    <string name="StoredTrips">StoredTrips</string>
 
     <!-- LOCATION LISTENER -->
     <string name="MovementNotificationTitle">Er din tur slut?</string>

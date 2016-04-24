@@ -108,7 +108,7 @@ public class ServiceHelper {
 		return facts;
 	}
 
-	public static ArrayList<Fact> GetFactsForMap(int carid, int tripid){
+	public static ArrayList<Fact> GetFactsForMap(int carid, long tripid){
 		String response = "Empty response";
 
 		try {

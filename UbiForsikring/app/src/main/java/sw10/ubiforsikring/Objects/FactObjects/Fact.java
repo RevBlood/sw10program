@@ -4,7 +4,9 @@ import android.util.Log;
 
 import org.json.JSONObject;
 
-public class Fact {
+import java.io.Serializable;
+
+public class Fact implements Serializable{
     public long EntryId;
     public long TripId;
     public int CarId;

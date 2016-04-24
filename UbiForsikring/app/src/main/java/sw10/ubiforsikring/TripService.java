@@ -5,7 +5,9 @@ import android.app.Activity;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -15,6 +17,7 @@ import android.os.Message;
 import android.os.Messenger;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -26,8 +29,13 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import sw10.ubiforsikring.Helpers.MeasureHelper;
 import sw10.ubiforsikring.Helpers.ServiceHelper;
@@ -61,10 +69,10 @@ public class TripService extends Service implements ConnectionCallbacks, OnConne
 
         //Initialize the GoogleApiClient, responsible for connecting to Google Location Services
         mGoogleApiClient = new GoogleApiClient.Builder(this)
-            .addConnectionCallbacks(this)
-            .addOnConnectionFailedListener(this)
-            .addApi(LocationServices.API)
-            .build();
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
         mGoogleApiClient.connect();
 
         //Initialize desired settings for location updates
@@ -221,20 +229,18 @@ public class TripService extends Service implements ConnectionCallbacks, OnConne
         mDrivingNotification = notificationBuilder.build();
     }
 
-    private void ProcessTripRaw(List<Location> entries) { 
+    private void ProcessTripRaw(List<Location> entries) {
         ArrayList<Fact> facts = new ArrayList<>();
 
         //int userId = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(this).getString(getString(R.string.StoredEmail), getString(R.string.DefaultEmail)));
 
-            //TODO: Stop med at crashe vores app, Lau!
         /*DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(getApplicationContext());
         Log.e("Debug", "Timestamp" + facts.get(1).SpatialTemporal.MPoint.getTime());
         Log.e("Debug", "Timezone: " + TimeZone.getDefault().getDisplayName());
         Log.e("Debug", "Timestamp with format" + dateFormat.format(facts.get(1).SpatialTemporal.MPoint.getTime()));
         Log.e("Debug", "Number of entries: " + entries.size()); */
 
-        if(entries.size() > 9) {
-
+        if (entries.size() >= 10) {
             for (Location entry : entries) {
                 //facts.add(new Fact(userId, new SpatialTemporalInformation(entry)));
                 facts.add(new Fact(1, new SpatialTemporalInformation(entry)));
@@ -242,35 +248,30 @@ public class TripService extends Service implements ConnectionCallbacks, OnConne
             }
 
             //Calculate Measures given the locations from logged data
-
-            //TODO: NO MEARURES ARE CALCULATED
+            //TODO: NO MEASURES ARE CALCULATED
             //MeasureHelper.CalculateMeasures(facts);
 
-            //Send the data to the server
-            ServiceHelper.PostFacts(facts);
+            // Send trip to server. If this succeeds, check for earlier trips that failed to send, and send them too.
+            if (SendTrip(facts)) {
+                SendUnresolvedTrips();
+            }
 
         } else {
             Toast toast = Toast.makeText(getApplicationContext(), "Turen var ikke lang nok!", Toast.LENGTH_LONG);
             toast.show();
 
-            Log.e("Debug","Not 10 or more facts");
+            Log.e("Debug", "Not 10 or more facts");
         }
 
-            //Finish up
-            mIsProcessing = false;
-            UpdateStatusBroadcast();
-            stopForeground(true);
-
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-
-            }
+        //Finish up
+        mIsProcessing = false;
+        UpdateStatusBroadcast();
+        stopForeground(true);
     }
 
     private void ProcessTrip(List<Location> entries) {
         //Handle case: No entries in list
-        if(!entries.isEmpty()) {
+        if (!entries.isEmpty()) {
             //Instantiate the database
             LBDatabaseHelper DbHelper = new LBDatabaseHelper(this);
             dbWriteQueries DbWriter = new dbWriteQueries(DbHelper);
@@ -285,10 +286,10 @@ public class TripService extends Service implements ConnectionCallbacks, OnConne
             Log.d("Debug", Long.toString(rowID));
 
             //Handle remaining entries
-            for(int i = 1; i < entries.size(); i++) {
+            for (int i = 1; i < entries.size(); i++) {
                 dateId = MeasureHelper.DBDate(entries.get(i).getTime());
                 timeId = MeasureHelper.DBTime(entries.get(i).getTime());
-                double speed = MeasureHelper.Speed(entries.get(i), entries.get(i-1));
+                double speed = MeasureHelper.Speed(entries.get(i), entries.get(i - 1));
 
                 //Save entries as GPSFacts
                 //TODO: And do it properly
@@ -298,12 +299,91 @@ public class TripService extends Service implements ConnectionCallbacks, OnConne
         }
         try {
             Thread.sleep(3500);
-        } catch(InterruptedException e) {
+        } catch (InterruptedException e) {
 
         }
         //Finish up
         mIsProcessing = false;
         UpdateStatusBroadcast();
         stopForeground(true);
+    }
+
+    private boolean SendTrip(ArrayList<Fact> facts) {
+        //Try sending data to server - If it fails, save the trip locally
+        try {
+            ServiceHelper.PostFacts(facts);
+            return true;
+        } catch (Exception e) {
+            SharedPreferences preferences = getSharedPreferences(getString(R.string.FailedTripPreferences), Context.MODE_PRIVATE);
+            boolean hasUnresolvedTrips = preferences.getBoolean(getString(R.string.FailedTripStatus), false);
+
+            //Get previously unresolved trips if any
+            Set<String> unresolvedTrips = new HashSet<>();
+            if (hasUnresolvedTrips) {
+                unresolvedTrips = preferences.getStringSet(getString(R.string.StoredTrips), null);
+            }
+
+            //Parse trip to JSONarray - SharedPreferences does not accept complex objects
+            JSONArray jsonArray = new JSONArray();
+            for (int i = 0; i < facts.size(); i++) {
+                jsonArray.put(facts.get(i).serializeToJSON());
+            }
+
+            //If there were no earlier unresolved trips, update the status in SharedPreferences.
+            SharedPreferences.Editor editor = preferences.edit();
+            if (!hasUnresolvedTrips) {
+                editor.putBoolean(getString(R.string.FailedTripStatus), true);
+            }
+
+            //Save the list of unresolved trips
+            unresolvedTrips.add(jsonArray.toString());
+            editor.putStringSet(getString(R.string.StoredTrips), unresolvedTrips);
+            editor.apply();
+            return false;
+        }
+    }
+
+    private boolean SendUnresolvedTrips() {
+        SharedPreferences preferences = getSharedPreferences(getString(R.string.FailedTripPreferences), Context.MODE_PRIVATE);
+        // If there are no unresolved trips, there's no problem. Return.
+        if (!preferences.getBoolean(getString(R.string.FailedTripStatus), false)) {
+            return true;
+        }
+
+        // If there are unresolved trips, read them, and send them
+        Set<String> unresolvedTrips = preferences.getStringSet(getString(R.string.StoredTrips), null);
+
+        for (String unresolvedTrip : unresolvedTrips) {
+            ArrayList<Fact> facts = new ArrayList<>();
+
+            try {
+                JSONArray jsonArray = new JSONArray(unresolvedTrip);
+
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    facts.add(new Fact(jsonArray.getJSONObject(i)));
+                }
+            } catch (JSONException e) {
+                Log.e("Debug", "SendUnresolvedTrips:", e);
+            }
+
+            // If sending the trip succeeds, delete it from shared preferences, otherwise return, leaving other trips for later
+            if (SendTrip(facts)) {
+                unresolvedTrips.remove(unresolvedTrip);
+                SharedPreferences.Editor editor = preferences.edit();
+
+                if (unresolvedTrips.isEmpty()) {
+                    editor.putBoolean(getString(R.string.FailedTripStatus), false);
+                    editor.remove(getString(R.string.StoredTrips));
+                } else {
+                    editor.putStringSet(getString(R.string.StoredTrips), unresolvedTrips);
+                }
+
+                editor.apply();
+            } else {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

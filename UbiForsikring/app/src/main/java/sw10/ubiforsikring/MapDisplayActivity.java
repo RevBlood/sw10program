@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
 import android.os.AsyncTask;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
@@ -33,6 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import sw10.ubiforsikring.Helpers.ServiceHelper;
+import sw10.ubiforsikring.Objects.FactObjects.Fact;
 
 public class MapDisplayActivity extends AppCompatActivity implements OnMapReadyCallback {
     Context mContext;
@@ -178,8 +180,11 @@ public class MapDisplayActivity extends AppCompatActivity implements OnMapReadyC
         @Override
         protected Boolean doInBackground(Long... tripId) {
             try {
-                //TODO This
-                //mRoute = ServiceHelper.GetTrip(1, tripId[0]);
+                List<Fact> facts = ServiceHelper.GetFactsForMap(1, tripId[0]);
+                for(Fact fact : facts) {
+                    Location location = fact.SpatialTemporal.MPoint;
+                    mRoute.add(new LatLng(location.getLatitude(), location.getLongitude()));
+                }
                 return true;
             } catch (Exception e) {
                 return false;
@@ -188,7 +193,6 @@ public class MapDisplayActivity extends AppCompatActivity implements OnMapReadyC
 
         @Override
         protected void onPostExecute(Boolean success) {
-
             if (mContextReference.get() != null) {
                 if(!success) {
                     BuildAlertDialog().show();
