@@ -33,6 +33,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import sw10.ubiforsikring.Helpers.ServiceHelper;
+import sw10.ubiforsikring.Objects.CarObjects.Car;
 
 public class MainMenuActivity extends AppCompatActivity {
     final static int FINE_LOCATION_PERMISSION_REQUEST = 0;

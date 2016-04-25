@@ -7,6 +7,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import sw10.ubiforsikring.Objects.CarObjects.Car;
 import sw10.ubiforsikring.Objects.CompetitionObjects.CompetitionListItem;
 import sw10.ubiforsikring.Objects.FactObjects.Fact;
 import sw10.ubiforsikring.Objects.TripObjects.Trip;
