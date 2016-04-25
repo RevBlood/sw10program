@@ -425,14 +425,14 @@ public class MainMenuActivity extends AppCompatActivity {
 
     private void CheckIMEI(){
         //Check IMEI is stored. If not, check if we have permission to get it
-        SharedPreferences preferences = getSharedPreferences(getString(R.string.IMEIPreferences), Context.MODE_PRIVATE);
+        SharedPreferences preferences = getSharedPreferences(getString(R.string.UserPreferences), Context.MODE_PRIVATE);
         if(!preferences.getBoolean(getString(R.string.IMEIStatus), false)) {
             VerifyPhoneStatePermission();
         }
     }
 
     private void SaveIMEI() {
-        SharedPreferences preferences = getSharedPreferences(getString(R.string.IMEIPreferences), Context.MODE_PRIVATE);
+        SharedPreferences preferences = getSharedPreferences(getString(R.string.UserPreferences), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
         editor.putBoolean(getString(R.string.IMEIStatus), true);
