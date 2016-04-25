@@ -5,7 +5,7 @@
     <string name="title_activity_map">Kort</string>
     <string name="title_activity_trip_list">Turliste</string>
     <string name="title_activity_trip_overview">Turoversigt</string>
-    <string name="title_activity_login">Login</string>
+    <!--<string name="title_activity_login">Login</string> -->
     <string name="title_activity_competition_list">Konkurrencer</string>
     <string name="title_activity_competition_overview">Overblik</string>
 
@@ -57,7 +57,7 @@
 
     <string name="IsGPSDialogOpen">IsGPSDialogOpen</string>
     <string name="UserPreferences">UserPreferences</string>
-    <string name="IMEIStatus">IMEIStatus</string>
+    <string name="CarIdStatus">CarIdStatus</string>
     <string name="StoredIMEI">StoredIMEI</string>
     <string name="StoredCarId">StoredCarId</string>
 

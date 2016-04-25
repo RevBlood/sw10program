@@ -28,7 +28,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -62,8 +61,8 @@ public class MainMenuActivity extends AppCompatActivity {
         mContext = this;
         mStatusReceiver = new StatusReceiver();
 
-        //Verify IMEI is accessible, otherwise application won't work
-        CheckIMEI();
+        //Verify CarId is accessible, otherwise application won't work
+        CheckCarId();
 
         //Recover any dialogs that were open
         if (savedInstanceState != null && savedInstanceState.getBoolean(getString(R.string.IsGPSDialogOpen), false)) {
@@ -157,9 +156,8 @@ public class MainMenuActivity extends AppCompatActivity {
         if (requestCode == PHONE_STATE_PERMISSION_REQUEST) {
             if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 SaveIMEI();
-                try {
-                    SendIMEI();
-                } catch (Exception e) {
+                // Block user from proceeding with a dialog if IMEI could not be sent.
+                if(!SendIMEI()) {
                     SendIMEIFailedDialog().show();
                 }
             } else {
@@ -371,9 +369,7 @@ public class MainMenuActivity extends AppCompatActivity {
         // This permission MUST be given - If not, request it. If permission is granted, save and send it.
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
             SaveIMEI();
-            try {
-                SendIMEI();
-            } catch (Exception e) {
+            if(!SendIMEI()) {
                 // Block user from proceeding with a dialog if IMEI could not be sent.
                 SendIMEIFailedDialog().show();
             }
@@ -423,10 +419,10 @@ public class MainMenuActivity extends AppCompatActivity {
                 .create();
     }
 
-    private void CheckIMEI(){
-        //Check IMEI is stored. If not, check if we have permission to get it
+    private void CheckCarId() {
+        //Check CarId is stored. If not, check if permission is granted to get IMEI (Needed to get CarId)
         SharedPreferences preferences = getSharedPreferences(getString(R.string.UserPreferences), Context.MODE_PRIVATE);
-        if(!preferences.getBoolean(getString(R.string.IMEIStatus), false)) {
+        if(!preferences.getBoolean(getString(R.string.CarIdStatus), false)) {
             VerifyPhoneStatePermission();
         }
     }
@@ -435,17 +431,25 @@ public class MainMenuActivity extends AppCompatActivity {
         SharedPreferences preferences = getSharedPreferences(getString(R.string.UserPreferences), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-        editor.putBoolean(getString(R.string.IMEIStatus), true);
         editor.putString(getString(R.string.StoredIMEI), telephonyManager.getDeviceId());
         editor.apply();
     }
 
-    private void SendIMEI() {
+    private boolean SendIMEI() {
         SharedPreferences preferences = getSharedPreferences(getString(R.string.UserPreferences), Context.MODE_PRIVATE);
         String imei = preferences.getString(getString(R.string.StoredIMEI), null);
-        Car car = ServiceHelper.GetOrCreateCar(imei);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putInt(getString(R.string.StoredCarId), car.CarId);
+        try {
+            Car car = ServiceHelper.GetOrCreateCar(imei);
+
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putBoolean(getString(R.string.CarIdStatus), true);
+            editor.putInt(getString(R.string.StoredCarId), car.CarId);
+            editor.apply();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+
     }
 
     private AlertDialog SendIMEIFailedDialog(){

@@ -48,7 +48,7 @@ public class ServiceHelper {
 		Car car = null;
 
 		try {
-			response = HTTPHelper.HTTPGet("http://" + ip + "/RestService/Trip/GetOrCreateCar?imei={" + imei + "}");
+			response = HTTPHelper.HTTPGet("http://" + ip + "/RestService/Car/GetOrCreateCar?imei=" + imei);
 			System.out.println("Response: " + response);
 		} catch (Exception e) {
 			e.printStackTrace();
