@@ -42,6 +42,30 @@ public class ServiceHelper {
 		return trip;
 	}
 
+	public static Car GetOrCreateCar(String imei){
+		String response = "Empty response";
+		Car car = null;
+
+		try {
+			response = HTTPHelper.HTTPGet("http://" + ip + "/RestService/Trip/GetOrCreateCar?imei={" + imei + "}");
+			System.out.println("Response: " + response);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		Log.i("Debug", response);
+
+		String prunedResponse = pruneXMLtags(response);
+
+		try {
+			car = new Car(new JSONObject(prunedResponse));
+		} catch(Exception e) {
+			Log.e("Debug", "GetOrCreateCar:", e);
+		}
+
+		return car;
+	}
+
 	public static ArrayList<TripListItem> GetTripsForListView(int carId, int offset){
 		String response = HTTPHelper.HTTPGet("http://" + ip + "/RestService/Trip/GetTripsForList?carid=" + carId + "&offset=" + offset);
         Log.i("Debug", response);
@@ -112,7 +136,7 @@ public class ServiceHelper {
 		String response = "Empty response";
 
 		try {
-			response = HTTPHelper.HTTPGet("http://" + ip + "/RestService/Fact/GetFactsForMap?carid=" + carid + "&tripid=" + tripid);
+			response = HTTPHelper.HTTPGet("http://" + ip + "/RestService/Fact/GetFacts?carid=" + carid + "&tripid=" + tripid);
 			Log.i("Debug", response);
 		} catch (Exception e) {
 			Log.i("Debug", "Response failure:", e);

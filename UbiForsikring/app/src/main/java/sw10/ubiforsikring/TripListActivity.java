@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -300,7 +301,10 @@ public class TripListActivity extends AppCompatActivity {
         @Override
         protected Boolean doInBackground(Integer... index) {
             try {
-                mTripList.addAll(ServiceHelper.GetTripsForListView(1, index[0]));
+                SharedPreferences preferences = getSharedPreferences(getString(R.string.UserPreferences), Context.MODE_PRIVATE);
+                int userId = preferences.getInt(getString(R.string.StoredCarId), -1);
+
+                mTripList.addAll(ServiceHelper.GetTripsForListView(userId, index[0]));
                 return true;
             } catch (Exception e) {
                 mIndex = index[0];

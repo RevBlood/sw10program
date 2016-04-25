@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
@@ -180,7 +181,10 @@ public class MapDisplayActivity extends AppCompatActivity implements OnMapReadyC
         @Override
         protected Boolean doInBackground(Long... tripId) {
             try {
-                List<Fact> facts = ServiceHelper.GetFactsForMap(1, tripId[0]);
+                SharedPreferences preferences = getSharedPreferences(getString(R.string.UserPreferences), Context.MODE_PRIVATE);
+                int userId = preferences.getInt(getString(R.string.StoredCarId), -1);
+
+                List<Fact> facts = ServiceHelper.GetFactsForMap(userId, tripId[0]);
                 for(Fact fact : facts) {
                     Location location = fact.SpatialTemporal.MPoint;
                     mRoute.add(new LatLng(location.getLatitude(), location.getLongitude()));
@@ -219,7 +223,7 @@ public class MapDisplayActivity extends AppCompatActivity implements OnMapReadyC
     private AlertDialog BuildAlertDialog(){
         return new AlertDialog.Builder(mContext)
                 .setTitle(getString(R.string.TripOverviewLoadErrorText))
-                .setPositiveButton(getString(R.string.TripOverviewErrorGoBack), new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.TripListRetryLoad), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         RouteGetTask routeGetTaskGetTask = new RouteGetTask(mContext);
                         routeGetTaskGetTask.execute(mTripId);

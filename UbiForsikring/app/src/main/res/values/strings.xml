@@ -56,9 +56,10 @@
     <string name="SendIMEICancelButtonText">Afslut</string>
 
     <string name="IsGPSDialogOpen">IsGPSDialogOpen</string>
-    <string name="IMEIPreferences">IMEIPreferences</string>
+    <string name="UserPreferences">UserPreferences</string>
     <string name="IMEIStatus">IMEIStatus</string>
     <string name="StoredIMEI">StoredIMEI</string>
+    <string name="StoredCarId">StoredCarId</string>
 
     <!-- LIVE MAP -->
     <string name="LiveDistanceText">%.1f km</string>

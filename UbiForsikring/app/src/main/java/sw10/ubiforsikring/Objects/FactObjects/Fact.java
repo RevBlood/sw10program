@@ -60,7 +60,7 @@ public class Fact implements Serializable{
         return jsonObject;
     }
 
-    @Override public String toString() {
+    /* @Override public String toString() {
         String result = "";
         String NEW_LINE = System.getProperty("line.separator");
 
@@ -75,7 +75,7 @@ public class Fact implements Serializable{
         result += "}";
 
         return result;
-    }
+    } */
 
 
 }

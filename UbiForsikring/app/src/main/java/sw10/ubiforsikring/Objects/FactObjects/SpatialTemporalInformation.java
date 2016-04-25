@@ -7,6 +7,8 @@ import org.json.JSONObject;
 
 import java.util.Date;
 
+import sw10.ubiforsikring.Helpers.DateObjectHelper;
+
 public class SpatialTemporalInformation {
     public long EntryId;
     public long TripId;
@@ -35,12 +37,12 @@ public class SpatialTemporalInformation {
             this.Point = new Location("");
             this.Point.setLatitude(objSpatial.isNull("pointlat") ? 0 : objSpatial.getDouble("pointlat"));
             this.Point.setLongitude(objSpatial.isNull("pointlng") ? 0 : objSpatial.getDouble("pointlng"));
-            this.Point.setTime(deserializeDate(objTemporal.isNull("timestamp") ? "0" : objTemporal.getString("timestamp")).getTime());
+            this.Point.setTime(DateObjectHelper.CreateDateObject(objTemporal.isNull("timestamp") ? "0" : objTemporal.getString("timestamp")).getTime());
 
             this.MPoint = new Location("");
             this.MPoint.setLatitude(objSpatial.isNull("mpointlat") ? 0 : objSpatial.getDouble("mpointlat"));
             this.MPoint.setLongitude(objSpatial.isNull("mpointlng") ? 0 : objSpatial.getDouble("mpointlng"));
-            this.MPoint.setTime(deserializeDate(objTemporal.isNull("timestamp") ? "0" : objTemporal.getString("timestamp")).getTime());
+            this.MPoint.setTime(DateObjectHelper.CreateDateObject(objTemporal.isNull("timestamp") ? "0" : objTemporal.getString("timestamp")).getTime());
 
             this.DistanceToLag = objSpatial.isNull("distancetolag") ? 0 : objSpatial.getDouble("distancetolag");
             this.PathLine = objSpatial.isNull("pathline") ? "" : objSpatial.getString("pathline");

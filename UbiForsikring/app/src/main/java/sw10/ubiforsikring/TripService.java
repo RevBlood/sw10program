@@ -241,9 +241,18 @@ public class TripService extends Service implements ConnectionCallbacks, OnConne
         Log.e("Debug", "Number of entries: " + entries.size()); */
 
         if (entries.size() >= 10) {
+
+            //Discard first 5 entries as they are usually shit
+            for (int i = 0; i < 5; i++) {
+                entries.remove(i);
+            }
+
+            SharedPreferences preferences = getSharedPreferences(getString(R.string.UserPreferences), Context.MODE_PRIVATE);
+            int userId = preferences.getInt(getString(R.string.StoredCarId), -1);
+
             for (Location entry : entries) {
                 //facts.add(new Fact(userId, new SpatialTemporalInformation(entry)));
-                facts.add(new Fact(1, new SpatialTemporalInformation(entry)));
+                facts.add(new Fact(userId, new SpatialTemporalInformation(entry)));
 
             }
 

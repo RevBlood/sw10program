@@ -32,6 +32,8 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import sw10.ubiforsikring.Helpers.ServiceHelper;
+
 public class MainMenuActivity extends AppCompatActivity {
     final static int FINE_LOCATION_PERMISSION_REQUEST = 0;
     final static int PHONE_STATE_PERMISSION_REQUEST = 1;
@@ -438,9 +440,11 @@ public class MainMenuActivity extends AppCompatActivity {
     }
 
     private void SendIMEI() {
-        //TODO: Send IMEI to server - Then save retreived CarId in SharedPreferences
-        SharedPreferences preferences = getSharedPreferences(getString(R.string.IMEIPreferences), Context.MODE_PRIVATE);
-        String imei = preferences.getString(getString(R.string.IMEIPreferences), null);
+        SharedPreferences preferences = getSharedPreferences(getString(R.string.UserPreferences), Context.MODE_PRIVATE);
+        String imei = preferences.getString(getString(R.string.StoredIMEI), null);
+        Car car = ServiceHelper.GetOrCreateCar(imei);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt(getString(R.string.StoredCarId), car.CarId);
     }
 
     private AlertDialog SendIMEIFailedDialog(){

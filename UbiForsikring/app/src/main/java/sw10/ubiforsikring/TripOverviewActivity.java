@@ -165,7 +165,10 @@ public class TripOverviewActivity extends AppCompatActivity {
         @Override
         protected Boolean doInBackground(Long... tripId) {
             try {
-                mTrip = ServiceHelper.GetTrip(1, tripId[0]);
+                SharedPreferences preferences = getSharedPreferences(getString(R.string.UserPreferences), Context.MODE_PRIVATE);
+                int userId = preferences.getInt(getString(R.string.StoredCarId), -1);
+
+                mTrip = ServiceHelper.GetTrip(userId, tripId[0]);
                 return true;
             } catch (Exception e) {
                 return false;
@@ -205,7 +208,13 @@ public class TripOverviewActivity extends AppCompatActivity {
 
                 // Environment
                 double environmentCost = (mTrip.CriticalTimeScore + mTrip.RoadtypeScore) / 1000;
-                double environmentPercentage = (environmentCost / (mTrip.MetersDriven / 1000)) * 100;
+                double environmentPercentage;
+                if (mTrip.MetersDriven == 0) {
+                    environmentPercentage = 0.0;
+                } else {
+                    environmentPercentage = (environmentCost / (mTrip.MetersDriven / 1000)) * 100;
+                }
+
                 if (environmentCost >= 0) {
                     environmentCostValueView.setText(String.format(getString(R.string.CostPlusValue), environmentCost));
                     environmentCostPercentageView.setText(String.format(getString(R.string.CostPlusPercentage), environmentPercentage));
@@ -219,7 +228,13 @@ public class TripOverviewActivity extends AppCompatActivity {
                                           mTrip.Brakescore +
                                           mTrip.Jerkscore +
                                           mTrip.SpeedingScore) / 1000;
-                double drivingStylePercentage = (drivingStyleCost / (mTrip.MetersDriven / 1000)) * 100;
+                double drivingStylePercentage;
+                if (mTrip.MetersDriven == 0) {
+                    drivingStylePercentage = 0.0;
+                } else {
+                    drivingStylePercentage = (drivingStyleCost / (mTrip.MetersDriven / 1000)) * 100;
+                }
+
                 SetTextColor(drivingStyleCostPercentageView, drivingStylePercentage);
                 if (drivingStyleCost >= 0) {
                     drivingStyleCostValueView.setText(String.format(getString(R.string.CostPlusValue), drivingStyleCost));
@@ -231,7 +246,14 @@ public class TripOverviewActivity extends AppCompatActivity {
 
                 // Total Cost
                 double totalCost = (mTrip.MetersDriven / 1000) + (environmentCost + drivingStyleCost);
-                double totalCostPercentage = environmentPercentage + drivingStylePercentage;
+
+                double totalCostPercentage;
+                if (mTrip.MetersDriven == 0) {
+                    totalCostPercentage = 0.0;
+                } else {
+                    totalCostPercentage = environmentPercentage + drivingStylePercentage;
+                }
+
                 if (totalCostPercentage >= 0) {
                     totalCostValueView.setText(String.format(getString(R.string.BaseCostValue), totalCost));
                     totalCostPercentageView.setText(String.format(getString(R.string.CostPlusPercentage), totalCostPercentage));
