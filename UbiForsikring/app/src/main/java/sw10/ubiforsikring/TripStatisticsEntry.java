@@ -3,7 +3,6 @@ package sw10.ubiforsikring;
 public class TripStatisticsEntry {
     public String Title;
     public double Optimality;
-    //public double Price;
     public String DescriptionText;
     public String PerHundredText;
 

@@ -1,7 +1,5 @@
 package sw10.ubiforsikring.Objects.TripObjects;
 
-import android.util.Log;
-
 import org.json.JSONObject;
 
 import java.io.Serializable;
@@ -56,7 +54,6 @@ public class Trip implements Serializable {
             this.JerkCount = obj.getInt("jerkcount");
 
         } catch (Exception e){
-            Log.e("Debug", "Trip JsonObject Constructor: ", e);
         }
     }
 

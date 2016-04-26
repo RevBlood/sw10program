@@ -1,7 +1,5 @@
 package sw10.ubiforsikring.Objects.FactObjects;
 
-import android.util.Log;
-
 import org.json.JSONObject;
 
 public class MeasureInformation {
@@ -31,7 +29,6 @@ public class MeasureInformation {
             this.Acceleration = jsonObject.isNull("acceleration") ? 0 : jsonObject.getDouble("acceleration");
             this.Jerk = jsonObject.isNull("jerk") ? 0 : jsonObject.getDouble("jerk");
         } catch (Exception e){
-            Log.e("Debug", "MeasureInformation - JSONObject:", e);
         }
     }
 
@@ -43,7 +40,6 @@ public class MeasureInformation {
             jsonObject.put("acceleration", Acceleration);
             jsonObject.put("jerk", Jerk);
         } catch(Exception e) {
-            Log.e("Debug", "MeasureInformation - Serialize:", e);
         }
 
         return jsonObject;

@@ -1,9 +1,6 @@
 package sw10.ubiforsikring.Objects.FactObjects;
 
-import android.util.Log;
-
 import org.json.JSONObject;
-
 import java.io.Serializable;
 
 public class Fact implements Serializable{
@@ -38,7 +35,6 @@ public class Fact implements Serializable{
             this.SpatialTemporal = new SpatialTemporalInformation(obj.getJSONObject("spatial"), obj.getJSONObject("temporal"));
         }
         catch (Exception e){
-            Log.e("Debug", "Fact - JSONObject:", e);
         }
     }
 
@@ -54,7 +50,6 @@ public class Fact implements Serializable{
             //jsonObject.put("flag", Flag.serializeToJSON());
             //jsonObject.put("measure", Measure.serializeToJSON());
         } catch(Exception e) {
-            Log.e("Debug", "Fact - Serialize:", e);
         }
 
         return jsonObject;

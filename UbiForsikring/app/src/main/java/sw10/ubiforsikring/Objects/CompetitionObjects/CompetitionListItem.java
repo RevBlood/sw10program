@@ -1,6 +1,5 @@
 package sw10.ubiforsikring.Objects.CompetitionObjects;
 
-import android.util.Log;
 
 import org.json.JSONObject;
 
@@ -31,7 +30,6 @@ public class CompetitionListItem {
             AttemptCount = obj.getInt("attemptcount");
         }
         catch (Exception e){
-            Log.e("Debug", "Competition JsonObject Constructor: ", e);
         }
     }
 

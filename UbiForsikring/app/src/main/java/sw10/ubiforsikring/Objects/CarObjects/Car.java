@@ -23,7 +23,6 @@ public class Car {
             this.Username = obj.isNull("username") ? "" : obj.getString("username");
 
         } catch (Exception e){
-            Log.e("Debug", "Trip JsonObject Constructor: ", e);
         }
     }
 }

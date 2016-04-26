@@ -1,7 +1,5 @@
 package sw10.ubiforsikring.Objects.FactObjects;
 
-import android.util.Log;
-
 import org.json.JSONObject;
 
 public class FlagInformation {
@@ -39,7 +37,6 @@ public class FlagInformation {
             Braking = !jsonObject.isNull("braking") && jsonObject.getBoolean("braking");
             //SteadySpeed = !obj.isNull("steadyspeed") && obj.getBoolean("steadyspeed");
         } catch (Exception e){
-            Log.e("Debug", "FlagInformation - JSONObject:", e);
         }
     }
 
@@ -53,7 +50,6 @@ public class FlagInformation {
             jsonObject.put("jerking", Jerking);
             //obj.put("steadyspeed", SteadySpeed);
         } catch(Exception e) {
-            Log.e("Debug", "FlagInformation - Serialize:", e);
         }
 
         return jsonObject;

@@ -8,9 +8,6 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.Handler;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +28,6 @@ public class LocationListener implements com.google.android.gms.location.Locatio
         mTimerTask = new Runnable() {
             @Override
             public void run() {
-                Log.i("Debug", "No movement registered, issuing notification");
                 IssueMovementNotification();
             }
         };
