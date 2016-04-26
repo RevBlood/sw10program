@@ -1,8 +1,7 @@
-package sw10.ubiforsikring;
+package sw10.ubiforsikring.Database;
 
 //ALT POSTGRES RELATED ER BLOT GEMT I TEXT FORMAT ATM
-
-public class dbMetaQueries {
+public class MetaQueries {
 
     private static final String COMMA_SEP = ",";
     private static final String INTEGER = " INTEGER";
@@ -13,7 +12,6 @@ public class dbMetaQueries {
     private static final String PRIMARYKEY = " PRIMARY KEY ";
     private static final String FOREIGNKEY = " FOREIGN KEY ";
     private static final String REFERENCES = " REFERENCES ";
-
 
     public static final String SQL_DELETE_ENTRIES =
             "DROP TABLE IF EXISTS " +

@@ -1,4 +1,4 @@
-package sw10.ubiforsikring;
+package sw10.ubiforsikring.Database;
 
 import android.provider.BaseColumns;
 
@@ -151,5 +151,6 @@ public final class DataWarehouseContract {
         public static final String COLUMN_NAME_QUARTER = "quarter";
         public static final String COLUMN_NAME_SEASON = "season";
     }
+
     //endregion
 }

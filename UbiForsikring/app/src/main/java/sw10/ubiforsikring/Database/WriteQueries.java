@@ -1,25 +1,19 @@
-package sw10.ubiforsikring;
+package sw10.ubiforsikring.Database;
 
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 
-import java.util.Calendar;
-import java.util.Date;
-
 import sw10.ubiforsikring.Helpers.MeasureHelper;
 
-/**
- * Created by Johan Leth Gregersen on 10-02-2016.
- */
-public class dbWriteQueries {
+public class WriteQueries {
 
-    private LBDatabaseHelper mDBhelper;
+    private Manager mDBManager;
     private SQLiteDatabase mDB;
 
-    public dbWriteQueries(LBDatabaseHelper DBhelper) {
-        mDBhelper = DBhelper;
-        mDB = mDBhelper.getWritableDatabase();
+    public WriteQueries(Manager DBhelper) {
+        mDBManager = DBhelper;
+        mDB = mDBManager.getWritableDatabase();
     }
 
     public long InsertLocationIntoGPS(Location location) {

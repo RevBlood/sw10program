@@ -7,7 +7,6 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
@@ -34,6 +33,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import sw10.ubiforsikring.Database.Manager;
+import sw10.ubiforsikring.Database.WriteQueries;
 import sw10.ubiforsikring.Helpers.MeasureHelper;
 import sw10.ubiforsikring.Helpers.ServiceHelper;
 import sw10.ubiforsikring.Objects.FactObjects.Fact;
@@ -272,8 +273,8 @@ public class TripService extends Service implements ConnectionCallbacks, OnConne
         //Handle case: No entries in list
         if (!entries.isEmpty()) {
             //Instantiate the database
-            LBDatabaseHelper DbHelper = new LBDatabaseHelper(this);
-            dbWriteQueries DbWriter = new dbWriteQueries(DbHelper);
+            Manager DbHelper = new Manager(this);
+            WriteQueries DbWriter = new WriteQueries(DbHelper);
 
             //Handle first entry
             int dateId = MeasureHelper.DBDate(entries.get(0).getTime());

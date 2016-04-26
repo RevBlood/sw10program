@@ -36,7 +36,7 @@ import sw10.ubiforsikring.Objects.TripObjects.TripListItem;
 public class TripListActivity extends AppCompatActivity {
     Context mContext;
     View mFooterView;
-    int mIndex;
+    int mOffset;
 
     //Trip list
     ArrayAdapter mTripListAdapter;
@@ -76,21 +76,16 @@ public class TripListActivity extends AppCompatActivity {
         mTripListAdapter = new TripListAdapter(this, mTripList);
         mTripListView.setAdapter(mTripListAdapter);
         mTripListView.setOnItemClickListener(TripListViewListener);
+        mTripListView.setOnScrollListener(new ListViewScrollListener(this, getResources().getInteger(R.integer.LoadMoreThreshold), getResources().getInteger(R.integer.ChunkSize)) {
+            @Override public void GetMoreEntries(int index) {
+                TripGetTask tripGetTask = new TripGetTask(mContext);
+                tripGetTask.execute(index);
+            }
+        });
     }
 
     @Override
     public void onResume() {
-        //Reset trip list
-        mTripList.clear();
-        mTripListAdapter.notifyDataSetChanged();
-
-        //Setup the list view again
-        mTripListView.setOnScrollListener(TripListViewScrollListener);
-
-        //Get entries for trip list view
-        TripGetTask tripGetTask = new TripGetTask(this);
-        tripGetTask.execute(0);
-
         //Listen for TripService status
         registerReceiver(mStatusReceiver, new IntentFilter(getString(R.string.BroadcastStatusIntent)));
 
@@ -103,9 +98,6 @@ public class TripListActivity extends AppCompatActivity {
 
     @Override
     public void onPause() {
-        //Disable trip list from updating
-        mTripListView.setOnScrollListener(null);
-
         //Stop listening for new locations
         if (mIsTripActive) {
             unregisterReceiver(mLocationReceiver);
@@ -130,13 +122,6 @@ public class TripListActivity extends AppCompatActivity {
         }
     };
 
-    ListView.OnScrollListener TripListViewScrollListener = new ListViewScrollListener(this, 5) {
-        @Override public void GetMoreEntries(int index) {
-            TripGetTask tripGetTask = new TripGetTask(mContext);
-            tripGetTask.execute(index);
-        }
-    };
-
     View.OnClickListener CurrentTripClickListener = new View.OnClickListener(){
         @Override public void onClick(View view) {
             startActivity(new Intent(mContext, LiveMapActivity.class));
@@ -150,7 +135,7 @@ public class TripListActivity extends AppCompatActivity {
     private class StatusReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            //Only need status once - Unregister the receiver afterwards
+            //Only need status once - Unregister the receiver
             unregisterReceiver(mStatusReceiver);
 
             mIsTripActive = intent.getBooleanExtra(getString(R.string.BroadcastIsTripActive), false);
@@ -164,6 +149,9 @@ public class TripListActivity extends AppCompatActivity {
     private class RouteReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
+            //Unregister the receiver - We only need the route once
+            unregisterReceiver(mRouteReceiver);
+
             List<Location> route = intent.getParcelableArrayListExtra(getString(R.string.BroadcastRouteLocationList));
 
             if(!route.isEmpty()) {
@@ -178,9 +166,6 @@ public class TripListActivity extends AppCompatActivity {
                 mPreviousPosition = new LatLng(route.get(route.size() - 1).getLatitude(), route.get(route.size() - 1).getLongitude());
             }
 
-            //Unregister the receiver - We only need the route once
-            unregisterReceiver(mRouteReceiver);
-
             //Register receiver for getting new positions
             mLocationReceiver = new PositionReceiver();
             registerReceiver(mLocationReceiver, new IntentFilter(getString(R.string.BroadcastLiveGpsIntent)));
@@ -193,10 +178,9 @@ public class TripListActivity extends AppCompatActivity {
             Location location = intent.getParcelableExtra(getString(R.string.BroadcastLiveGpsLocation));
             LatLng position = new LatLng(location.getLatitude(), location.getLongitude());
 
-            //If there is a previous position, start adding the distance to new positions
+            //If a previous position exists, start adding up distance
             if (mPreviousPosition != null) {
                 mMetersDriven += DistanceBetweenLatLng(position, mPreviousPosition);
-
                 mCurrentTripDescriptionView.setText(String.format(getString(R.string.CurrentTripDistanceText), mMetersDriven / 1000));
             }
 
@@ -224,15 +208,10 @@ public class TripListActivity extends AppCompatActivity {
 
     private void HandleProcessingStatus() {
         if (mIsProcessing) {
-            //Show the relevant layout
-            View activeTripLayout = findViewById(R.id.CurrentTripLayout);
-            activeTripLayout.setVisibility(View.VISIBLE);
-
-            //Show the relevant layout
+            //Show the relevant layouts
             View currentTripLayout = findViewById(R.id.CurrentTripLayout);
             TextView currentTripTitleView = (TextView) findViewById(R.id.CurrentTripTitleView);
             currentTripLayout.setVisibility(View.VISIBLE);
-            currentTripLayout.setOnClickListener(CurrentTripClickListener);
             currentTripTitleView.setText(getString(R.string.CurrentTripTitle));
             mCurrentTripDescriptionView.setText(getString(R.string.CurrentTripProcessingText));
         }
@@ -297,15 +276,17 @@ public class TripListActivity extends AppCompatActivity {
         }
 
         @Override
-        protected Boolean doInBackground(Integer... index) {
+        protected Boolean doInBackground(Integer... offset) {
             try {
+                // Get car id from SharedPreferences - Then request trips for that car
                 SharedPreferences preferences = getSharedPreferences(getString(R.string.UserPreferences), Context.MODE_PRIVATE);
                 int userId = preferences.getInt(getString(R.string.StoredCarId), -1);
 
-                mTripList.addAll(ServiceHelper.GetTripsForListView(userId, index[0]));
+                mTripList.addAll(ServiceHelper.GetTripsForListView(userId, offset[0]));
                 return true;
             } catch (Exception e) {
-                mIndex = index[0];
+                // If retrieval fails, save the offset in case user wants to retry
+                mOffset = offset[0];
                 return false;
             }
         }
@@ -328,7 +309,6 @@ public class TripListActivity extends AppCompatActivity {
         protected void onPreExecute() {
             findViewById(R.id.TripListEmptyView).setVisibility(View.GONE);
             mTripListView.setEmptyView(findViewById(R.id.TripListLoadingView));
-
             mTripListView.addFooterView(mFooterView, null, false);
             mTripListAdapter.notifyDataSetChanged();
         }
@@ -343,7 +323,7 @@ public class TripListActivity extends AppCompatActivity {
                 .setPositiveButton(getString(R.string.TripListRetryLoad), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         TripGetTask tripGetTask = new TripGetTask(mContext);
-                        tripGetTask.execute(mIndex);
+                        tripGetTask.execute(mOffset);
                         dialog.cancel();
                     }
                 })

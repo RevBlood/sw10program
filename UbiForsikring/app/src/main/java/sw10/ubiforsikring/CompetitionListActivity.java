@@ -50,42 +50,27 @@ public class CompetitionListActivity extends AppCompatActivity {
         mCompetitionListAdapter = new CompetitionListAdapter(this, mCompetitionList);
         mCompetitionListView.setAdapter(mCompetitionListAdapter);
         mCompetitionListView.setOnItemClickListener(CompetitionClickListener);
+        mCompetitionListView.setOnScrollListener(new ListViewScrollListener(this, getResources().getInteger(R.integer.LoadMoreThreshold), getResources().getInteger(R.integer.ChunkSize)) {
+            @Override public void GetMoreEntries(int index) {
+                CompetitionGetTask competitionGetTask = new CompetitionGetTask(mContext);
+                competitionGetTask.execute(index);
+            }
+        });
+
+        //TODO: Remove test data
+        //CompetitionListItem testItemOne = new CompetitionListItem(-1, "DM i Roadkill", 357, false, -1, -1);
+        //CompetitionListItem testItemTwo = new CompetitionListItem(-1, "Kør Casper Ned 2016", 2300001, true, 9027, 403);
+        //mCompetitionList.add(testItemOne);
+        //mCompetitionList.add(testItemTwo);
+        //mCompetitionListAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void onResume() {
-        //Reset trip list
-        mCompetitionList.clear();
-        mCompetitionListAdapter.notifyDataSetChanged();
-
-        //Setup the list view again
-        mCompetitionListView.setOnScrollListener(CompetitionScrollListener);
-        findViewById(R.id.CompetitionListEmptyView).setVisibility(View.GONE);
-        mCompetitionListView.setEmptyView(findViewById(R.id.CompetitionListLoadingView));
-
-        //Get entries for trip list view
-        CompetitionGetTask competitionGetTask = new CompetitionGetTask(mContext);
-        competitionGetTask.execute(0);
-
-        //TODO: Remove test data
-        CompetitionListItem testItemOne = new CompetitionListItem(-1, "DM i Roadkill", 357, false, -1, -1);
-        CompetitionListItem testItemTwo = new CompetitionListItem(-1, "Kør Casper Ned 2016", 2300001, true, 9027, 403);
-        mCompetitionList.add(testItemOne);
-        mCompetitionList.add(testItemTwo);
-        mCompetitionListAdapter.notifyDataSetChanged();
-
         //Check if user has a username - Display dialog if not.
         HandleUsername();
 
         super.onResume();
-    }
-
-    @Override
-    public void onPause() {
-        //Disable trip list from updating
-        mCompetitionListView.setOnScrollListener(null);
-
-        super.onPause();
     }
 
     //endregion
@@ -98,13 +83,6 @@ public class CompetitionListActivity extends AppCompatActivity {
             Intent intent = new Intent(mContext, CompetitionOverviewActivity.class);
             intent.putExtra(getString(R.string.CompetitionIdIntentName), mCompetitionList.get(position).CompetitionId);
             startActivity(intent);
-        }
-    };
-
-    ListView.OnScrollListener CompetitionScrollListener = new ListViewScrollListener(this, 5) {
-        @Override public void GetMoreEntries(int index) {
-            CompetitionGetTask competitionGetTask = new CompetitionGetTask(mContext);
-            competitionGetTask.execute(index);
         }
     };
 

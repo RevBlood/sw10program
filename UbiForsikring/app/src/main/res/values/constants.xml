@@ -7,6 +7,10 @@
     <integer name="userNameMinLength">4</integer>
     <integer name="userNameMaxLength">32</integer>
 
+    <!-- LISTVIEWS -->
+    <integer name="ChunkSize">10</integer>
+    <integer name="LoadMoreThreshold">5</integer>
+
     <!-- LIVE MAP -->
     <integer name="LiveGpsRouteWidth">12</integer>
     <integer name="AnimationSpeed">800</integer>

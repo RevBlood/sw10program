@@ -5,21 +5,23 @@ import android.widget.AbsListView;
 
 public abstract class ListViewScrollListener implements AbsListView.OnScrollListener {
     Context mContext;
-    int mLoadThreshold = 4;
-    int mTotalItemCount = 10;
-    int mCurrentIndex = 10;
+    int mLoadThreshold; // Defines when to load more entries
+    int mChunkSize;
+    int mTotalItemCount = 0;
     boolean mLoading = false;
 
-    public ListViewScrollListener(Context context, int visibleThreshold) {
+    public ListViewScrollListener(Context context, int visibleThreshold, int chunkSize) {
         mContext = context;
         mLoadThreshold = visibleThreshold;
+        mChunkSize = chunkSize;
+        mLoading = true;
+        GetMoreEntries(mTotalItemCount);
     }
 
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int newTotalItemCount) {
-        // If loading at this point, stop if dataset has changed - That means we're done loading. Then update with current info.
-        if (mLoading && newTotalItemCount > mTotalItemCount + 1) {
-            mCurrentIndex += 10;
+        // If previously loading, and a chunk of trips has been added to the listview, update status
+        if (mLoading && newTotalItemCount == mTotalItemCount + mChunkSize) {
             mTotalItemCount = newTotalItemCount;
             mLoading = false;
         }
@@ -27,7 +29,7 @@ public abstract class ListViewScrollListener implements AbsListView.OnScrollList
         // If not loading, check if more data should be loaded.
         if (!mLoading && mTotalItemCount - visibleItemCount <= firstVisibleItem + mLoadThreshold) {
             mLoading = true;
-            GetMoreEntries(mCurrentIndex);
+            GetMoreEntries(mTotalItemCount);
         }
     }
 
