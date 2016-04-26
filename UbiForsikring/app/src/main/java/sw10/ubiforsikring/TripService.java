@@ -216,7 +216,7 @@ public class TripService extends Service implements ConnectionCallbacks, OnConne
     private void BuildServiceNotification() {
         //Build notification
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.drawable.drive_lab_icon_silhouette)
                 .setContentTitle(getString(R.string.ServiceNotificationTitle))
                 .setContentText(getString(R.string.ServiceNotificationText));
 

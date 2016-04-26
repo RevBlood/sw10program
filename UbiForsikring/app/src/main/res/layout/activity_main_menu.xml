@@ -59,7 +59,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_below="@id/ApplicationTitleView"
                 android:layout_marginBottom="60dp"
-                android:src="@mipmap/ic_launcher"
+                android:src="@drawable/drive_lab_icon"
                 android:contentDescription="@string/LogoDescription"/>
 
             <Button
