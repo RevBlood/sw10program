@@ -23,7 +23,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -234,7 +233,6 @@ public class MainMenuActivity extends AppCompatActivity {
         // As soon as The Trip Service is connected to Google Play Services, it is safe to start a trip
         if (mIsConnected) {
             tripButton.setEnabled(true);
-            Log.i("Debug", "Connected to Google Play Services");
         } else {
             tripButton.setEnabled(false);
         }
@@ -284,12 +282,10 @@ public class MainMenuActivity extends AppCompatActivity {
 
     private void InitializeTripService() {
         if (!IsServiceRunning(TripService.class)) {
-            Log.i("Debug", "Starting TripService");
             InitializeTripServiceConnection();
             startService(new Intent(this, TripService.class));
             BindTripService();
         } else {
-            Log.i("Debug", "TripService already running");
             InitializeTripServiceConnection();
             BindTripService();
         }
@@ -331,7 +327,6 @@ public class MainMenuActivity extends AppCompatActivity {
             mMessenger.send(message);
             return true;
         } catch (RemoteException e) {
-            Log.e("Debug", "Failed to contact TripService");
             return false;
         }
     }

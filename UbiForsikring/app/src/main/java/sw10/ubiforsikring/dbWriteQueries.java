@@ -3,7 +3,6 @@ package sw10.ubiforsikring;
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
-import android.util.Log;
 
 import java.util.Calendar;
 import java.util.Date;

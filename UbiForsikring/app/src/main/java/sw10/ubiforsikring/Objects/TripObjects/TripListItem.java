@@ -1,7 +1,5 @@
 package sw10.ubiforsikring.Objects.TripObjects;
 
-import android.util.Log;
-
 import org.json.JSONObject;
 
 import java.util.Date;
@@ -35,7 +33,6 @@ public class TripListItem {
             //this.PreviousTripId = obj.getLong("prevtripid");
             //this.CarId = obj.getInt("carid");
         } catch (Exception e){
-            Log.e("Debug", "TripListItem JsonObject Constructor: ", e);
         }
     }
 

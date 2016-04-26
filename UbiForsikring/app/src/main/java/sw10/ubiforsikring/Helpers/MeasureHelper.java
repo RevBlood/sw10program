@@ -1,7 +1,6 @@
 package sw10.ubiforsikring.Helpers;
 
 import android.location.Location;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -100,7 +99,6 @@ public final class MeasureHelper {
         dbDate += calendar.get(Calendar.YEAR);
         dbDate += String.format("%02d", calendar.get(Calendar.MONTH) + 1);
         dbDate += String.format("%02d", calendar.get(Calendar.DAY_OF_MONTH));
-        Log.d("Debug", dbDate);
         return Integer.parseInt(dbDate);
     }
 
@@ -112,7 +110,6 @@ public final class MeasureHelper {
         dbTime += String.format("%02d", calendar.get(Calendar.HOUR_OF_DAY));
         dbTime += String.format("%02d", calendar.get(Calendar.MINUTE));
         dbTime += String.format("%02d", calendar.get(Calendar.SECOND));
-        Log.d("Debug", dbTime);
         return Integer.parseInt(dbTime);
     }
 

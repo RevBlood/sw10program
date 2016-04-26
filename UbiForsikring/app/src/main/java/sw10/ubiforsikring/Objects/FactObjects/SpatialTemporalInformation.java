@@ -1,7 +1,6 @@
 package sw10.ubiforsikring.Objects.FactObjects;
 
 import android.location.Location;
-import android.util.Log;
 
 import org.json.JSONObject;
 
@@ -48,7 +47,6 @@ public class SpatialTemporalInformation {
             this.PathLine = objSpatial.isNull("pathline") ? "" : objSpatial.getString("pathline");
             this.SecondsToLag = objTemporal.isNull("secondstolag") ? 0 : objTemporal.getInt("secondstolag");
         } catch (Exception e){
-            Log.e("Debug", "SpatialInformation - JSONObject:", e);
         }
     }
 
@@ -75,7 +73,6 @@ public class SpatialTemporalInformation {
             }
 
         } catch(Exception e) {
-            Log.e("Debug", "SpatialInformation - Serialize:", e);
         }
 
         return jsonObject;
@@ -88,7 +85,6 @@ public class SpatialTemporalInformation {
             jsonObject.put("timestamp", Point.getTime());
             //jsonObject.put("secondstolag", SecondsToLag);
         } catch(Exception e) {
-            Log.e("Debug", "TemporalInformation - Serialize:", e);
         }
 
         return jsonObject;

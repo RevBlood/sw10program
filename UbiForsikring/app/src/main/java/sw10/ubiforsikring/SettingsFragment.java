@@ -12,17 +12,11 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
-import android.preference.EditTextPreference;
 import android.preference.Preference;
-import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.preference.SwitchPreference;
-import android.text.InputFilter;
-import android.text.InputType;
-import android.util.Log;
-import android.widget.EditText;
 import android.widget.Toast;
 
 public class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -213,7 +207,6 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
             mMessenger.send(message);
             return true;
         } catch (RemoteException e) {
-            Log.e("Debug", "Failed to contact TripService");
             return false;
         }
     }

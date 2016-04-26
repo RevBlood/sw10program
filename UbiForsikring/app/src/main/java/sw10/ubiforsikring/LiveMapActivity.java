@@ -19,7 +19,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -184,7 +183,6 @@ public class LiveMapActivity extends AppCompatActivity implements OnMapReadyCall
                 for (int i = 1; i < route.size() - 1; i++) {
                     mTripDistance += route.get(i).distanceTo(route.get(i - 1));
                 }
-                Log.d("Debug", "Route: " + Double.toString(mTripDistance - test));
 
                 //If start time of the trip has not been recorded yet, initialize the view for live time
                 if (mTripStartTime == null) {
@@ -212,8 +210,6 @@ public class LiveMapActivity extends AppCompatActivity implements OnMapReadyCall
             LatLng position = new LatLng(location.getLatitude(), location.getLongitude());
             if (!mRoute.isEmpty()) {
                 mTripDistance += DistanceBetweenLatLng(position, mRoute.get(mRoute.size() - 1));
-
-                Log.d("Debug", "Position: " + Double.toString(DistanceBetweenLatLng(position, mRoute.get(mRoute.size() - 1))));
             }
 
             //Add new coordinate to the route
@@ -267,7 +263,6 @@ public class LiveMapActivity extends AppCompatActivity implements OnMapReadyCall
             mMessenger.send(message);
             return true;
         } catch (RemoteException e) {
-            Log.e("Debug", "Failed to contact TripService");
             return false;
         }
     }

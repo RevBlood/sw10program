@@ -17,7 +17,6 @@ import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -276,7 +275,6 @@ public class TripListActivity extends AppCompatActivity {
             mMessenger.send(message);
             return true;
         } catch (RemoteException e) {
-            Log.e("Debug", "Failed to contact TripService");
             return false;
         }
     }

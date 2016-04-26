@@ -1,7 +1,6 @@
 package sw10.ubiforsikring;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -17,8 +16,6 @@ import android.os.Message;
 import android.os.Messenger;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
-import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -99,7 +96,6 @@ public class TripService extends Service implements ConnectionCallbacks, OnConne
         // Disable any UI components that depend on Google APIs
         // until onConnected() is called.
 
-        Log.w("Debug", "Connection Suspended");
     }
 
     @Override
@@ -107,7 +103,6 @@ public class TripService extends Service implements ConnectionCallbacks, OnConne
         // This callback is important for handling errors that
         // may occur while attempting to connect with Google.
 
-        Log.e("Debug", "Connection Failed");
     }
 
     @Override
@@ -146,9 +141,7 @@ public class TripService extends Service implements ConnectionCallbacks, OnConne
         startForeground(1, mDrivingNotification);
 
         //Check that permission to access location has been given
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Log.e("Debug", "Missing permission: ACCESS_FINE_LOCATION");
-        }
+        ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
 
         //Start retrieving location updates
         LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, mLocationListener);
@@ -163,9 +156,7 @@ public class TripService extends Service implements ConnectionCallbacks, OnConne
 
     private void EndTrip() {
         //Check that permission to access location has been given
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Log.e("Debug", "Missing permission: ACCESS_FINE_LOCATION");
-        }
+        ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
 
         //Stop retrieving location updates
         if (mGoogleApiClient.isConnected()) {
@@ -269,7 +260,6 @@ public class TripService extends Service implements ConnectionCallbacks, OnConne
             Toast toast = Toast.makeText(getApplicationContext(), "Turen var ikke lang nok!", Toast.LENGTH_LONG);
             toast.show();
 
-            Log.e("Debug", "Not 10 or more facts");
         }
 
         //Finish up
@@ -292,7 +282,6 @@ public class TripService extends Service implements ConnectionCallbacks, OnConne
             //Save entry as GPSFact
             //TODO: And do it properly
             long rowID = DbWriter.InsertLocationIntoGPS(entries.get(0));
-            Log.d("Debug", Long.toString(rowID));
 
             //Handle remaining entries
             for (int i = 1; i < entries.size(); i++) {
@@ -303,7 +292,6 @@ public class TripService extends Service implements ConnectionCallbacks, OnConne
                 //Save entries as GPSFacts
                 //TODO: And do it properly
                 rowID = DbWriter.InsertLocationIntoGPS(entries.get(i));
-                Log.d("Debug", Long.toString(rowID));
             }
         }
         try {
@@ -372,7 +360,6 @@ public class TripService extends Service implements ConnectionCallbacks, OnConne
                     facts.add(new Fact(jsonArray.getJSONObject(i)));
                 }
             } catch (JSONException e) {
-                Log.e("Debug", "SendUnresolvedTrips:", e);
             }
 
             // If sending the trip succeeds, delete it from shared preferences, otherwise return, leaving other trips for later
