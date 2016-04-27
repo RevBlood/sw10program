@@ -29,9 +29,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TimeZone;
 
 import sw10.ubiforsikring.Database.Manager;
 import sw10.ubiforsikring.Database.WriteQueries;
@@ -243,9 +245,15 @@ public class TripService extends Service implements ConnectionCallbacks, OnConne
             int userId = preferences.getInt(getString(R.string.StoredCarId), -1);
 
             for (Location entry : entries) {
-                //facts.add(new Fact(userId, new SpatialTemporalInformation(entry)));
-                facts.add(new Fact(userId, new SpatialTemporalInformation(entry)));
+                // Fix timestamps according to daylight savings: minutes * seconds * milliseconds = 1 hour
+                if (TimeZone.getTimeZone("Europe/Copenhagen").inDaylightTime(new Date(entry.getTime()))) {
+                    entry.setTime(entry.getTime() + (2* 60 * 60 * 1000));
+                } else {
+                    entry.setTime(entry.getTime() + (60 * 60 * 1000));
+                }
 
+                //Add entry to fact
+                facts.add(new Fact(userId, new SpatialTemporalInformation(entry)));
             }
 
             //Calculate Measures given the locations from logged data
