@@ -7,7 +7,9 @@ import java.util.Date;
 import sw10.ubiforsikring.Helpers.DateObjectHelper;
 
 public class TripListItem {
+
     public long TripId;
+    public long LocalTripId;
     public Date TripStart;
     public Date TripEnd;
     public double MetersDriven;
@@ -23,6 +25,7 @@ public class TripListItem {
     public TripListItem(JSONObject obj) {
         try {
             this.TripId = obj.getLong("tripid");
+            this.LocalTripId = obj.getLong("localtripid");
             this.TripStart = DateObjectHelper.CreateDateObject(new JSONObject(obj.getString("starttemporal")).getString("timestamp"));
             this.TripEnd = DateObjectHelper.CreateDateObject(new JSONObject(obj.getString("endtemporal")).getString("timestamp"));
             this.MetersDriven = obj.getDouble("metersdriven");
