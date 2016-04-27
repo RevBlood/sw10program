@@ -154,12 +154,12 @@
     <string name="DeleteAfterSettingTitle">Slet ture på enhed efter</string>
     <string name="HelpSettingTitle">Hjælp</string>
     <string name="FeedbackSettingTitle">Feedback</string>
-    <string name="AboutSettingTitle">Om UBI Forsikring</string>
+    <string name="AboutSettingTitle">Om Drive-LaB</string>
     <string name="OnLogoutWhileTripActiveToast">Afslut venligst din tur før du logger ud</string>
     <string name="UnfinishedFeatureText">Denne feature kommer snart</string>
 
     <!-- TRIP SERVICE -->
-    <string name="ServiceNotificationTitle">UBI Forsikring</string>
+    <string name="ServiceNotificationTitle">Drive-LaB</string>
     <string name="ServiceNotificationText">Din tur er aktiv</string>
 
     <string name="FailedTripPreferences">FailedTripPreferences</string>
