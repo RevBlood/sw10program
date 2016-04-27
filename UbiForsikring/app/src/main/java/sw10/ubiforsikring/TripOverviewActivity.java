@@ -185,7 +185,7 @@ public class TripOverviewActivity extends AppCompatActivity {
 
                 // Find all views
                 TextView tripTitleView = (TextView) findViewById(R.id.TripTitleView);
-                //TextView tripDescriptionView = (TextView) findViewById(R.id.TripDescriptionView);
+                TextView tripDescriptionView = (TextView) findViewById(R.id.TripDescriptionView);
                 //TextView totalCostView = (TextView) findViewById(R.id.TotalCostView);
                 TextView baseCostValueView = (TextView) findViewById(R.id.BaseCostValueView);
                 TextView environmentCostPercentageView = (TextView) findViewById(R.id.EnvironmentCostPercentageView);
@@ -199,7 +199,7 @@ public class TripOverviewActivity extends AppCompatActivity {
 
                 // Trip Title
                 tripTitleView.setText(String.format(getString(R.string.TripTitle), mTrip.LocalTripId));
-                // tripDescriptionView.setText("Til Arbejde");
+                tripDescriptionView.setText(TimeStringGenerator.Generate(mTrip.TripEnd.getTime(), mContext));
                 // totalCostView.setText("43,00 Dkr");
                 // totalCostView.setTextColor(ContextCompat.getColor(mContextReference.get(), R.color.graphColorRed));
 

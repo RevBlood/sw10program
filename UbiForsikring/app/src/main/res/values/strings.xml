@@ -181,6 +181,21 @@
     <string name="BroadcastRouteIntent">RouteIntent</string>
     <string name="BroadcastRouteLocationList">RouteLocationList</string>
 
+    <!-- DATE AND TIME -->
+    <string name="TripDescriptionText">Kørt %s</string>
+    <string name="TimeNow">lige nu</string>
+    <string name="TimeMinutes">for %d minutter siden</string>
+    <string name="TimeHour">for en time siden</string>
+    <string name="TimeHours">for %d timer siden</string>
+    <string name="TimeDay">i går</string>
+    <string name="TimeTwoDays">i forgårs</string>
+    <string name="TimeDays">for %d dage siden</string>
+    <string name="TimeWeek">for en uge siden</string>
+    <string name="TimeWeeks">for %d uger siden</string>
+    <string name="TimeMonth">for en måned siden</string>
+    <string name="TimeMonths">for %d måneder siden</string>
+    <string name="TimeYear">for mere end et år siden</string>
+
     <!-- OTHER -->
     <string name="app_name">Drive-LaB</string>
     <string name="DefaultText">DefaultText</string>

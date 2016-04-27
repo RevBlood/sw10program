@@ -63,7 +63,7 @@ public class TripListAdapter extends ArrayAdapter<TripListItem> {
         //Populate ViewHolder with data
         ViewHolder viewHolder = (ViewHolder) rowView.getTag();
         viewHolder.TripTitleView.setText(String.format(mContext.getString(R.string.TripTitle), item.LocalTripId));
-        viewHolder.TripDescriptionView.setText("Beskrivelse");
+        viewHolder.TripDescriptionView.setText(TimeStringGenerator.Generate(item.TripEnd.getTime(), mContext));
         viewHolder.TripOptimalityView.setText(String.format(mContext.getString(R.string.TripOptimalityText), item.ScorePercentage));
         viewHolder.TripTimeView.setText(String.format(mContext.getString(R.string.TripTimeText), mSdf.format(item.TripStart), mSdf.format(item.TripEnd)));
         if (item.MetersDriven == 0) {

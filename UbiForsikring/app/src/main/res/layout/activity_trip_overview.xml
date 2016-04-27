@@ -54,7 +54,6 @@
                     android:id="@+id/TripTitleView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/DefaultText"
                     android:textSize="36sp"
                     android:layout_centerHorizontal="true"/>
 
@@ -62,7 +61,6 @@
                     android:id="@+id/TripDescriptionView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/DefaultText"
                     android:textSize="18sp"
                     android:layout_centerHorizontal="true"
                     android:layout_below="@id/TripTitleView"/>
@@ -71,7 +69,6 @@
                     android:id="@+id/TotalCostView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/DefaultText"
                     android:textSize="26sp"
                     android:visibility="gone"
                     android:layout_centerHorizontal="true"
@@ -98,7 +95,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:textSize="18sp"
-                        android:text="@string/BaseCostText"/>
+                        android:text="@string/BaseCostText" />
 
                     <TextView
                         android:id="@+id/BaseCostValueView"
@@ -106,8 +103,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:textAlignment="textEnd"
-                        android:textSize="18sp"
-                        android:text="@string/DefaultText"/>
+                        android:textSize="18sp"/>
 
 
                 </LinearLayout>
@@ -133,8 +129,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:textAlignment="textEnd"
-                        android:textSize="18sp"
-                        android:text="@string/DefaultText"/>
+                        android:textSize="18sp"/>
 
                     <TextView
                         android:id="@+id/EnvironmentCostValueView"
@@ -142,8 +137,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:textAlignment="textEnd"
-                        android:textSize="18sp"
-                        android:text="@string/DefaultText"/>
+                        android:textSize="18sp"/>
 
 
                 </LinearLayout>
@@ -169,8 +163,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:textAlignment="textEnd"
-                        android:textSize="18sp"
-                        android:text="@string/DefaultText"/>
+                        android:textSize="18sp"/>
 
                     <TextView
                         android:id="@+id/DrivingStyleCostValueView"
@@ -178,8 +171,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:textAlignment="textEnd"
-                        android:textSize="18sp"
-                        android:text="@string/DefaultText"/>
+                        android:textSize="18sp"/>
 
                 </LinearLayout>
 
@@ -211,8 +203,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:textAlignment="textEnd"
-                        android:textSize="18sp"
-                        android:text="@string/DefaultText"/>
+                        android:textSize="18sp"/>
 
                     <TextView
                         android:id="@+id/TotalCostValueView"
@@ -220,8 +211,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:textAlignment="textEnd"
-                        android:textSize="18sp"
-                        android:text="@string/DefaultText"/>
+                        android:textSize="18sp"/>
 
                 </LinearLayout>
 
@@ -260,8 +250,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:textAlignment="textEnd"
-                        android:textSize="18sp"
-                        android:text="@string/DefaultText"/>
+                        android:textSize="18sp"/>
 
                 </LinearLayout>
 
@@ -286,8 +275,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:textAlignment="textEnd"
-                        android:textSize="18sp"
-                        android:text="@string/DefaultText"/>
+                        android:textSize="18sp"/>
 
                 </LinearLayout>
 

@@ -33,11 +33,11 @@ public class TripStatisticsActivity extends AppCompatActivity {
 
         //Setup text
         TextView tripTitleView = (TextView) findViewById(R.id.TripTitleView);
-        //TextView tripDescriptionView = (TextView) findViewById(R.id.TripDescriptionView);
+        TextView tripDescriptionView = (TextView) findViewById(R.id.TripDescriptionView);
         //TextView totalCostView = (TextView) findViewById(R.id.TotalCostView);
 
         tripTitleView.setText(String.format(getString(R.string.TripTitle), mTrip.LocalTripId));
-        //tripDescriptionView.setText("Til Arbejde");
+        tripDescriptionView.setText(TimeStringGenerator.Generate(mTrip.TripEnd.getTime(), this));
         //totalCostView.setText("43,00 Dkr");
         //totalCostView.setTextColor(ContextCompat.getColor(this, R.color.graphColorRed));
     }
