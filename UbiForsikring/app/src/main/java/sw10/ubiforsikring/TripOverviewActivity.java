@@ -198,7 +198,7 @@ public class TripOverviewActivity extends AppCompatActivity {
                 TextView tripEndValueView = (TextView) findViewById(R.id.TripEndValueView);
 
                 // Trip Title
-                tripTitleView.setText(String.format(getString(R.string.TripTitle), mTripId));
+                tripTitleView.setText(String.format(getString(R.string.TripTitle), mTrip.LocalTripId));
                 // tripDescriptionView.setText("Til Arbejde");
                 // totalCostView.setText("43,00 Dkr");
                 // totalCostView.setTextColor(ContextCompat.getColor(mContextReference.get(), R.color.graphColorRed));
