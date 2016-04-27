@@ -24,14 +24,14 @@ public class TimeStringGenerator {
 
         } else if (elapsed < HOUR) {
             return String.format(context.getString(R.string.TripDescriptionText),
-                    String.format(context.getString(R.string.TimeMinutes), Math.floor(elapsed / MINUTE)));
+                    String.format(context.getString(R.string.TimeMinutes), (int) Math.floor(elapsed / MINUTE)));
 
         } else if (elapsed < 2 * HOUR) {
             return String.format(context.getString(R.string.TripDescriptionText), context.getString(R.string.TimeHour));
 
         } else if (elapsed < DAY) {
             return String.format(context.getString(R.string.TripDescriptionText),
-                    String.format(context.getString(R.string.TimeHours), Math.floor(elapsed / HOUR)));
+                    String.format(context.getString(R.string.TimeHours), (int) Math.floor(elapsed / HOUR)));
 
         } else if (elapsed < 2 * DAY) {
             return String.format(context.getString(R.string.TripDescriptionText), context.getString(R.string.TimeDay));
@@ -41,21 +41,21 @@ public class TimeStringGenerator {
 
         } else if (elapsed < WEEK) {
             return String.format(context.getString(R.string.TripDescriptionText),
-                    String.format(context.getString(R.string.TimeDays), Math.floor(elapsed / DAY)));
+                    String.format(context.getString(R.string.TimeDays), (int) Math.floor(elapsed / DAY)));
 
         } else if (elapsed < 2 * WEEK) {
             return String.format(context.getString(R.string.TripDescriptionText), context.getString(R.string.TimeWeek));
 
         } else if (elapsed < 4 * WEEK) {
             return String.format(context.getString(R.string.TripDescriptionText),
-                    String.format(context.getString(R.string.TimeWeeks), Math.floor(elapsed / WEEK)));
+                    String.format(context.getString(R.string.TimeWeeks), (int) Math.floor(elapsed / WEEK)));
 
         } else if (elapsed < 8 * WEEK) {
             return String.format(context.getString(R.string.TripDescriptionText), context.getString(R.string.TimeMonth));
 
         } else if (elapsed < 52 * WEEK) {
             return String.format(context.getString(R.string.TripDescriptionText),
-                    String.format(context.getString(R.string.TimeMonths), Math.floor(elapsed / (WEEK * 4))));
+                    String.format(context.getString(R.string.TimeMonths), (int) Math.floor(elapsed / (WEEK * 4))));
 
         } else {
             return String.format(context.getString(R.string.TripDescriptionText), context.getString(R.string.TimeYear));

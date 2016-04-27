@@ -109,7 +109,19 @@ public class TripOverviewActivity extends AppCompatActivity {
 
         //Combine the dataSet with labels and style it
         PieData data = new PieData(labels, dataSet);
-        data.setValueFormatter(new PieValueFormatter());
+
+        final double totalTripAddition = mTrip.AccelerationScore + mTrip.Brakescore + mTrip.Jerkscore + mTrip.SpeedingScore + mTrip.CriticalTimeScore + mTrip.RoadtypeScore;
+        data.setValueFormatter(new PieValueFormatter(){
+            @Override
+            public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
+                // Handle case where entry is less than a percent. Everything else is beautiful
+                if ((value / totalTripAddition) < 0.5) {
+                    return "";
+                } else {
+                    return super.getFormattedValue(value, entry, dataSetIndex, viewPortHandler);
+                }
+            }
+        });
 
         //Style the PieChart itself
         PieChart pieChartView = (PieChart) findViewById(R.id.PieChartView);
