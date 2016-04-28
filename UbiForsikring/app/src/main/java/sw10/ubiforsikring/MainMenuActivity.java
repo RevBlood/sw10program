@@ -63,9 +63,17 @@ public class MainMenuActivity extends AppCompatActivity {
         //Verify CarId is accessible, otherwise application won't work
         CheckCarId();
 
-        //Recover any dialogs that were open
-        if (savedInstanceState != null && savedInstanceState.getBoolean(getString(R.string.IsGPSDialogOpen), false)) {
-            GPSDisabledDialog().show();
+        //Recover layout of activity if relevant
+        if (savedInstanceState != null) {
+            // If the GPS dialog was open, show it again
+            if(savedInstanceState.getBoolean(getString(R.string.IsGPSDialogOpen), false)) {
+                GPSDisabledDialog().show();
+            }
+
+            // If TripService was logging or processing a trip, recover that information for visuals
+            mIsTripActive = savedInstanceState.getBoolean(getString(R.string.IsTripActive), false);
+            mIsProcessing = savedInstanceState.getBoolean(getString(R.string.IsTripProcessing), false);
+            HandleTripStatus();
         }
 
         //Setup buttons
@@ -106,9 +114,11 @@ public class MainMenuActivity extends AppCompatActivity {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        // If any dialogs are open, save that information so they can be recovered later
+        // Save information about screen layout, so it can be recovered in onCreate
         super.onSaveInstanceState(outState);
         outState.putBoolean(getString(R.string.IsGPSDialogOpen), mIsGPSDialogOpen);
+        outState.putBoolean(getString(R.string.IsTripActive), mIsTripActive);
+        outState.putBoolean(getString(R.string.IsTripProcessing), mIsProcessing);
     }
 
     @Override
@@ -178,8 +188,6 @@ public class MainMenuActivity extends AppCompatActivity {
                 if(!CheckFineLocationPermission() || !CheckGPSEnabled()) {
                     return;
                 }
-
-                InitializeTripService();
 
                 if (MessageTripService(TripService.BEGIN_TRIP)) {
                     Toast.makeText(mContext, R.string.TripStartToast, Toast.LENGTH_SHORT).show();
@@ -282,13 +290,11 @@ public class MainMenuActivity extends AppCompatActivity {
 
     private void InitializeTripService() {
         if (!IsServiceRunning(TripService.class)) {
-            InitializeTripServiceConnection();
             startService(new Intent(this, TripService.class));
-            BindTripService();
-        } else {
-            InitializeTripServiceConnection();
-            BindTripService();
         }
+
+        InitializeTripServiceConnection();
+        BindTripService();
     }
 
     private void InitializeTripServiceConnection() {
@@ -313,7 +319,6 @@ public class MainMenuActivity extends AppCompatActivity {
     }
 
     private void BindTripService(){
-
         Intent intent = new Intent(this, TripService.class);
         bindService(intent, mTripServiceConnection, Context.BIND_AUTO_CREATE);
     }

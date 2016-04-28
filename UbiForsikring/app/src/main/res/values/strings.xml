@@ -56,6 +56,8 @@
     <string name="SendIMEICancelButtonText">Afslut</string>
 
     <string name="IsGPSDialogOpen">IsGPSDialogOpen</string>
+    <string name="IsTripProcessing">IsTripProcessing</string>
+    <string name="IsTripActive">IsTripActive</string>
     <string name="UserPreferences">UserPreferences</string>
     <string name="CarIdStatus">CarIdStatus</string>
     <string name="StoredIMEI">StoredIMEI</string>
@@ -126,6 +128,7 @@
 
     <!-- COMPETITION LIST -->
     <string name="CompetitionListEmptyText">Der er ingen konkurrencer lige nu</string>
+    <string name="CompetitionListLoadErrorText">Kunne ikke indlæse konkurrencer</string>
     <string name="LoadingCompetitionsText">Indlæser&#8230;</string>
     <string name="CompetitionIdIntentName">CompetitionId</string>
     <string name="EnterCompetitionText">Deltag</string>

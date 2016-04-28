@@ -134,7 +134,7 @@ public class CompetitionListActivity extends AppCompatActivity {
 
     private AlertDialog BuildAlertDialog(){
         return new AlertDialog.Builder(mContext)
-                .setTitle(getString(R.string.TripListLoadErrorText))
+                .setTitle(getString(R.string.CompetitionListLoadErrorText))
                 .setPositiveButton(getString(R.string.TripListRetryLoad), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         CompetitionGetTask competitionGetTask = new CompetitionGetTask(mContext);
