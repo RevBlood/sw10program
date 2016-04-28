@@ -179,8 +179,6 @@ public class MainMenuActivity extends AppCompatActivity {
                     return;
                 }
 
-                InitializeTripService();
-
                 if (MessageTripService(TripService.BEGIN_TRIP)) {
                     Toast.makeText(mContext, R.string.TripStartToast, Toast.LENGTH_SHORT).show();
                 }
@@ -282,13 +280,11 @@ public class MainMenuActivity extends AppCompatActivity {
 
     private void InitializeTripService() {
         if (!IsServiceRunning(TripService.class)) {
-            InitializeTripServiceConnection();
             startService(new Intent(this, TripService.class));
-            BindTripService();
-        } else {
-            InitializeTripServiceConnection();
-            BindTripService();
         }
+
+        InitializeTripServiceConnection();
+        BindTripService();
     }
 
     private void InitializeTripServiceConnection() {
@@ -313,7 +309,6 @@ public class MainMenuActivity extends AppCompatActivity {
     }
 
     private void BindTripService(){
-
         Intent intent = new Intent(this, TripService.class);
         bindService(intent, mTripServiceConnection, Context.BIND_AUTO_CREATE);
     }
