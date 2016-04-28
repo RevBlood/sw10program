@@ -42,6 +42,7 @@ public class MapDisplayActivity extends AppCompatActivity implements OnMapReadyC
 
     //Map
     GoogleMap mMap;
+    boolean mapLoaded = false;
     List<LatLng> mRoute;
     Polyline mRouteLine;
     PolylineOptions mRouteOptions;
@@ -132,7 +133,11 @@ public class MapDisplayActivity extends AppCompatActivity implements OnMapReadyC
     GoogleMap.OnMapLoadedCallback MapLoadedCallback = new GoogleMap.OnMapLoadedCallback() {
         @Override
         public void onMapLoaded() {
-            CenterRoute();
+            if (!mRoute.isEmpty()) {
+                CenterRoute();
+            } else {
+                mapLoaded = true;
+            }
         }
     };
 
@@ -206,6 +211,9 @@ public class MapDisplayActivity extends AppCompatActivity implements OnMapReadyC
                 if (mMap != null) {
                     PlaceMarkers();
                     PlaceRoute();
+                }
+
+                if(mapLoaded) {
                     CenterRoute();
                 }
             }

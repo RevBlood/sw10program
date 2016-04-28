@@ -3,7 +3,6 @@ package sw10.ubiforsikring;
 import android.content.Context;
 
 public class TimeStringGenerator {
-
     private static final int SECOND = 1000;
     private static final int MINUTE = 60 * SECOND;
     private static final int HOUR = 60 * MINUTE;
