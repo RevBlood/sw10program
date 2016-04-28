@@ -15,7 +15,6 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
-            android:text="@string/DefaultText"
             android:visibility="gone"
             android:textSize="44sp"/>
 
@@ -37,7 +36,6 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:layout_toStartOf="@id/CompetitionRankView"
-            android:text="@string/DefaultText"
             android:textSize="26sp" />
 
         <TextView
@@ -47,7 +45,6 @@
             android:layout_alignParentStart="true"
             android:layout_below="@id/CompetitionTitleView"
             android:layout_toStartOf="@id/CompetitionRankView"
-            android:text="@string/DefaultText"
             android:textSize="18sp"/>
 
     </RelativeLayout>
@@ -64,8 +61,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:textSize="18sp"
-            android:text="@string/DefaultText" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/CompetitionAttemptCountView"
@@ -74,8 +70,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:visibility="invisible"
-            android:textSize="18sp"
-            android:text="@string/DefaultText" />
+            android:textSize="18sp" />
 
     </LinearLayout>
 

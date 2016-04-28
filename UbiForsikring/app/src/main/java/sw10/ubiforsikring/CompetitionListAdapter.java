@@ -59,7 +59,7 @@ public class CompetitionListAdapter extends ArrayAdapter<CompetitionListItem> {
         //Populate ViewHolder with data
         ViewHolder viewHolder = (ViewHolder) rowView.getTag();
         viewHolder.CompetitionTitleView.setText(item.CompetitionName);
-        viewHolder.CompetitionTimeLeftView.setText(mContext.getString(R.string.DefaultText));
+        //viewHolder.CompetitionTimeLeftView.setText(mContext.getString(R.string.DefaultText));
 
         //Alter layout depending on participation status
         if (!item.IsParticipating) {
@@ -75,10 +75,9 @@ public class CompetitionListAdapter extends ArrayAdapter<CompetitionListItem> {
             viewHolder.CompetitionRankView.setVisibility(View.VISIBLE);
             viewHolder.CompetitionAttemptCountView.setVisibility(View.VISIBLE);
             viewHolder.CompetitionAttemptCountView.setText(String.format(mContext.getString(R.string.CompetitionAttemptCountText), item.AttemptCount));
-
-            viewHolder.CompetitionDescriptionView.setText(String.format(mContext.getString(R.string.CompetitionRankDescription), item.Rank, item.ParticipantCount));
-            int rankPercentage = ((item.Rank / item.ParticipantCount) * 100);
-            viewHolder.CompetitionRankView.setText(String.format(mContext.getString(R.string.CompetitionRankText), rankPercentage));
+            //viewHolder.CompetitionDescriptionView.setText(String.format(mContext.getString(R.string.CompetitionRankDescription), item.Rank, item.ParticipantCount));
+            //int rankPercentage = ((item.Rank / item.ParticipantCount) * 100);
+            //viewHolder.CompetitionRankView.setText(String.format(mContext.getString(R.string.CompetitionRankText), rankPercentage));
 
             SetTextColor(viewHolder.CompetitionRankView, -1);
             SetTextColor(viewHolder.CompetitionDescriptionView, -1);

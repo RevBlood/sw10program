@@ -1,12 +1,9 @@
 package sw10.ubiforsikring.Objects.CompetitionObjects;
 
-
 import org.json.JSONObject;
 
 import sw10.ubiforsikring.Helpers.DateObjectHelper;
 import java.util.Date;
-
-import sw10.ubiforsikring.Helpers.DateObjectHelper;
 
 public class CompetitionListItem {
     public int CompetitionId;
