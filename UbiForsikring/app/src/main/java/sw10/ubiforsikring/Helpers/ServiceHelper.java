@@ -89,6 +89,28 @@ public class ServiceHelper {
 		return tripListItems;
 	}
 
+	public static void CompetitionSignUp(int carId, int competitionId){
+		String response = "Empty response";
+		try {
+			response = HTTPHelper.HTTPGet("http://" + ip + "/RestService/Competition/CompetitionSignUp?carid=" + carId + "&competitionid=" + competitionId);
+			System.out.println("Response: " + response);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return;
+	}
+
+	public static void CompetitionSignDown(int carId, int competitionId){
+		String response = "Empty response";
+		try {
+			response = HTTPHelper.HTTPGet("http://" + ip + "/RestService/Competition/CompetitionSignDown?carid=" + carId + "&competitionid=" + competitionId);
+			System.out.println("Response: " + response);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return;
+	}
+
     //TODO: Få Lau til at sætte denne op på serveren, og parse til CompetitionListItem i stedet for tripListItem
 	public static ArrayList<CompetitionListItem> GetCompetitionsForListView(int carId, int offset){
 		String response = HTTPHelper.HTTPGet("http://" + ip + "/RestService/Competition/GetCompetitionsForListView?carid=" + carId + "&offset=" + offset);
