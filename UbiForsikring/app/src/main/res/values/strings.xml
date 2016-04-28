@@ -56,6 +56,8 @@
     <string name="SendIMEICancelButtonText">Afslut</string>
 
     <string name="IsGPSDialogOpen">IsGPSDialogOpen</string>
+    <string name="IsTripProcessing">IsTripProcessing</string>
+    <string name="IsTripActive">IsTripActive</string>
     <string name="UserPreferences">UserPreferences</string>
     <string name="CarIdStatus">CarIdStatus</string>
     <string name="StoredIMEI">StoredIMEI</string>
