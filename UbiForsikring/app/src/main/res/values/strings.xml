@@ -128,6 +128,7 @@
 
     <!-- COMPETITION LIST -->
     <string name="CompetitionListEmptyText">Der er ingen konkurrencer lige nu</string>
+    <string name="CompetitionListLoadErrorText">Kunne ikke indlæse konkurrencer</string>
     <string name="LoadingCompetitionsText">Indlæser&#8230;</string>
     <string name="CompetitionIdIntentName">CompetitionId</string>
     <string name="EnterCompetitionText">Deltag</string>
