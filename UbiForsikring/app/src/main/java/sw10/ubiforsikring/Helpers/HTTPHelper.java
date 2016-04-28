@@ -131,7 +131,7 @@ public class HTTPHelper {
 
                 conn.disconnect();
 
-                return output;
+                return "ok";
             } catch (MalformedURLException e) {
                 e.printStackTrace();
                 return null;

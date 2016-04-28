@@ -12,6 +12,7 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Message;
@@ -23,6 +24,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,8 +32,19 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import sw10.ubiforsikring.Helpers.ServiceHelper;
 import sw10.ubiforsikring.Objects.CarObjects.Car;
+import sw10.ubiforsikring.Objects.FactObjects.Fact;
+import sw10.ubiforsikring.Objects.FactObjects.FlagInformation;
+import sw10.ubiforsikring.Objects.FactObjects.MeasureInformation;
+import sw10.ubiforsikring.Objects.FactObjects.SpatialTemporalInformation;
 
 public class MainMenuActivity extends AppCompatActivity {
     final static int FINE_LOCATION_PERMISSION_REQUEST = 0;
@@ -193,6 +206,12 @@ public class MainMenuActivity extends AppCompatActivity {
                     Toast.makeText(mContext, R.string.TripStartToast, Toast.LENGTH_SHORT).show();
                 }
             } else {
+                SharedPreferences preferences = getSharedPreferences(getString(R.string.FailedTripPreferences), Context.MODE_PRIVATE);
+                Set<String> set = preferences.getStringSet(getString(R.string.StoredTrips), new HashSet<String>());
+                for (String entry : set) {
+                        Log.e("Debug", "JSON: " + entry);
+                }
+
                 if (MessageTripService(TripService.END_TRIP)) {
                     Toast.makeText(mContext, R.string.TripStopToast, Toast.LENGTH_SHORT).show();
                 }

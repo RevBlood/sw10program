@@ -1,8 +1,10 @@
 package sw10.ubiforsikring;
 
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
@@ -19,20 +21,22 @@ import android.preference.PreferenceScreen;
 import android.preference.SwitchPreference;
 import android.widget.Toast;
 
+import sw10.ubiforsikring.Helpers.ServiceHelper;
+
 public class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
     //TripService communication
-    ServiceConnection mTripServiceConnection;
-    Messenger mMessenger;
-    BroadcastReceiver mStatusReceiver;
+    //ServiceConnection mTripServiceConnection;
+    //Messenger mMessenger;
+    //BroadcastReceiver mStatusReceiver;
 
     //TripService status
-    boolean mIsTripActive = true;
-    boolean mIsProcessing = true;
+    //boolean mIsTripActive = true;
+    //boolean mIsProcessing = true;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mStatusReceiver = new StatusReceiver();
+        //mStatusReceiver = new StatusReceiver();
 
         //Load the preferences from an XML resource
         addPreferencesFromResource(R.xml.preferences);
@@ -40,9 +44,9 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         //Set listeners for links
         PreferenceScreen preferenceScreen = getPreferenceScreen();
         //preferenceScreen.findPreference(getString(R.string.UserLogoutTitle)).setOnPreferenceClickListener(OnLogoutClickListener);
-        preferenceScreen.findPreference(getString(R.string.HelpSettingTitle)).setOnPreferenceClickListener(OnHelpClickListener);
-        preferenceScreen.findPreference(getString(R.string.FeedbackSettingTitle)).setOnPreferenceClickListener(OnFeedbackClickListener);
-        preferenceScreen.findPreference(getString(R.string.AboutSettingTitle)).setOnPreferenceClickListener(OnAboutClickListener);
+        //preferenceScreen.findPreference(getString(R.string.HelpSettingTitle)).setOnPreferenceClickListener(OnHelpClickListener);
+        //preferenceScreen.findPreference(getString(R.string.FeedbackSettingTitle)).setOnPreferenceClickListener(OnFeedbackClickListener);
+        //preferenceScreen.findPreference(getString(R.string.AboutSettingTitle)).setOnPreferenceClickListener(OnAboutClickListener);
     }
 
     @Override
@@ -57,15 +61,15 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
 
         //Update fields depending on preferences
-        ToggleOfflineSettings();
+        //ToggleOfflineSettings();
         SetUsernameSettings();
 
         //Listen for TripService status
-        getActivity().registerReceiver(mStatusReceiver, new IntentFilter(getString(R.string.BroadcastStatusIntent)));
+        //getActivity().registerReceiver(mStatusReceiver, new IntentFilter(getString(R.string.BroadcastStatusIntent)));
 
         //Connect to the TripService
-        InitializeTripServiceConnection();
-        BindTripService();
+        //InitializeTripServiceConnection();
+        //BindTripService();
 
         super.onResume();
     }
@@ -76,19 +80,35 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
 
         //Disconnect from TripService
-        getActivity().unbindService(mTripServiceConnection);
+        //getActivity().unbindService(mTripServiceConnection);
 
         super.onPause();
     }
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if(key.equals(getString(R.string.SyncOnlineSettingTitle))) {
+        /*if(key.equals(getString(R.string.SyncOnlineSettingTitle))) {
             ToggleOfflineSettings();
-        }
+        } */
 
         if(key.equals(getString(R.string.UsernameTitle))) {
-            SetUsernameSettings();
+            String username = sharedPreferences.getString(getString(R.string.UsernameTitle), "");
+            if (username.isEmpty()) {
+                return;
+            }
+
+            try {
+                SharedPreferences preferences = getActivity().getSharedPreferences(getString(R.string.UserPreferences), Context.MODE_PRIVATE);
+                int userId = preferences.getInt(getString(R.string.StoredCarId), -1);
+
+                ServiceHelper.UpdateCarWithUsername(userId, username);
+
+                SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getActivity()).edit();
+                editor.putString(getString(R.string.UsernameTitle), username).apply();
+                SetUsernameSettings();
+            } catch (Exception e) {
+                SendUsernameFailedDialog(username).show();
+            }
         }
     }
 
@@ -103,7 +123,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         }
     }
 
-    private void ToggleOfflineSettings() {
+    /*private void ToggleOfflineSettings() {
         //Check if offline settings should be enabled or disabled
         SwitchPreference syncOnlineSetting = (SwitchPreference) getPreferenceScreen().findPreference(getString(R.string.SyncOnlineSettingTitle));
         if (syncOnlineSetting.isChecked()) {
@@ -111,7 +131,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         } else {
             getPreferenceScreen().findPreference(getString(R.string.DeleteAfterSettingTitle)).setEnabled(true);
         }
-    }
+    } */
 
     //region LISTENERS
 
@@ -135,7 +155,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         }
     }; */
 
-    private Preference.OnPreferenceClickListener OnHelpClickListener = new Preference.OnPreferenceClickListener() {
+    /*private Preference.OnPreferenceClickListener OnHelpClickListener = new Preference.OnPreferenceClickListener() {
         @Override
         public boolean onPreferenceClick(Preference preference) {
             Toast.makeText(getActivity(), getString(R.string.UnfinishedFeatureText), Toast.LENGTH_SHORT).show();
@@ -157,11 +177,11 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
             Toast.makeText(getActivity(), R.string.UnfinishedFeatureText, Toast.LENGTH_SHORT).show();
             return true;
         }
-    };
+    }; */
 
     //endregion
 
-    private class StatusReceiver extends BroadcastReceiver {
+    /*private class StatusReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
             //Only need status once - Unregister the receiver afterwards
@@ -170,11 +190,11 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
             mIsTripActive = intent.getBooleanExtra(getString(R.string.BroadcastIsTripActive), false);
             mIsProcessing = intent.getBooleanExtra(getString(R.string.BroadcastIsProcessing), false);
         }
-    }
+    } */
 
     //region TRIP SERVICE
 
-    private void InitializeTripServiceConnection() {
+    /* private void InitializeTripServiceConnection() {
         //Create a connection and a messenger for communication with the service
         //Enable/disable interaction with the service depending on connection status
         mTripServiceConnection = new ServiceConnection() {
@@ -209,7 +229,35 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         } catch (RemoteException e) {
             return false;
         }
-    }
+    } */
 
     //endregion
+
+    private AlertDialog SendUsernameFailedDialog(final String username){
+        return new AlertDialog.Builder(getActivity())
+                .setTitle(getString(R.string.UsernameSendErrorText))
+                .setPositiveButton(getString(R.string.TripListRetryLoad), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        try {
+                            SharedPreferences preferences = getActivity().getSharedPreferences(getString(R.string.UserPreferences), Context.MODE_PRIVATE);
+                            int userId = preferences.getInt(getString(R.string.StoredCarId), -1);
+
+                            ServiceHelper.UpdateCarWithUsername(userId, username);
+
+                            SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getActivity()).edit();
+                            editor.putString(getString(R.string.UsernameTitle), username).apply();
+                        } catch (Exception e) {
+                            SendUsernameFailedDialog(username).show();
+                        }
+
+                        dialog.cancel();
+                    }
+                })
+                .setNegativeButton(getString(R.string.TripListCancelLoad), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                })
+                .create();
+    }
 }

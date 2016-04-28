@@ -21,7 +21,7 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory
+    <!--<PreferenceCategory
         android:title="@string/SettingsCategoryStorage">
 
         <SwitchPreference
@@ -40,9 +40,9 @@
             android:enabled="false"
             />
 
-    </PreferenceCategory>
+    </PreferenceCategory> -->
 
-    <PreferenceCategory
+    <!-- <PreferenceCategory
         android:title="@string/SettingsCategorySupport" >
 
         <Preference
@@ -65,6 +65,6 @@
             android:key="@string/AboutSettingTitle"
             />
 
-    </PreferenceCategory>
+    </PreferenceCategory> -->
 
 </PreferenceScreen>

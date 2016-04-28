@@ -15,7 +15,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import java.lang.ref.WeakReference;
@@ -50,12 +49,6 @@ public class CompetitionListActivity extends AppCompatActivity {
         mCompetitionListAdapter = new CompetitionListAdapter(this, mCompetitionList);
         mCompetitionListView.setAdapter(mCompetitionListAdapter);
         mCompetitionListView.setOnItemClickListener(CompetitionClickListener);
-        mCompetitionListView.setOnScrollListener(new ListViewScrollListener(this, getResources().getInteger(R.integer.LoadMoreThreshold), getResources().getInteger(R.integer.ChunkSize)) {
-            @Override public void GetMoreEntries(int index) {
-                CompetitionGetTask competitionGetTask = new CompetitionGetTask(mContext);
-                competitionGetTask.execute(index);
-            }
-        });
 
         //TODO: Remove test data
         //CompetitionListItem testItemOne = new CompetitionListItem(-1, "DM i Roadkill", 357, false, -1, -1);
@@ -100,7 +93,9 @@ public class CompetitionListActivity extends AppCompatActivity {
         @Override
         protected Boolean doInBackground(Integer... index) {
             try {
-                mCompetitionList.addAll(ServiceHelper.GetCompetitionsForListView(1, index[0]));
+                SharedPreferences preferences = getSharedPreferences(getString(R.string.UserPreferences), Context.MODE_PRIVATE);
+                int userId = preferences.getInt(getString(R.string.StoredCarId), -1);
+                mCompetitionList.addAll(ServiceHelper.GetCompetitionsForListView(userId, index[0]));
                 return true;
             } catch (Exception e) {
                 mIndex = index[0];
@@ -173,8 +168,18 @@ public class CompetitionListActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         if (inputView.getText().toString().length() >= mContext.getResources().getInteger(R.integer.userNameMinLength)) {
-                            SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(mContext).edit();
-                            editor.putString(getString(R.string.UsernameTitle), inputView.getText().toString()).apply();
+                            try {
+                                SharedPreferences preferences = getSharedPreferences(getString(R.string.UserPreferences), Context.MODE_PRIVATE);
+                                int userId = preferences.getInt(getString(R.string.StoredCarId), -1);
+
+                                ServiceHelper.UpdateCarWithUsername(userId, inputView.getText().toString());
+
+                                SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(mContext).edit();
+                                editor.putString(getString(R.string.UsernameTitle), inputView.getText().toString()).apply();
+                                SetScrollListener();
+                            } catch (Exception e) {
+                                SendUsernameFailedDialog(inputView.getText().toString()).show();
+                            }
                             alertDialog.cancel();
                         } else {
                             inputView.setError(mContext.getString(R.string.UsernameTooShortError));
@@ -192,7 +197,47 @@ public class CompetitionListActivity extends AppCompatActivity {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         if (preferences.getString(getString(R.string.UsernameTitle), "").isEmpty()) {
             BuildUsernameDialog().show();
+        } else {
+            SetScrollListener();
         }
+    }
+
+    private void SetScrollListener() {
+        mCompetitionListView.setOnScrollListener(new ListViewScrollListener(this, getResources().getInteger(R.integer.LoadMoreThreshold), getResources().getInteger(R.integer.ChunkSize)) {
+            @Override public void GetMoreEntries(int index) {
+                CompetitionGetTask competitionGetTask = new CompetitionGetTask(mContext);
+                competitionGetTask.execute(index);
+            }
+        });
+    }
+
+    private AlertDialog SendUsernameFailedDialog(final String username){
+        return new AlertDialog.Builder(this)
+                .setTitle(getString(R.string.UsernameSendErrorText))
+                .setPositiveButton(getString(R.string.TripListRetryLoad), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        try {
+                            SharedPreferences preferences = getSharedPreferences(getString(R.string.UserPreferences), Context.MODE_PRIVATE);
+                            int userId = preferences.getInt(getString(R.string.StoredCarId), -1);
+
+                            ServiceHelper.UpdateCarWithUsername(userId, username);
+
+                            SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(mContext).edit();
+                            editor.putString(getString(R.string.UsernameTitle), username).apply();
+                            SetScrollListener();
+                        } catch (Exception e) {
+                            SendUsernameFailedDialog(username).show();
+                        }
+
+                        dialog.cancel();
+                    }
+                })
+                .setNegativeButton(getString(R.string.TripListCancelLoad), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                })
+                .create();
     }
     //endregion
 }

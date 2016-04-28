@@ -129,6 +129,7 @@
     <!-- COMPETITION LIST -->
     <string name="CompetitionListEmptyText">Der er ingen konkurrencer lige nu</string>
     <string name="CompetitionListLoadErrorText">Kunne ikke indlæse konkurrencer</string>
+    <string name="CompetitionParticipateErrorText">Kunne ikke indlæse konkurrencer</string>
     <string name="LoadingCompetitionsText">Indlæser&#8230;</string>
     <string name="CompetitionIdIntentName">CompetitionId</string>
     <string name="EnterCompetitionText">Deltag</string>
@@ -136,6 +137,7 @@
     <string name="CompetitionRankDescription">%1$,d / %2$,d</string>
     <string name="CompetitionParticipantsDescription">%d deltagere</string>
     <string name="CompetitionRankText">%d%%</string>
+    <string name="UsernameSendErrorText">Kunne ikke gemme brugernavnet</string>
 
     <string name="UsernameNotSetTitle">Vælg brugernavn</string>
     <string name="UsernameNotSetDescription">For at kunne deltage i konkurrencer skal du have et brugernavn</string>

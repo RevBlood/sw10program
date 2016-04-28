@@ -31,6 +31,7 @@ import org.json.JSONException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.TimeZone;
@@ -247,7 +248,7 @@ public class TripService extends Service implements ConnectionCallbacks, OnConne
             for (Location entry : entries) {
                 // Fix timestamps according to daylight savings: minutes * seconds * milliseconds = 1 hour
                 if (TimeZone.getTimeZone("Europe/Copenhagen").inDaylightTime(new Date(entry.getTime()))) {
-                    entry.setTime(entry.getTime() + (2* 60 * 60 * 1000));
+                    entry.setTime(entry.getTime() + (2 * 60 * 60 * 1000));
                 } else {
                     entry.setTime(entry.getTime() + (60 * 60 * 1000));
                 }
@@ -266,9 +267,7 @@ public class TripService extends Service implements ConnectionCallbacks, OnConne
             }
 
         } else {
-            Toast toast = Toast.makeText(getApplicationContext(), "Turen var ikke lang nok!", Toast.LENGTH_LONG);
-            toast.show();
-
+            Toast.makeText(getApplicationContext(), "Turen var ikke lang nok!", Toast.LENGTH_LONG).show();
         }
 
         //Finish up
@@ -316,79 +315,63 @@ public class TripService extends Service implements ConnectionCallbacks, OnConne
 
     private boolean SendTrip(ArrayList<Fact> facts) {
         //Try sending data to server - If it fails, save the trip locally
-        try {
-            ServiceHelper.PostFacts(facts);
+        if (ServiceHelper.PostFacts(facts)) {
             return true;
-        } catch (Exception e) {
-            SharedPreferences preferences = getSharedPreferences(getString(R.string.FailedTripPreferences), Context.MODE_PRIVATE);
-            boolean hasUnresolvedTrips = preferences.getBoolean(getString(R.string.FailedTripStatus), false);
-
-            //Get previously unresolved trips if any
-            Set<String> unresolvedTrips = new HashSet<>();
-            if (hasUnresolvedTrips) {
-                unresolvedTrips = preferences.getStringSet(getString(R.string.StoredTrips), null);
-            }
-
-            //Parse trip to JSONarray - SharedPreferences does not accept complex objects
-            JSONArray jsonArray = new JSONArray();
-            for (int i = 0; i < facts.size(); i++) {
-                jsonArray.put(facts.get(i).serializeToJSON());
-            }
-
-            //If there were no earlier unresolved trips, update the status in SharedPreferences.
-            SharedPreferences.Editor editor = preferences.edit();
-            if (!hasUnresolvedTrips) {
-                editor.putBoolean(getString(R.string.FailedTripStatus), true);
-            }
-
-            //Save the list of unresolved trips
-            unresolvedTrips.add(jsonArray.toString());
-            editor.putStringSet(getString(R.string.StoredTrips), unresolvedTrips);
-            editor.apply();
-            return false;
         }
+
+        //Parse trip to JSONArray - SharedPreferences does not accept complex objects
+        JSONArray failedTrip = new JSONArray();
+        for (int i = 0; i < facts.size(); i++) {
+            failedTrip.put(facts.get(i).serializeToJSON());
+        }
+
+        //Get previously unresolved trips if any, and add the failed trip to the set
+        SharedPreferences preferences = getSharedPreferences(getString(R.string.FailedTripPreferences), Context.MODE_PRIVATE);
+        Set<String> unresolvedTrips = preferences.getStringSet(getString(R.string.StoredTrips), new HashSet<String>());
+        unresolvedTrips.add(failedTrip.toString());
+
+        //Save the list of unresolved trips
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putStringSet(getString(R.string.StoredTrips), unresolvedTrips);
+        editor.apply();
+        return false;
     }
 
     private boolean SendUnresolvedTrips() {
+        boolean success = true;
         SharedPreferences preferences = getSharedPreferences(getString(R.string.FailedTripPreferences), Context.MODE_PRIVATE);
-        // If there are no unresolved trips, there's no problem. Return.
-        if (!preferences.getBoolean(getString(R.string.FailedTripStatus), false)) {
-            return true;
-        }
 
-        // If there are unresolved trips, read them, and send them
-        Set<String> unresolvedTrips = preferences.getStringSet(getString(R.string.StoredTrips), null);
+        // Get all unresolved trips (List might be empty)
+        Set<String> unresolvedTrips = preferences.getStringSet(getString(R.string.StoredTrips), new HashSet<String>());
+        Set<String> toRemove = new HashSet<>();
 
+        //For every unresolved trip, parse to JSONArray and send it
         for (String unresolvedTrip : unresolvedTrips) {
-            ArrayList<Fact> facts = new ArrayList<>();
-
+            JSONArray jsonArray = new JSONArray();
             try {
-                JSONArray jsonArray = new JSONArray(unresolvedTrip);
-
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    facts.add(new Fact(jsonArray.getJSONObject(i)));
-                }
-            } catch (JSONException e) {
+                jsonArray = new JSONArray(unresolvedTrip);
+            } catch (Exception e) {
             }
 
             // If sending the trip succeeds, delete it from shared preferences, otherwise return, leaving other trips for later
-            if (SendTrip(facts)) {
-                unresolvedTrips.remove(unresolvedTrip);
-                SharedPreferences.Editor editor = preferences.edit();
-
-                if (unresolvedTrips.isEmpty()) {
-                    editor.putBoolean(getString(R.string.FailedTripStatus), false);
-                    editor.remove(getString(R.string.StoredTrips));
-                } else {
-                    editor.putStringSet(getString(R.string.StoredTrips), unresolvedTrips);
-                }
-
-                editor.apply();
+            if (ServiceHelper.PostFacts(jsonArray)) {
+                toRemove.add(unresolvedTrip);
             } else {
-                return false;
+                success = false;
+                break;
             }
         }
 
-        return true;
+        SharedPreferences.Editor editor = preferences.edit();
+
+        if (!success) {
+            unresolvedTrips.removeAll(toRemove);
+            editor.putStringSet(getString(R.string.StoredTrips), unresolvedTrips);
+        } else {
+            editor.remove(getString(R.string.StoredTrips));
+        }
+
+        editor.apply();
+        return success;
     }
 }

@@ -75,7 +75,6 @@ public class ServiceHelper {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return;
 	}
 
 	public static ArrayList<TripListItem> GetTripsForListView(int carId, int offset){
@@ -108,7 +107,6 @@ public class ServiceHelper {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return;
 	}
 
 	public static void CompetitionSignDown(int carId, int competitionId){
@@ -119,7 +117,6 @@ public class ServiceHelper {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return;
 	}
 
     //TODO: Få Lau til at sætte denne op på serveren, og parse til CompetitionListItem i stedet for tripListItem
@@ -211,10 +208,22 @@ public class ServiceHelper {
         try {
             String response = HTTPHelper.HTTPPost(request, jsonArray.toString());
             System.out.println("Response: " + response);
-            return true;
+            return response != null;
         } catch (Exception e) {
             return false;
         }
+
+	}
+
+	public static boolean PostFacts(JSONArray jsonArray) {
+		String request = "http://" + ip + "/RestService/Fact/AddFacts";
+		try {
+			String response = HTTPHelper.HTTPPost(request, jsonArray.toString());
+			System.out.println("Response: " + response);
+            return response != null;
+		} catch (Exception e) {
+			return false;
+		}
 
 	}
 
