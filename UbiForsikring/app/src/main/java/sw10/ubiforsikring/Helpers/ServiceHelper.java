@@ -67,6 +67,17 @@ public class ServiceHelper {
 		return car;
 	}
 
+	public static void UpdateCarWithUsername(int carId, String username){
+		String response = "Empty response";
+		try {
+			response = HTTPHelper.HTTPGet("http://" + ip + "/RestService/Car/UpdateCarWithUsername?carid=" + carId + "&username=" + username);
+			System.out.println("Response: " + response);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return;
+	}
+
 	public static ArrayList<TripListItem> GetTripsForListView(int carId, int offset){
 		String response = HTTPHelper.HTTPGet("http://" + ip + "/RestService/Trip/GetTripsForList?carid=" + carId + "&offset=" + offset);
         Log.i("Debug", response);
