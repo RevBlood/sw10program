@@ -3,9 +3,17 @@ package sw10.ubiforsikring.Objects.CompetitionObjects;
 
 import org.json.JSONObject;
 
+import sw10.ubiforsikring.Helpers.DateObjectHelper;
+import java.util.Date;
+
+import sw10.ubiforsikring.Helpers.DateObjectHelper;
+
 public class CompetitionListItem {
     public int CompetitionId;
     public String CompetitionName;
+    public String CompetitionDescription;
+    public Date CompetitionStart;
+    public Date CompetitionEnd;
     public int ParticipantCount;
     public boolean IsParticipating;
     public int Rank;
@@ -24,6 +32,9 @@ public class CompetitionListItem {
         try {
             CompetitionId = obj.getInt("competitionid");
             CompetitionName = obj.getString("competitionname");
+            CompetitionDescription = obj.getString("competitiondescription");
+            CompetitionStart = DateObjectHelper.CreateDateObject(new JSONObject(obj.getString("starttemporal")).getString("timestamp"));
+            CompetitionEnd = DateObjectHelper.CreateDateObject(new JSONObject(obj.getString("stoptemporal")).getString("timestamp"));
             ParticipantCount = obj.getInt("participantcount");
             IsParticipating = obj.getBoolean("isparticipating");
             Rank = obj.getInt("rank");

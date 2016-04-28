@@ -91,13 +91,16 @@ public class ServiceHelper {
 
     //TODO: Få Lau til at sætte denne op på serveren, og parse til CompetitionListItem i stedet for tripListItem
 	public static ArrayList<CompetitionListItem> GetCompetitionsForListView(int carId, int offset){
-		String response = HTTPHelper.HTTPGet("http://" + ip + "/RestService/Trip/GetCompetitionsForOverview?carid=" + carId + "&offset=" + offset);
+		String response = HTTPHelper.HTTPGet("http://" + ip + "/RestService/Competition/GetCompetitionsForListView?carid=" + carId + "&offset=" + offset);
 		Log.i("Debug", response);
+
+		String prunedResponse = pruneXMLtags(response);
+		Log.i("Debug", prunedResponse);
 
 		ArrayList<CompetitionListItem> competitionListItems = new ArrayList<>();
 
 		try {
-			JSONArray jsonArray = new JSONArray(response);
+			JSONArray jsonArray = new JSONArray(prunedResponse);
 
 			for(int i = 0; i < jsonArray.length(); i++){
                 competitionListItems.add(new CompetitionListItem(jsonArray.getJSONObject(i)));
