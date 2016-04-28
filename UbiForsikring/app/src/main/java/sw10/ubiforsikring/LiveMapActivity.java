@@ -108,38 +108,39 @@ public class LiveMapActivity extends AppCompatActivity implements OnMapReadyCall
 
     @Override
     public void onResume() {
-        //Whenever activity is resumed re-calculate distance before listening for new updates
+        //Ensure all data is cleared
+        mRoute.clear();
+        mStartMarker = null;
+        mCurrentMarker = null;
+        mTripStartTime = null;
+        mTripDistance = 0;
+
+        //Redraw polyline, if GoogleMap is ready
+        if (mMap != null) {
+            mMap.clear();
+            mRouteLine = mMap.addPolyline(mRouteOptions);
+        }
+
+        //Re-calculate distance before listening for new updates
         registerReceiver(mRouteReceiver, new IntentFilter(getString(R.string.BroadcastRouteIntent)));
 
         //Connect to the TripService
         InitializeTripServiceConnection();
         BindTripService();
 
-        //Redraw polyline, if GoogleMap is ready
-        if (mMap != null) {
-            mRouteLine = mMap.addPolyline(mRouteOptions);
-        }
-
         super.onResume();
     }
 
     @Override
     public void onPause() {
+        //Stop updating the trip timer
+        mTripTimer.removeCallbacks(mTimerTask);
+
         //If activity is paused, stop listening for new locations
         unregisterReceiver(mLocationReceiver);
 
         //Disconnect from the TripService
         unbindService(mTripServiceConnection);
-
-        //Clear data
-        mMap.clear();
-        mRoute.clear();
-        mStartMarker = null;
-        mCurrentMarker = null;
-        mTripDistance = 0;
-
-        //Stop Live Time from updating until activity is resumed
-        mTripTimer.removeCallbacks(mTimerTask);
 
         super.onPause();
     }
