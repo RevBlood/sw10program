@@ -435,6 +435,7 @@ public class MainMenuActivity extends AppCompatActivity {
                         finish();
                     }
                 })
+                .setCancelable(false)
                 .create();
     }
 
@@ -494,6 +495,7 @@ public class MainMenuActivity extends AppCompatActivity {
                         finish();
                     }
                 })
+                .setCancelable(false)
                 .create();
     }
 
