@@ -2,11 +2,13 @@
 <manifest
     xmlns:android="http://schemas.android.com/apk/res/android"
     package="sw10.ubiforsikring"
-    android:versionCode="2"
-    android:versionName="0.1.1">
+    android:versionCode="3"
+    android:versionName="0.1.2">
 
-    <!-- Fine Location required for streaming GPS locations -->
+    <!-- ACCESS_FINE_LOCATION required for streaming GPS locations -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+    <!-- READ_PHONE_STATE required for IMEI access -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
@@ -36,46 +38,71 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".LiveMapActivity"
             android:label="@string/title_activity_map"
-            android:launchMode="singleTask"
-            android:parentActivityName=".MainMenuActivity" />
+            android:launchMode="singleTask" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainMenuActivity"/>
+        </activity>
         <activity
             android:name=".TripListActivity"
             android:label="@string/title_activity_trip_list"
-            android:launchMode="singleTask"
-            android:parentActivityName=".MainMenuActivity" />
+            android:launchMode="singleTask" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainMenuActivity"/>
+        </activity>
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:launchMode="singleTask"
-            android:parentActivityName=".MainMenuActivity" />
+            android:launchMode="singleTask" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainMenuActivity"/>
+        </activity>
         <activity
             android:name=".TripOverviewActivity"
             android:label="@string/title_activity_trip_overview"
-            android:launchMode="singleTask"
-            android:parentActivityName=".TripListActivity" />
+            android:launchMode="singleTask" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".TripListActivity"/>
+    </activity>
         <activity
             android:name=".TripStatisticsActivity"
             android:label="@string/title_activity_trip_overview"
-            android:launchMode="singleTask"
-            android:parentActivityName=".TripOverviewActivity" />
+            android:launchMode="singleTask" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".TripOverviewActivity"/>
+        </activity>
         <activity
             android:name=".MapDisplayActivity"
             android:label="@string/title_activity_map"
-            android:launchMode="singleTask"
-            android:parentActivityName=".TripOverviewActivity" />
+            android:launchMode="singleTask" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".TripOverviewActivity"/>
+        </activity>
         <activity
             android:name=".CompetitionListActivity"
             android:label="@string/title_activity_competition_list"
-            android:launchMode="singleTask"
-            android:parentActivityName=".MainMenuActivity"/>
+            android:launchMode="singleTask" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainMenuActivity"/>
+        </activity>
         <activity
             android:name=".CompetitionOverviewActivity"
             android:label="@string/title_activity_competition_overview"
-            android:launchMode="singleTask"
-            android:parentActivityName=".CompetitionListActivity" />
+            android:launchMode="singleTask" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".CompetitionListActivity"/>
+        </activity>
 
         <!-- Not currently being used
         <activity

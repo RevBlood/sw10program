@@ -13,7 +13,7 @@ android {
     buildToolsVersion "23.0.2"
     defaultConfig {
         applicationId "sw10.ubiforsikring"
-        minSdkVersion 19
+        minSdkVersion 14
         targetSdkVersion 23
     }
     buildTypes {
