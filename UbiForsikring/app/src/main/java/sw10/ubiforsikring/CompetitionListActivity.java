@@ -49,21 +49,19 @@ public class CompetitionListActivity extends AppCompatActivity {
         mCompetitionListAdapter = new CompetitionListAdapter(this, mCompetitionList);
         mCompetitionListView.setAdapter(mCompetitionListAdapter);
         mCompetitionListView.setOnItemClickListener(CompetitionClickListener);
-
-        //TODO: Remove test data
-        //CompetitionListItem testItemOne = new CompetitionListItem(-1, "DM i Roadkill", 357, false, -1, -1);
-        //CompetitionListItem testItemTwo = new CompetitionListItem(-1, "Kør Casper Ned 2016", 2300001, true, 9027, 403);
-        //mCompetitionList.add(testItemOne);
-        //mCompetitionList.add(testItemTwo);
-        //mCompetitionListAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void onResume() {
         //Check if user has a username - Display dialog if not.
         HandleUsername();
-
         super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        mCompetitionList.clear();
+        super.onPause();
     }
 
     //endregion

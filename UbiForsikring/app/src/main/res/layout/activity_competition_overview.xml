@@ -4,6 +4,81 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="sw10.ubiforsikring.CompetitionOverviewActivity">
+
+    <RelativeLayout
+        android:id="@+id/CompetitionTitleLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="20dp" >
+
+        <TextView
+            android:id="@+id/CompetitionTitleView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="36sp"
+            android:layout_centerHorizontal="true"
+            android:text="@string/DefaultText"/>
+
+        <TextView
+            android:id="@+id/CompetitionTimeLeftView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/CompetitionTitleView"
+            android:text="@string/DefaultText"/>
+
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/StatsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/CompetitionTitleLayout"
+        android:paddingBottom="20dp">
+
+        <TextView
+            android:id="@+id/RankXYView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/DefaultText"/>
+
+
+        <TextView
+            android:id="@+id/PersonalScoreView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/DefaultText"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/CompetitionDescriptionView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/StatsLayout"
+        android:text="@string/DefaultText"
+        android:paddingBottom="20dp"/>
+
+    <ListView
+        android:id="@+id/LeaderBoard"
+        android:layout_below="@id/CompetitionDescriptionView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:divider="@color/colorPrimaryDark"
+        android:dividerHeight="1px">
+
+    </ListView>
 </RelativeLayout>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="6dp" >
+
+    <TextView
+        android:id="@+id/RankView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="start"
+        android:textSize="18sp"
+        android:text="@string/DefaultText" />
+
+    <TextView
+        android:id="@+id/UsernameView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="18sp"
+        android:text="@string/DefaultText" />
+
+    <TextView
+        android:id="@+id/ScoreView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:textSize="18sp"
+        android:text="@string/DefaultText" />
+
+</RelativeLayout>

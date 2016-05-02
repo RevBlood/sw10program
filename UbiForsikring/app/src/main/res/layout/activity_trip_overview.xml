@@ -85,7 +85,6 @@
 
                 <LinearLayout
                     android:id="@+id/BaseCostLayout"
-                    android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -103,6 +102,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:textAlignment="textEnd"
+                        android:gravity="end"
                         android:textSize="18sp"/>
 
 
@@ -110,7 +110,6 @@
 
                 <LinearLayout
                     android:id="@+id/EnvironmentLayout"
-                    android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/BaseCostLayout">
@@ -129,6 +128,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:textAlignment="textEnd"
+                        android:gravity="end"
                         android:textSize="18sp"/>
 
                     <TextView
@@ -137,6 +137,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:textAlignment="textEnd"
+                        android:gravity="end"
                         android:textSize="18sp"/>
 
 
@@ -144,7 +145,6 @@
 
                 <LinearLayout
                     android:id="@+id/DrivingStyleLayout"
-                    android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/EnvironmentLayout">
@@ -163,6 +163,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:textAlignment="textEnd"
+                        android:gravity="end"
                         android:textSize="18sp"/>
 
                     <TextView
@@ -171,6 +172,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:textAlignment="textEnd"
+                        android:gravity="end"
                         android:textSize="18sp"/>
 
                 </LinearLayout>
@@ -184,7 +186,6 @@
 
                 <LinearLayout
                     android:id="@+id/TotalCostLayout"
-                    android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/CostLayoutDivider">
@@ -203,6 +204,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:textAlignment="textEnd"
+                        android:gravity="end"
                         android:textSize="18sp"/>
 
                     <TextView
@@ -211,6 +213,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:textAlignment="textEnd"
+                        android:gravity="end"
                         android:textSize="18sp"/>
 
                 </LinearLayout>
@@ -250,6 +253,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:textAlignment="textEnd"
+                        android:gravity="end"
                         android:textSize="18sp"/>
 
                 </LinearLayout>
@@ -275,6 +279,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:textAlignment="textEnd"
+                        android:gravity="end"
                         android:textSize="18sp"/>
 
                 </LinearLayout>

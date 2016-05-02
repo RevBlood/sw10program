@@ -9,6 +9,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/listitem_delinquency_header_shape"
         android:textAlignment="center"
+        android:gravity="center"
         android:text="@string/DefaultText"
         android:textSize="26sp"/>
 

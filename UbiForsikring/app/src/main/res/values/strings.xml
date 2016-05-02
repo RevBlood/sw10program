@@ -145,6 +145,9 @@
     <string name="UsernameGoBack">Gå tilbage</string>
     <string name="UsernameTooShortError">Navnet er for kort</string>
 
+    <!-- COMPETITION OVERVIEW -->
+
+    <string name="CompetitionOverviewLoadErrorText">Kunne ikke indlæse konkurrencen</string>
     <!-- SETTINGS ACTIVITY -->
     <string name="SettingsCategoryUser">Bruger</string>
     <string name="SettingsCategoryStorage">Lager</string>

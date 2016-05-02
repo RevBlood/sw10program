@@ -247,7 +247,6 @@ public class TripOverviewActivity extends AppCompatActivity {
                     drivingStylePercentage = (drivingStyleCost / (mTrip.MetersDriven / 1000)) * 100;
                 }
 
-                SetTextColor(drivingStyleCostPercentageView, drivingStylePercentage);
                 if (drivingStyleCost >= 0) {
                     drivingStyleCostValueView.setText(String.format(getString(R.string.CostPlusValue), drivingStyleCost));
                     drivingStyleCostPercentageView.setText(String.format(getString(R.string.CostPlusPercentage), drivingStylePercentage));
@@ -291,45 +290,10 @@ public class TripOverviewActivity extends AppCompatActivity {
         protected void onProgressUpdate(Void... values) {}
     }
 
-    private void SetTextColor(TextView optimalityView, double optimality) {
-        //Get the limit where everything is just red
-        int maxColor = mContext.getResources().getInteger(R.integer.OptimalityMaxColor);
-
-        //Define the sections of each color
-        double sectionSize = maxColor / 5;
-
-        //Red
-        if (optimality >= sectionSize * 4) {
-            optimalityView.setTextColor(ContextCompat.getColor(mContext, R.color.graphColorRed));
-            return;
-        }
-
-        //Orange
-        if (optimality >= sectionSize * 3) {
-            optimalityView.setTextColor(ContextCompat.getColor(mContext, R.color.graphColorOrange));
-            return;
-        }
-
-        //Yellow
-        if (optimality >= sectionSize * 2) {
-            optimalityView.setTextColor(ContextCompat.getColor(mContext, R.color.graphColorYellow));
-            return;
-        }
-
-        //Lime
-        if (optimality >= sectionSize * 1) {
-            optimalityView.setTextColor(ContextCompat.getColor(mContext, R.color.graphColorLime));
-        }
-
-        //Green
-        else {
-            optimalityView.setTextColor(ContextCompat.getColor(mContext, R.color.graphColorGreen));
-        }
-    }
-
     private AlertDialog BuildAlertDialog(){
         return new AlertDialog.Builder(mContext)
                 .setTitle(getString(R.string.TripOverviewLoadErrorText))
+                .setCancelable(false)
                 .setPositiveButton(getString(R.string.TripListRetryLoad), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         OverviewGetTask overviewGetTask = new OverviewGetTask(mContext);

@@ -89,12 +89,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
                     android:indeterminate="true"/>
 
                 <TextView
                     android:text="@string/TripStoppingText"
                     android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true"
                     android:layout_toStartOf="@id/ProgressBar"
+                    android:layout_toLeftOf="@id/ProgressBar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="18sp" />

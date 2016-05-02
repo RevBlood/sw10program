@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
@@ -32,7 +33,7 @@ public class TripListAdapter extends ArrayAdapter<TripListItem> {
     static class ViewHolder {
         public TextView TripTitleView;
         public TextView TripDescriptionView;
-        public TextView TripOptimalityView;
+        public ImageView TripSmileyView;
         public TextView TripTimeView;
         public TextView TripDistanceView;
         public TextView TripCostView;
@@ -52,7 +53,7 @@ public class TripListAdapter extends ArrayAdapter<TripListItem> {
             ViewHolder viewHolder = new ViewHolder();
             viewHolder.TripTitleView = (TextView) rowView.findViewById(R.id.TripTitleView);
             viewHolder.TripDescriptionView = (TextView) rowView.findViewById(R.id.TripDescriptionView);
-            viewHolder.TripOptimalityView = (TextView) rowView.findViewById(R.id.TripOptimalityView);
+            viewHolder.TripSmileyView = (ImageView) rowView.findViewById(R.id.TripSmileyView);
             viewHolder.TripTimeView = (TextView) rowView.findViewById(R.id.TripTimeView);
             viewHolder.TripDistanceView = (TextView) rowView.findViewById(R.id.TripDistanceView);
             viewHolder.TripCostView = (TextView) rowView.findViewById(R.id.TripCostView);
@@ -64,7 +65,6 @@ public class TripListAdapter extends ArrayAdapter<TripListItem> {
         ViewHolder viewHolder = (ViewHolder) rowView.getTag();
         viewHolder.TripTitleView.setText(String.format(mContext.getString(R.string.TripTitle), item.LocalTripId));
         viewHolder.TripDescriptionView.setText(TimeStringGenerator.Generate(item.TripEnd.getTime(), mContext));
-        viewHolder.TripOptimalityView.setText(String.format(mContext.getString(R.string.TripOptimalityText), item.ScorePercentage));
         viewHolder.TripTimeView.setText(String.format(mContext.getString(R.string.TripTimeText), mSdf.format(item.TripStart), mSdf.format(item.TripEnd)));
         if (item.MetersDriven == 0) {
             viewHolder.TripDistanceView.setText(String.format(mContext.getString(R.string.TripDistanceText), 0.0));
@@ -72,45 +72,41 @@ public class TripListAdapter extends ArrayAdapter<TripListItem> {
             viewHolder.TripDistanceView.setText(String.format(mContext.getString(R.string.TripDistanceText), item.MetersDriven / 1000));
         }
 
-        SetTextColor(viewHolder.TripOptimalityView, item.ScorePercentage);
+        SetSmileyFace(viewHolder.TripSmileyView, item.ScorePercentage);
 
         return rowView;
     }
 
-    private void SetTextColor(TextView optimalityView, double optimality) {
-        //Get the limit where everything is just red
-        int maxColor = mContext.getResources().getInteger(R.integer.OptimalityMaxColor);
+    private void SetSmileyFace(ImageView tripSmileyView, double optimality) {
+        // Get threshold values
+        int thresholdOne = mContext.getResources().getInteger(R.integer.SmileyOneThreshold);
+        int thresholdTwo = mContext.getResources().getInteger(R.integer.SmileyTwoThreshold);
+        int thresholdThree = mContext.getResources().getInteger(R.integer.SmileyThreeThreshold);
+        int thresholdFour = mContext.getResources().getInteger(R.integer.SmileyFourThreshold);
 
-        //Define the sections of each color
-        double sectionSize = maxColor / 5;
-
-        //Red
-        if (optimality >= sectionSize * 4) {
-            optimalityView.setTextColor(ContextCompat.getColor(mContext, R.color.graphColorRed));
+        // Set smiley face dependant on optimality
+        if (optimality <= thresholdOne) {
+            tripSmileyView.setImageResource(R.drawable.smiley_one);
             return;
         }
 
-        //Orange
-        if (optimality >= sectionSize * 3) {
-            optimalityView.setTextColor(ContextCompat.getColor(mContext, R.color.graphColorOrange));
+        if (optimality <= thresholdTwo) {
+            tripSmileyView.setImageResource(R.drawable.smiley_two);
             return;
         }
 
-        //Yellow
-        if (optimality >= sectionSize * 2) {
-            optimalityView.setTextColor(ContextCompat.getColor(mContext, R.color.graphColorYellow));
+        if (optimality <= thresholdThree) {
+            tripSmileyView.setImageResource(R.drawable.smiley_three);
             return;
         }
 
-        //Lime
-        if (optimality >= sectionSize * 1) {
-            optimalityView.setTextColor(ContextCompat.getColor(mContext, R.color.graphColorLime));
+        if (optimality <= thresholdFour) {
+            tripSmileyView.setImageResource(R.drawable.smiley_four);
+            return;
         }
 
-        //Green
-        else {
-            optimalityView.setTextColor(ContextCompat.getColor(mContext, R.color.graphColorGreen));
-        }
+        // If optimality is not included in any of the above thresholds, just set it to the worst threshold
+        tripSmileyView.setImageResource(R.drawable.smiley_five);
     }
 }
 

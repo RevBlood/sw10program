@@ -18,10 +18,12 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
         android:src="@android:drawable/ic_menu_mylocation"
         app:backgroundTint="@color/graphColorRed"
         android:scaleType="center"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"/>
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"/>
 
 </RelativeLayout>
