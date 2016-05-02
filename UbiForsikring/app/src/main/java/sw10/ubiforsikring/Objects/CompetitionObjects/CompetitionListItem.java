@@ -16,15 +16,6 @@ public class CompetitionListItem {
     public int Rank;
     public int AttemptCount;
 
-    public CompetitionListItem(int competitionId, String competitionName, int participantCount, boolean isParticipating, int rank, int attemptCount) {
-        CompetitionId = competitionId;
-        CompetitionName = competitionName;
-        ParticipantCount = participantCount;
-        IsParticipating = isParticipating;
-        Rank = rank;
-        AttemptCount = attemptCount;
-    }
-
     public CompetitionListItem(JSONObject obj) {
         try {
             CompetitionId = obj.getInt("competitionid");

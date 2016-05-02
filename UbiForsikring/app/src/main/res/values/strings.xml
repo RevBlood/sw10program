@@ -138,6 +138,8 @@
     <string name="CompetitionParticipantsDescription">%d deltagere</string>
     <string name="CompetitionRankText">%d%%</string>
     <string name="UsernameSendErrorText">Kunne ikke gemme brugernavnet</string>
+    <string name="CompetitionTimeLeftText">Sluttidspunkt: %s</string>
+    <string name="CompetitionTimeLeftFormat">dd/MM HH:mm</string>
 
     <string name="UsernameNotSetTitle">Vælg brugernavn</string>
     <string name="UsernameNotSetDescription">For at kunne deltage i konkurrencer skal du have et brugernavn</string>
@@ -146,8 +148,8 @@
     <string name="UsernameTooShortError">Navnet er for kort</string>
 
     <!-- COMPETITION OVERVIEW -->
-
     <string name="CompetitionOverviewLoadErrorText">Kunne ikke indlæse konkurrencen</string>
+
     <!-- SETTINGS ACTIVITY -->
     <string name="SettingsCategoryUser">Bruger</string>
     <string name="SettingsCategoryStorage">Lager</string>
