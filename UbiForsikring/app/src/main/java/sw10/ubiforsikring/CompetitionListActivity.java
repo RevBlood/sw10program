@@ -53,15 +53,12 @@ public class CompetitionListActivity extends AppCompatActivity {
 
     @Override
     public void onResume() {
+        // Clear any previous data
+        mCompetitionList.clear();
+
         //Check if user has a username - Display dialog if not.
         HandleUsername();
         super.onResume();
-    }
-
-    @Override
-    public void onPause() {
-        mCompetitionList.clear();
-        super.onPause();
     }
 
     //endregion
@@ -107,9 +104,9 @@ public class CompetitionListActivity extends AppCompatActivity {
                 mCompetitionListView.removeFooterView(mFooterView);
                 findViewById(R.id.CompetitionListLoadingView).setVisibility(View.GONE);
                 mCompetitionListView.setEmptyView(findViewById(R.id.CompetitionListEmptyView));
-                if (success) {
-                    mCompetitionListAdapter.notifyDataSetChanged();
-                } else {
+                mCompetitionListAdapter.notifyDataSetChanged();
+
+                if (!success) {
                     BuildAlertDialog().show();
                 }
             }

@@ -31,10 +31,10 @@ public class CompetitionListAdapter extends ArrayAdapter<CompetitionListItem> {
 
     static class ViewHolder {
         public TextView CompetitionTitleView;
-        public TextView CompetitionDescriptionView;
-        public TextView CompetitionRankView;
-        public TextView CompetitionTimeLeftView;
-        public TextView CompetitionAttemptCountView;
+        //public TextView CompetitionDescriptionView;
+        //public TextView CompetitionRankView;
+        //public TextView CompetitionTimeLeftView;
+        //public TextView CompetitionAttemptCountView;
         public Button EnterCompetitionButton;
     }
 
@@ -51,10 +51,10 @@ public class CompetitionListAdapter extends ArrayAdapter<CompetitionListItem> {
 
             ViewHolder viewHolder = new ViewHolder();
             viewHolder.CompetitionTitleView = (TextView) rowView.findViewById(R.id.CompetitionTitleView);
-            viewHolder.CompetitionDescriptionView = (TextView) rowView.findViewById(R.id.CompetitionDescriptionView);
-            viewHolder.CompetitionRankView = (TextView) rowView.findViewById(R.id.CompetitionRankView);
-            viewHolder.CompetitionTimeLeftView = (TextView) rowView.findViewById(R.id.CompetitionTimeLeftView);
-            viewHolder.CompetitionAttemptCountView = (TextView) rowView.findViewById(R.id.CompetitionAttemptCountView);
+            //viewHolder.CompetitionDescriptionView = (TextView) rowView.findViewById(R.id.CompetitionDescriptionView);
+            //viewHolder.CompetitionRankView = (TextView) rowView.findViewById(R.id.CompetitionRankView);
+            //viewHolder.CompetitionTimeLeftView = (TextView) rowView.findViewById(R.id.CompetitionTimeLeftView);
+            //viewHolder.CompetitionAttemptCountView = (TextView) rowView.findViewById(R.id.CompetitionAttemptCountView);
             viewHolder.EnterCompetitionButton = (Button) rowView.findViewById((R.id.EnterCompetitionButton));
 
             rowView.setTag(viewHolder);
@@ -67,7 +67,7 @@ public class CompetitionListAdapter extends ArrayAdapter<CompetitionListItem> {
 
         //Alter layout depending on participation status
         if (!item.IsParticipating) {
-            viewHolder.CompetitionDescriptionView.setText(String.format(mContext.getString(R.string.CompetitionParticipantsDescription), item.ParticipantCount));
+            //viewHolder.CompetitionDescriptionView.setText(String.format(mContext.getString(R.string.CompetitionParticipantsDescription), item.ParticipantCount));
             final int competitionId = item.CompetitionId;
             viewHolder.EnterCompetitionButton.setOnClickListener(new Button.OnClickListener() {
                 @Override
@@ -149,15 +149,15 @@ public class CompetitionListAdapter extends ArrayAdapter<CompetitionListItem> {
 
     private void CreateParticipantLayout(ViewHolder viewHolder, CompetitionListItem item) {
         viewHolder.EnterCompetitionButton.setVisibility(View.GONE);
-        viewHolder.CompetitionRankView.setVisibility(View.VISIBLE);
-        viewHolder.CompetitionAttemptCountView.setVisibility(View.VISIBLE);
-        viewHolder.CompetitionAttemptCountView.setText(String.format(mContext.getString(R.string.CompetitionAttemptCountText), item.AttemptCount));
+        //viewHolder.CompetitionRankView.setVisibility(View.VISIBLE);
+        //viewHolder.CompetitionAttemptCountView.setVisibility(View.VISIBLE);
+        //viewHolder.CompetitionAttemptCountView.setText(String.format(mContext.getString(R.string.CompetitionAttemptCountText), item.AttemptCount));
         //viewHolder.CompetitionDescriptionView.setText(String.format(mContext.getString(R.string.CompetitionRankDescription), item.Rank, item.ParticipantCount));
         //int rankPercentage = ((item.Rank / item.ParticipantCount) * 100);
         //viewHolder.CompetitionRankView.setText(String.format(mContext.getString(R.string.CompetitionRankText), rankPercentage));
 
-        SetTextColor(viewHolder.CompetitionRankView, -1);
-        SetTextColor(viewHolder.CompetitionDescriptionView, -1);
+        //SetTextColor(viewHolder.CompetitionRankView, -1);
+        //SetTextColor(viewHolder.CompetitionDescriptionView, -1);
     }
 }
 
