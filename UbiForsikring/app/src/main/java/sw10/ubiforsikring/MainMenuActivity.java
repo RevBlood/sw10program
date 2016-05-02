@@ -276,17 +276,17 @@ public class MainMenuActivity extends AppCompatActivity {
         // If trip has ended, remove progressbar
         if (mIsTripActive) {
             tripButton.setText(R.string.TripButtonTitleStop);
-            tripButton.setBackground(ContextCompat.getDrawable(mContext, R.drawable.trip_button_stop_shape));
+            tripButton.setBackgroundDrawable(ContextCompat.getDrawable(mContext, R.drawable.trip_button_stop_shape));
             liveMapButton.setEnabled(true);
         } else if (mIsProcessing) {
             tripButton.setText(R.string.TripButtonTitleStopping);
-            tripButton.setBackground(ContextCompat.getDrawable(mContext, R.drawable.trip_button_stopping_shape));
+            tripButton.setBackgroundDrawable(ContextCompat.getDrawable(mContext, R.drawable.trip_button_stopping_shape));
             liveMapButton.setEnabled(false);
             liveMapButton.setVisibility(View.GONE);
             endingTripLayout.setVisibility(View.VISIBLE);
         } else {
             tripButton.setText(R.string.TripButtonTitleStart);
-            tripButton.setBackground(ContextCompat.getDrawable(mContext, R.drawable.trip_button_start_shape));
+            tripButton.setBackgroundDrawable(ContextCompat.getDrawable(mContext, R.drawable.trip_button_start_shape));
             liveMapButton.setEnabled(false);
             liveMapButton.setVisibility(View.VISIBLE);
             endingTripLayout.setVisibility(View.GONE);
@@ -478,10 +478,8 @@ public class MainMenuActivity extends AppCompatActivity {
                 .setMessage(getString(R.string.SendIMEIDialogText))
                 .setPositiveButton(getString(R.string.SendIMEIRetryButtonText), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        try {
-                            // Retry sending IMEI to server
-                            SendIMEI();
-                        } catch (Exception e) {
+                        // Retry sending IMEI to server
+                        if(!SendIMEI()) {
                             // Pop dialog again if it fails
                             SendIMEIFailedDialog().show();
                         }
