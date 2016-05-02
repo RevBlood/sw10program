@@ -12,7 +12,6 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Message;
@@ -32,19 +31,11 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import org.json.JSONArray;
-
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import sw10.ubiforsikring.Helpers.ServiceHelper;
 import sw10.ubiforsikring.Objects.CarObjects.Car;
-import sw10.ubiforsikring.Objects.FactObjects.Fact;
-import sw10.ubiforsikring.Objects.FactObjects.FlagInformation;
-import sw10.ubiforsikring.Objects.FactObjects.MeasureInformation;
-import sw10.ubiforsikring.Objects.FactObjects.SpatialTemporalInformation;
 
 public class MainMenuActivity extends AppCompatActivity {
     final static int FINE_LOCATION_PERMISSION_REQUEST = 0;
@@ -481,7 +472,7 @@ public class MainMenuActivity extends AppCompatActivity {
                         // Retry sending IMEI to server
                         if(!SendIMEI()) {
                             // Pop dialog again if it fails
-                            SendIMEIFailedDialog().show();
+                            // SendIMEIFailedDialog().show();
                         }
 
                         dialog.cancel();

@@ -26,12 +26,10 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.TimeZone;
@@ -199,10 +197,26 @@ public class TripService extends Service implements ConnectionCallbacks, OnConne
     private void UpdateRouteBroadcast() {
         //Get the logged entries from the LocationListener
         ArrayList<Location> entries = new ArrayList<>(mLocationListener.GetEntries());
+        SharedPreferences.Editor editor = getSharedPreferences(getString(R.string.RoutePreferences), Context.MODE_MULTI_PROCESS).edit();
 
-        //Send the broadcast
+        if (!entries.isEmpty()) {
+            // Save route in SharedPreferences
+            Set<String> values = new HashSet<>();
+            for (Location entry : entries) {
+                values.add(Double.toString(entry.getLatitude()) + ";" + Double.toString(entry.getLongitude()));
+            }
+
+            editor.putStringSet(getString(R.string.StoredRoute), values);
+            editor.putLong(getString(R.string.StoredRouteStart), entries.get(0).getTime());
+        } else {
+            editor.remove(getString(R.string.StoredRoute));
+            editor.remove(getString(R.string.StoredRouteStart));
+        }
+
+        editor.commit();
+
+        //Announce that route is available in SharedPreferences
         Intent intent = new Intent(getString(R.string.BroadcastRouteIntent));
-        intent.putParcelableArrayListExtra(getString(R.string.BroadcastRouteLocationList), entries);
         sendBroadcast(intent);
     }
 

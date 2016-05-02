@@ -171,6 +171,10 @@
     <string name="FailedTripStatus">FailedTripStatus</string>
     <string name="StoredTrips">StoredTrips</string>
 
+    <string name="RoutePreferences">RoutePreferences</string>
+    <string name="StoredRoute">StoredRoute</string>
+    <string name="StoredRouteStart">StoredRouteStart</string>
+
     <!-- LOCATION LISTENER -->
     <string name="MovementNotificationTitle">Er din tur slut?</string>
     <string name="MovementNotificationText">Tryk her for at slutte din tur</string>
@@ -184,7 +188,6 @@
     <string name="BroadcastLiveGpsIntent">LiveGpsIntent</string>
     <string name="BroadcastLiveGpsLocation">LiveGpsPosition</string>
     <string name="BroadcastRouteIntent">RouteIntent</string>
-    <string name="BroadcastRouteLocationList">RouteLocationList</string>
 
     <!-- DATE AND TIME -->
     <string name="TripDescriptionText">Kørt %s</string>

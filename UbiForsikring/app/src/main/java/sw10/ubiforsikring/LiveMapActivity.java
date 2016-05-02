@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
@@ -34,9 +35,14 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class LiveMapActivity extends AppCompatActivity implements OnMapReadyCallback {
     Context mContext;
@@ -61,7 +67,7 @@ public class LiveMapActivity extends AppCompatActivity implements OnMapReadyCall
 
     //Stats
     Long mTripStartTime;
-    double mTripDistance = 0;
+    double mTripDistance;
     SimpleDateFormat mSdf;
     Handler mTripTimer;
     Runnable mTimerTask;
@@ -171,32 +177,37 @@ public class LiveMapActivity extends AppCompatActivity implements OnMapReadyCall
     private class RouteReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            List<Location> route = intent.getParcelableArrayListExtra(getString(R.string.BroadcastRouteLocationList));
+            //Unregister the receiver - We only need the route once
+            unregisterReceiver(mRouteReceiver);
+
+            // Read the route from SharedPreferences
+            List<LatLng> route = new ArrayList<>();
+            SharedPreferences preferences = getSharedPreferences(getString(R.string.RoutePreferences), Context.MODE_MULTI_PROCESS);
+            Set<String> values = preferences.getStringSet(getString(R.string.StoredRoute), new HashSet<String>());
+
+            for (String value : values) {
+                String[] latLng = value.split(";");
+                route.add(new LatLng((Double.parseDouble(latLng[0])), Double.parseDouble(latLng[1])));
+            }
 
             if(!route.isEmpty()) {
                 //Add all coordinates to the route
                 for (int i = route.size() - 1; i >= 0; i--) {
-                    mRoute.add(0, new LatLng(route.get(i).getLatitude(), route.get(i).getLongitude()));
+                    mRoute.add(route.get(i));
                 }
 
                 //Add all distance to the TripDistance
-                double test = mTripDistance;
                 for (int i = 1; i < route.size() - 1; i++) {
-                    mTripDistance += route.get(i).distanceTo(route.get(i - 1));
+                    mTripDistance += DistanceBetweenLatLng(route.get(i), route.get(i - 1));
                 }
 
-                //If start time of the trip has not been recorded yet, initialize the view for live time
-                if (mTripStartTime == null) {
-                    mTripStartTime = route.get(0).getTime();
-                    InitializeLiveTime();
-                }
+                //Initialize the view for live time
+                mTripStartTime = preferences.getLong(getString(R.string.StoredRouteStart), -1);
+                InitializeLiveTime();
 
                 //Update Map UI
                 UpdateRouteOnMap();
             }
-
-            //Unregister the receiver - We only need the route once
-            unregisterReceiver(mRouteReceiver);
 
             //Listen for position updates
             mLocationReceiver = new PositionReceiver();

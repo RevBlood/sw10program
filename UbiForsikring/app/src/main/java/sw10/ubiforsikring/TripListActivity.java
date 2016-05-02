@@ -28,7 +28,9 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import sw10.ubiforsikring.Helpers.ServiceHelper;
 import sw10.ubiforsikring.Objects.TripObjects.TripListItem;
@@ -46,7 +48,7 @@ public class TripListActivity extends AppCompatActivity {
     //Active Trip
     TextView mCurrentTripDescriptionView;
     LatLng mPreviousPosition;
-    double mMetersDriven = 0;
+    double mMetersDriven;
 
     //TripService communication
     ServiceConnection mTripServiceConnection;
@@ -152,18 +154,26 @@ public class TripListActivity extends AppCompatActivity {
             //Unregister the receiver - We only need the route once
             unregisterReceiver(mRouteReceiver);
 
-            List<Location> route = intent.getParcelableArrayListExtra(getString(R.string.BroadcastRouteLocationList));
+            // Read the route from SharedPreferences
+            List<LatLng> route = new ArrayList<>();
+            SharedPreferences preferences = getSharedPreferences(getString(R.string.RoutePreferences), Context.MODE_MULTI_PROCESS);
+            Set<String> values = preferences.getStringSet(getString(R.string.StoredRoute), new HashSet<String>());
+
+            for (String value : values) {
+                String[] latLng = value.split(";");
+                route.add(new LatLng((Double.parseDouble(latLng[0])), Double.parseDouble(latLng[1])));
+            }
 
             if(!route.isEmpty()) {
                 //Add all distance to the active trip
                 for (int i = 1; i < route.size() - 1; i++) {
-                    mMetersDriven += route.get(i).distanceTo(route.get(i - 1));
+                    mMetersDriven += DistanceBetweenLatLng(route.get(i), route.get(i - 1));
                 }
 
                 mCurrentTripDescriptionView.setText(String.format(getString(R.string.CurrentTripDistanceText), mMetersDriven / 1000));
 
                 //Save last position as the previous for calculating further distances
-                mPreviousPosition = new LatLng(route.get(route.size() - 1).getLatitude(), route.get(route.size() - 1).getLongitude());
+                mPreviousPosition = route.get(route.size() - 1);
             }
 
             //Register receiver for getting new positions
@@ -191,6 +201,9 @@ public class TripListActivity extends AppCompatActivity {
 
     private void HandleTripStatus() {
         if (mIsTripActive) {
+            // Initialize relevant variables
+            mMetersDriven = 0;
+
             //Listen for, and request the route so far, from the TripService
             mRouteReceiver = new RouteReceiver();
             registerReceiver(mRouteReceiver, new IntentFilter(getString(R.string.BroadcastRouteIntent)));
@@ -281,7 +294,6 @@ public class TripListActivity extends AppCompatActivity {
                 // Get car id from SharedPreferences - Then request trips for that car
                 SharedPreferences preferences = getSharedPreferences(getString(R.string.UserPreferences), Context.MODE_PRIVATE);
                 int userId = preferences.getInt(getString(R.string.StoredCarId), -1);
-
                 mTripList.addAll(ServiceHelper.GetTripsForListView(userId, offset[0]));
                 return true;
             } catch (Exception e) {

@@ -15,7 +15,6 @@ import sw10.ubiforsikring.Objects.TripObjects.TripListItem;
 
 public class ServiceHelper {
 	private static String ip = "stream.cs.aau.dk:9220";
-	//private static String ip = "62.107.99.175";
 
 	//region GET
 
