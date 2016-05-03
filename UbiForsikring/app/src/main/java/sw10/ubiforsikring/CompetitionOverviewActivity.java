@@ -13,6 +13,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.lang.ref.WeakReference;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import sw10.ubiforsikring.Helpers.ServiceHelper;
@@ -25,23 +27,30 @@ public class CompetitionOverviewActivity extends AppCompatActivity {
     Competition mCompetition;
     List<LeaderBoardEntry> mRankings;
     ArrayAdapter<LeaderBoardEntry> mCompetitionAdapter;
+    SimpleDateFormat mSdf;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_competition_overview);
         mContext = this;
+        mSdf = new SimpleDateFormat(mContext.getString(R.string.CompetitionTimeLeftFormat));
 
         //Get trip id for which data to display
         Intent intent = getIntent();
         mCompetitionId = intent.getIntExtra(getString(R.string.CompetitionIdIntentName), -1);
 
         ListView leaderBoard = (ListView) findViewById(R.id.LeaderBoard);
+        mRankings = new ArrayList<>();
+        mCompetitionAdapter = new LeaderBoardAdapter(this, mRankings);
         leaderBoard.setAdapter(mCompetitionAdapter);
     }
 
     @Override
     public void onResume() {
+        // Clear leaderboard
+        mRankings.clear();
+
         //Get data for GUI
         CompetitionGetTask competitionGetTask = new CompetitionGetTask(this);
         competitionGetTask.execute(mCompetitionId);
@@ -61,8 +70,7 @@ public class CompetitionOverviewActivity extends AppCompatActivity {
             try {
                 SharedPreferences preferences = getSharedPreferences(getString(R.string.UserPreferences), Context.MODE_PRIVATE);
                 int userId = preferences.getInt(getString(R.string.StoredCarId), -1);
-
-                //mCompetition = ServiceHelper.GetCompetition(userId, competitionId[0]);
+                mCompetition = ServiceHelper.GetCompetitionForOverview(competitionId[0], userId);
                 return true;
             } catch (Exception e) {
                 return false;
@@ -74,6 +82,7 @@ public class CompetitionOverviewActivity extends AppCompatActivity {
             if (mContextReference.get() != null) {
                 if(!success) {
                     CompetitionLoadErrorDialog().show();
+                    return;
                 }
 
                 // Find all views to update
@@ -82,6 +91,17 @@ public class CompetitionOverviewActivity extends AppCompatActivity {
                 TextView rankXYView = (TextView) findViewById(R.id.RankXYView);
                 TextView personalScoreView = (TextView) findViewById(R.id.PersonalScoreView);
                 TextView competitionDescriptionView = (TextView) findViewById(R.id.CompetitionDescriptionView);
+
+                competitionTitleView.setText(mCompetition.Name);
+
+                String endDate = mSdf.format(mCompetition.EndDate);
+                competitionTimeLeftView.setText(String.format(getString(R.string.CompetitionTimeLeftText), endDate));
+                rankXYView.setText(String.format(getString(R.string.CompetitionOverviewRankText), mCompetition.Rank, mCompetition.ParticipantCount));
+                personalScoreView.setText(String.format(getString(R.string.CompetitionOverviewAvgScore), mCompetition.PersonalScore));
+                competitionDescriptionView.setText(mCompetition.Description);
+
+                mRankings.addAll(mCompetition.LeaderBoardEntries);
+                mCompetitionAdapter.notifyDataSetChanged();
             }
         }
 

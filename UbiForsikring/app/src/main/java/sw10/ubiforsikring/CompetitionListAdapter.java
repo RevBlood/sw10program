@@ -81,6 +81,8 @@ public class CompetitionListAdapter extends ArrayAdapter<CompetitionListItem> {
                         SharedPreferences preferences = mContext.getSharedPreferences(mContext.getString(R.string.UserPreferences), Context.MODE_PRIVATE);
                         int userId = preferences.getInt(mContext.getString(R.string.StoredCarId), -1);
                         ServiceHelper.CompetitionSignUp(userId, competitionId);
+                        item.ParticipantCount += 1;
+                        item.Rank = item.ParticipantCount;
                         CreateParticipantLayout(viewHolder, item);
 
                     } catch (Exception e) {
@@ -157,12 +159,11 @@ public class CompetitionListAdapter extends ArrayAdapter<CompetitionListItem> {
         viewHolder.CompetitionRankView.setVisibility(View.VISIBLE);
         viewHolder.CompetitionAttemptCountView.setVisibility(View.VISIBLE);
         viewHolder.CompetitionAttemptCountView.setText(String.format(mContext.getString(R.string.CompetitionAttemptCountText), item.AttemptCount));
-        viewHolder.CompetitionDescriptionView.setText(String.format(mContext.getString(R.string.CompetitionRankDescription), item.Rank, item.ParticipantCount));
-        int rankPercentage = ((item.Rank / item.ParticipantCount) * 100);
-        viewHolder.CompetitionRankView.setText(String.format(mContext.getString(R.string.CompetitionRankText), rankPercentage));
+        viewHolder.CompetitionDescriptionView.setText(String.format(mContext.getString(R.string.CompetitionDescriptionText), item.ParticipantCount));
+        viewHolder.CompetitionRankView.setText(String.format(mContext.getString(R.string.CompetitionRankText), item.Rank, item.ParticipantCount));
 
-        SetTextColor(viewHolder.CompetitionRankView, -1);
-        SetTextColor(viewHolder.CompetitionDescriptionView, -1);
+        double rankPercentage = (((double) item.Rank / (double) item.ParticipantCount) * 100);
+        SetTextColor(viewHolder.CompetitionRankView, rankPercentage);
     }
 }
 

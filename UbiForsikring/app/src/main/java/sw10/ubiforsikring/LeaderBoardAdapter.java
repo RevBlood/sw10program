@@ -50,9 +50,9 @@ public class LeaderBoardAdapter extends ArrayAdapter<LeaderBoardEntry> {
 
         //Populate ViewHolder with data
         final ViewHolder viewHolder = (ViewHolder) rowView.getTag();
-        viewHolder.RankView.setText(item.Rank);
+        viewHolder.RankView.setText(Integer.toString(position + 1));
         viewHolder.UsernameView.setText(item.Username);
-        viewHolder.ScoreView.setText(Double.toString(item.Score));
+        viewHolder.ScoreView.setText(String.format(mContext.getString(R.string.LeaderboardAvgScore), item.Score));
 
         return rowView;
     }

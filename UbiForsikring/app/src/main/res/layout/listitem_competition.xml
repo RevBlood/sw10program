@@ -58,15 +58,14 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/ListViewTopSection"
-        android:layout_marginTop="14dp">
+        android:layout_below="@id/ListViewTopSection">
 
         <TextView
             android:id="@+id/CompetitionTimeLeftView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center"
+            android:gravity="start"
             android:textSize="18sp" />
 
         <TextView
@@ -74,7 +73,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center"
+            android:gravity="end"
             android:visibility="invisible"
             android:textSize="18sp" />
 

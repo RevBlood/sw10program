@@ -11,6 +11,7 @@ import java.util.List;
 import sw10.ubiforsikring.Helpers.DateObjectHelper;
 
 public class Competition {
+    public int Id;
     public String Name;
     public Date EndDate;
     public int Rank;
@@ -21,12 +22,13 @@ public class Competition {
 
     public Competition(JSONObject obj) {
         try {
-            Name = obj.getString("name");
-            EndDate = DateObjectHelper.CreateDateObject("enddate");
+            Id = obj.getInt("competitionid");
+            Name = obj.getString("competitionname");
+            EndDate = DateObjectHelper.CreateDateObject(new JSONObject(obj.getString("stoptemporal")).getString("timestamp"));
             Rank = obj.getInt("rank");
             ParticipantCount = obj.getInt("participantcount");
-            PersonalScore = obj.getDouble("personalscore");
-            Description = obj.getString("description");
+            PersonalScore = obj.getDouble("score");
+            Description = obj.getString("competitiondescription");
 
             LeaderBoardEntries = new ArrayList<>();
             JSONArray jsonArray = obj.getJSONArray("leaderboard");

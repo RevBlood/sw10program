@@ -8,6 +8,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import sw10.ubiforsikring.Objects.CarObjects.Car;
+import sw10.ubiforsikring.Objects.CompetitionObjects.Competition;
 import sw10.ubiforsikring.Objects.CompetitionObjects.CompetitionListItem;
 import sw10.ubiforsikring.Objects.FactObjects.Fact;
 import sw10.ubiforsikring.Objects.TripObjects.Trip;
@@ -118,7 +119,6 @@ public class ServiceHelper {
 		}
 	}
 
-    //TODO: Få Lau til at sætte denne op på serveren, og parse til CompetitionListItem i stedet for tripListItem
 	public static ArrayList<CompetitionListItem> GetCompetitionsForListView(int carId, int offset){
 		String response = HTTPHelper.HTTPGet("http://" + ip + "/RestService/Competition/GetCompetitionsForListView?carid=" + carId + "&offset=" + offset);
 		Log.i("Debug", response);
@@ -139,6 +139,30 @@ public class ServiceHelper {
 		}
 
 		return competitionListItems;
+	}
+
+	public static Competition GetCompetitionForOverview(int competitionId, int carId) {
+		String response = "Empty response";
+		Competition competition = null;
+
+		try {
+			response = HTTPHelper.HTTPGet("http://" + ip + "/RestService/Competition/GetCompetitionForOverview?competitionid=" + competitionId + "&carid=" + carId);
+			System.out.println("Response: " + response);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		Log.i("Debug", response);
+
+		String prunedResponse = pruneXMLtags(response);
+
+		try {
+			competition = new Competition(new JSONObject(prunedResponse));
+		} catch(Exception e) {
+			Log.e("Debug", "GetCompetitionForOverview:", e);
+		}
+
+		return competition;
 	}
 
 	public static ArrayList<Fact> GetFacts(int carid, int tripid){
@@ -226,9 +250,9 @@ public class ServiceHelper {
 
 	}
 
+    //endregion
+
 	public static String pruneXMLtags(String response) {
 		return response.replaceAll("<.*?>", "");
 	}
-
-    //endregion
 }

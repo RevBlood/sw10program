@@ -134,12 +134,15 @@
     <string name="CompetitionIdIntentName">CompetitionId</string>
     <string name="EnterCompetitionText">Deltag</string>
     <string name="CompetitionAttemptCountText">%d forsøg</string>
-    <string name="CompetitionRankDescription">%1$,d / %2$,d</string>
+    <string name="CompetitionRankText">%1$,d / %2$,d</string>
     <string name="CompetitionParticipantsDescription">%d deltagere</string>
-    <string name="CompetitionRankText">%d%%</string>
+    <string name="CompetitionDescriptionText">Antal deltagere: %d</string>
     <string name="UsernameSendErrorText">Kunne ikke gemme brugernavnet</string>
     <string name="CompetitionTimeLeftText">Sluttidspunkt: %s</string>
     <string name="CompetitionTimeLeftFormat">dd/MM HH:mm</string>
+    <string name="CompetitionOverviewRankText">Din placering: %1$,d / %2$,d</string>
+    <string name="CompetitionOverviewAvgScore">Gns. score: %.2f</string>
+    <string name="LeaderboardAvgScore">%.2f</string>
 
     <string name="UsernameNotSetTitle">Vælg brugernavn</string>
     <string name="UsernameNotSetDescription">For at kunne deltage i konkurrencer skal du have et brugernavn</string>
