@@ -99,9 +99,9 @@
     <string name="DrivingStyleText">Din kørsel:</string>
     <string name="TotalCostText">Din Tur:</string>
     <string name="CostPlusPercentage">(+%.1f%%) </string>
-    <string name="CostMinusPercentage">(-%.1f%%)</string>
+    <string name="CostMinusPercentage">(%.1f%%)</string>
     <string name="CostPlusValue">+%.1f km</string>
-    <string name="CostMinusValue">-%.1f km</string>
+    <string name="CostMinusValue">%.1f km</string>
     <string name="MapDisplayIntent">MapDisplay</string>
     <string name="TripStartText">Tur startet:</string>
     <string name="TripEndText">Tur afsluttet:</string>

@@ -7,7 +7,6 @@ import java.util.Date;
 import sw10.ubiforsikring.Helpers.DateObjectHelper;
 
 public class TripListItem {
-
     public long TripId;
     public long LocalTripId;
     public Date TripStart;

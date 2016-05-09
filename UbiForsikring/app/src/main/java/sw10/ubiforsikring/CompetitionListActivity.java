@@ -101,6 +101,8 @@ public class CompetitionListActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Boolean success) {
             if (mContextReference.get() != null) {
+                // Resetting the adapter is necessary pre KitKat.
+                mCompetitionListView.setAdapter(mCompetitionListAdapter);
                 mCompetitionListView.removeFooterView(mFooterView);
                 findViewById(R.id.CompetitionListLoadingView).setVisibility(View.GONE);
                 mCompetitionListView.setEmptyView(findViewById(R.id.CompetitionListEmptyView));

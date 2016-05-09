@@ -306,6 +306,8 @@ public class TripListActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Boolean success) {
             if (mContextReference.get() != null) {
+                // Resetting the adapter is necessary pre KitKat.
+                mTripListView.setAdapter(mTripListAdapter);
                 mTripListView.removeFooterView(mFooterView);
                 findViewById(R.id.TripListLoadingView).setVisibility(View.GONE);
                 mTripListView.setEmptyView(findViewById(R.id.TripListEmptyView));
