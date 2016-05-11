@@ -88,7 +88,7 @@ public class CompetitionListActivity extends AppCompatActivity {
         @Override
         protected Boolean doInBackground(Integer... index) {
             try {
-                SharedPreferences preferences = getSharedPreferences(getString(R.string.UserPreferences), Context.MODE_PRIVATE);
+                SharedPreferences preferences = getSharedPreferences(getString(R.string.SW10Preferences), Context.MODE_PRIVATE);
                 int userId = preferences.getInt(getString(R.string.StoredCarId), -1);
                 mCompetitionList.addAll(ServiceHelper.GetCompetitionsForListView(userId, index[0]));
                 return true;
@@ -134,7 +134,7 @@ public class CompetitionListActivity extends AppCompatActivity {
                         dialog.cancel();
                     }
                 })
-                .setNegativeButton(getString(R.string.TripListCancelLoad), new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.DialogIgnore), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
                     }
@@ -148,8 +148,8 @@ public class CompetitionListActivity extends AppCompatActivity {
         final AlertDialog alertDialog = new AlertDialog.Builder(mContext)
                 .setTitle(getString(R.string.UsernameNotSetTitle))
                 .setMessage(getString(R.string.UsernameNotSetDescription))
-                .setPositiveButton(getString(R.string.UsernameOk), null)
-                .setNegativeButton(getString(R.string.UsernameGoBack), new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.DialogOK), null)
+                .setNegativeButton(getString(R.string.DialogBack), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         finish();
                     }
@@ -166,7 +166,7 @@ public class CompetitionListActivity extends AppCompatActivity {
                     public void onClick(View view) {
                         if (inputView.getText().toString().length() >= mContext.getResources().getInteger(R.integer.userNameMinLength)) {
                             try {
-                                SharedPreferences preferences = getSharedPreferences(getString(R.string.UserPreferences), Context.MODE_PRIVATE);
+                                SharedPreferences preferences = getSharedPreferences(getString(R.string.SW10Preferences), Context.MODE_PRIVATE);
                                 int userId = preferences.getInt(getString(R.string.StoredCarId), -1);
 
                                 ServiceHelper.UpdateCarWithUsername(userId, inputView.getText().toString());
@@ -214,7 +214,7 @@ public class CompetitionListActivity extends AppCompatActivity {
                 .setPositiveButton(getString(R.string.TripListRetryLoad), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         try {
-                            SharedPreferences preferences = getSharedPreferences(getString(R.string.UserPreferences), Context.MODE_PRIVATE);
+                            SharedPreferences preferences = getSharedPreferences(getString(R.string.SW10Preferences), Context.MODE_PRIVATE);
                             int userId = preferences.getInt(getString(R.string.StoredCarId), -1);
 
                             ServiceHelper.UpdateCarWithUsername(userId, username);
@@ -229,7 +229,7 @@ public class CompetitionListActivity extends AppCompatActivity {
                         dialog.cancel();
                     }
                 })
-                .setNegativeButton(getString(R.string.TripListCancelLoad), new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.DialogIgnore), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
                     }

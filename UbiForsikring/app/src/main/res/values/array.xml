@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+<!--
     <string-array name="DeleteAfterSettingOptions">
         <item>Aldrig</item>
         <item>7 dage</item>
@@ -20,5 +20,5 @@
         <item>5</item>
         <item>6</item>
     </string-array>
-
+-->
 </resources>

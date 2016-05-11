@@ -156,7 +156,7 @@ public class TripListActivity extends AppCompatActivity {
 
             // Read the route from SharedPreferences
             List<LatLng> route = new ArrayList<>();
-            SharedPreferences preferences = getSharedPreferences(getString(R.string.RoutePreferences), Context.MODE_MULTI_PROCESS);
+            SharedPreferences preferences = getSharedPreferences(getString(R.string.SW10Preferences), Context.MODE_MULTI_PROCESS);
             Set<String> values = preferences.getStringSet(getString(R.string.StoredRoute), new HashSet<String>());
 
             for (String value : values) {
@@ -292,7 +292,7 @@ public class TripListActivity extends AppCompatActivity {
         protected Boolean doInBackground(Integer... offset) {
             try {
                 // Get car id from SharedPreferences - Then request trips for that car
-                SharedPreferences preferences = getSharedPreferences(getString(R.string.UserPreferences), Context.MODE_PRIVATE);
+                SharedPreferences preferences = getSharedPreferences(getString(R.string.SW10Preferences), Context.MODE_PRIVATE);
                 int userId = preferences.getInt(getString(R.string.StoredCarId), -1);
                 mTripList.addAll(ServiceHelper.GetTripsForListView(userId, offset[0]));
                 return true;
@@ -341,7 +341,7 @@ public class TripListActivity extends AppCompatActivity {
                         dialog.cancel();
                     }
                 })
-                .setNegativeButton(getString(R.string.TripListCancelLoad), new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.DialogIgnore), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
                     }

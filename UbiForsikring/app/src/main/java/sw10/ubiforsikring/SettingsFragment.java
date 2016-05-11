@@ -1,25 +1,14 @@
 package sw10.ubiforsikring;
 
 import android.app.AlertDialog;
-import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.IBinder;
-import android.os.Message;
-import android.os.Messenger;
-import android.os.RemoteException;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
-import android.preference.SwitchPreference;
-import android.widget.Toast;
 
 import sw10.ubiforsikring.Helpers.ServiceHelper;
 
@@ -98,7 +87,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
             }
 
             try {
-                SharedPreferences preferences = getActivity().getSharedPreferences(getString(R.string.UserPreferences), Context.MODE_PRIVATE);
+                SharedPreferences preferences = getActivity().getSharedPreferences(getString(R.string.SW10Preferences), Context.MODE_PRIVATE);
                 int userId = preferences.getInt(getString(R.string.StoredCarId), -1);
 
                 ServiceHelper.UpdateCarWithUsername(userId, username);
@@ -239,7 +228,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
                 .setPositiveButton(getString(R.string.TripListRetryLoad), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         try {
-                            SharedPreferences preferences = getActivity().getSharedPreferences(getString(R.string.UserPreferences), Context.MODE_PRIVATE);
+                            SharedPreferences preferences = getActivity().getSharedPreferences(getString(R.string.SW10Preferences), Context.MODE_PRIVATE);
                             int userId = preferences.getInt(getString(R.string.StoredCarId), -1);
 
                             ServiceHelper.UpdateCarWithUsername(userId, username);
@@ -253,7 +242,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
                         dialog.cancel();
                     }
                 })
-                .setNegativeButton(getString(R.string.TripListCancelLoad), new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.DialogIgnore), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
                     }

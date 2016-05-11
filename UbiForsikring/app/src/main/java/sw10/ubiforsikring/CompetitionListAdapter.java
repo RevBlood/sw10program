@@ -78,7 +78,7 @@ public class CompetitionListAdapter extends ArrayAdapter<CompetitionListItem> {
                 @Override
                 public void onClick(View v) {
                     try {
-                        SharedPreferences preferences = mContext.getSharedPreferences(mContext.getString(R.string.UserPreferences), Context.MODE_PRIVATE);
+                        SharedPreferences preferences = mContext.getSharedPreferences(mContext.getString(R.string.SW10Preferences), Context.MODE_PRIVATE);
                         int userId = preferences.getInt(mContext.getString(R.string.StoredCarId), -1);
                         ServiceHelper.CompetitionSignUp(userId, competitionId);
                         item.ParticipantCount += 1;
@@ -136,7 +136,7 @@ public class CompetitionListAdapter extends ArrayAdapter<CompetitionListItem> {
                 .setPositiveButton(mContext.getString(R.string.TripListRetryLoad), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         try {
-                            SharedPreferences preferences = mContext.getSharedPreferences(mContext.getString(R.string.UserPreferences), Context.MODE_PRIVATE);
+                            SharedPreferences preferences = mContext.getSharedPreferences(mContext.getString(R.string.SW10Preferences), Context.MODE_PRIVATE);
                             int userId = preferences.getInt(mContext.getString(R.string.StoredCarId), -1);
                             ServiceHelper.CompetitionSignUp(userId, item.CompetitionId);
                             CreateParticipantLayout(viewHolder, item);
@@ -146,7 +146,7 @@ public class CompetitionListAdapter extends ArrayAdapter<CompetitionListItem> {
                         }
                     }
                 })
-                .setNegativeButton(mContext.getString(R.string.TripListCancelLoad), new DialogInterface.OnClickListener() {
+                .setNegativeButton(mContext.getString(R.string.DialogIgnore), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
                     }

@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 public class LoginActivity extends AppCompatActivity {
+    /*
     Button mLoginButton;
     SharedPreferences mPreferences;
 
@@ -28,7 +29,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         //Skip login if relevant
-        SharedPreferences preferences = getSharedPreferences(getString(R.string.LoginPreferences), Context.MODE_PRIVATE);
+        SharedPreferences preferences = getSharedPreferences(getString(R.string.SW10Preferences), Context.MODE_PRIVATE);
         if(preferences.getBoolean(getString(R.string.LoginStatus), false)) {
             startActivity(new Intent(this, MainMenuActivity.class));
             finish();
@@ -85,7 +86,7 @@ public class LoginActivity extends AppCompatActivity {
 
     public void OnLoginSuccess(String email) {
         //Save the login status
-        mPreferences = getSharedPreferences(getString(R.string.LoginPreferences), Context.MODE_PRIVATE);
+        mPreferences = getSharedPreferences(getString(R.string.SW10Preferences), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = mPreferences.edit();
         editor.putBoolean(getString(R.string.LoginStatus), true);
         editor.putString(getString(R.string.StoredEmail), email);
@@ -126,4 +127,5 @@ public class LoginActivity extends AppCompatActivity {
 
         return valid;
     }
+    */
 }

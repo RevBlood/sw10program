@@ -126,16 +126,6 @@ public class MainMenuActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onBackPressed() {
-        //Deny application exit if trip is ongoing
-        if (!mIsTripActive) {
-            super.onBackPressed();
-        } else {
-            Toast.makeText(this, R.string.OnBackPressedToast, Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         //Create the proper layout for the Actionbar
         getMenuInflater().inflate(R.menu.main_menu_actionbar, menu);
@@ -194,17 +184,17 @@ public class MainMenuActivity extends AppCompatActivity {
                 }
 
                 if (MessageTripService(TripService.BEGIN_TRIP)) {
-                    Toast.makeText(mContext, R.string.TripStartToast, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, R.string.TripStartToast, Toast.LENGTH_LONG).show();
                 }
             } else {
-                SharedPreferences preferences = getSharedPreferences(getString(R.string.FailedTripPreferences), Context.MODE_PRIVATE);
+                SharedPreferences preferences = getSharedPreferences(getString(R.string.SW10Preferences), Context.MODE_PRIVATE);
                 Set<String> set = preferences.getStringSet(getString(R.string.StoredTrips), new HashSet<String>());
                 for (String entry : set) {
                         Log.e("Debug", "JSON: " + entry);
                 }
 
                 if (MessageTripService(TripService.END_TRIP)) {
-                    Toast.makeText(mContext, R.string.TripStopToast, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, R.string.TripStopToast, Toast.LENGTH_LONG).show();
                 }
             }
         }
@@ -400,7 +390,7 @@ public class MainMenuActivity extends AppCompatActivity {
                     dialog.cancel();
                 }
             })
-            .setNegativeButton(getString(R.string.GPSDisabledCancelButtonText), new DialogInterface.OnClickListener() {
+            .setNegativeButton(getString(R.string.DialogCancel), new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
                     mIsGPSDialogOpen = false;
                     dialog.cancel();
@@ -420,7 +410,7 @@ public class MainMenuActivity extends AppCompatActivity {
                         dialog.cancel();
                     }
                 })
-                .setNegativeButton(getString(R.string.IMEICancelButtonText), new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.DialogExit), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         // Close the program. It must not be used without IMEI
                         finish();
@@ -432,14 +422,14 @@ public class MainMenuActivity extends AppCompatActivity {
 
     private void CheckCarId() {
         //Check CarId is stored. If not, check if permission is granted to get IMEI (Needed to get CarId)
-        SharedPreferences preferences = getSharedPreferences(getString(R.string.UserPreferences), Context.MODE_PRIVATE);
+        SharedPreferences preferences = getSharedPreferences(getString(R.string.SW10Preferences), Context.MODE_PRIVATE);
         if(!preferences.getBoolean(getString(R.string.CarIdStatus), false)) {
             VerifyPhoneStatePermission();
         }
     }
 
     private void SaveIMEI() {
-        SharedPreferences preferences = getSharedPreferences(getString(R.string.UserPreferences), Context.MODE_PRIVATE);
+        SharedPreferences preferences = getSharedPreferences(getString(R.string.SW10Preferences), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
         editor.putString(getString(R.string.StoredIMEI), telephonyManager.getDeviceId());
@@ -447,7 +437,7 @@ public class MainMenuActivity extends AppCompatActivity {
     }
 
     private boolean SendIMEI() {
-        SharedPreferences preferences = getSharedPreferences(getString(R.string.UserPreferences), Context.MODE_PRIVATE);
+        SharedPreferences preferences = getSharedPreferences(getString(R.string.SW10Preferences), Context.MODE_PRIVATE);
         String imei = preferences.getString(getString(R.string.StoredIMEI), null);
         try {
             Car car = ServiceHelper.GetOrCreateCar(imei);
@@ -478,7 +468,7 @@ public class MainMenuActivity extends AppCompatActivity {
                         dialog.cancel();
                     }
                 })
-                .setNegativeButton(getString(R.string.SendIMEICancelButtonText), new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.DialogExit), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         // Exit program. It must not be used without IMEI
                         finish();

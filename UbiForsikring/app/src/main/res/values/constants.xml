@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- MAIN MENU -->
-    <integer name="OnBackPressedTimer">2000</integer>
-
     <!-- PREFERENCES -->
     <integer name="userNameMinLength">4</integer>
     <integer name="userNameMaxLength">32</integer>
 
-    <!-- LISTVIEWS -->
+    <!-- LIST VIEWS -->
     <integer name="ChunkSize">10</integer>
     <integer name="LoadMoreThreshold">5</integer>
 

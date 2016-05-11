@@ -35,9 +35,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -182,7 +179,7 @@ public class LiveMapActivity extends AppCompatActivity implements OnMapReadyCall
 
             // Read the route from SharedPreferences
             List<LatLng> route = new ArrayList<>();
-            SharedPreferences preferences = getSharedPreferences(getString(R.string.RoutePreferences), Context.MODE_MULTI_PROCESS);
+            SharedPreferences preferences = getSharedPreferences(getString(R.string.SW10Preferences), Context.MODE_MULTI_PROCESS);
             Set<String> values = preferences.getStringSet(getString(R.string.StoredRoute), new HashSet<String>());
 
             for (String value : values) {

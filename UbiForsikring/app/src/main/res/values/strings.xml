@@ -1,16 +1,27 @@
 <resources>
+    <!-- CROSS-ACTIVITY -->
+    <string name="app_name">Drive-LaB</string>
+    <string name="SW10Preferences">SW10Preferences</string>
+    <string name="DialogOK">OK</string>
+    <string name="DialogCancel">Annuller</string>
+    <string name="DialogBack">Tilbage</string>
+    <string name="DialogExit">Afslut</string>
+    <string name="DialogIgnore">Ignorer</string>
+    <string name="DefaultText">DefaultText</string>
+
     <!-- ACTIVITY TITLES -->
-    <string name="title_activity_main_menu">Drive-LaB</string>
+    <!--<string name="title_activity_login">Login</string> -->
+    <string name="title_activity_main_menu">@string/app_name</string>
     <string name="title_activity_settings">Indstillinger</string>
     <string name="title_activity_map">Kort</string>
     <string name="title_activity_trip_list">Turliste</string>
     <string name="title_activity_trip_overview">Turoversigt</string>
-    <!--<string name="title_activity_login">Login</string> -->
+    <string name="title_activity_trip_statistics">Turoversigt</string>
     <string name="title_activity_competition_list">Konkurrencer</string>
     <string name="title_activity_competition_overview">Overblik</string>
 
     <!-- LOGIN -->
-    <string name="Authenticating">Logger ind&#8230;</string>
+    <!-- <string name="Authenticating">Logger ind&#8230;</string>
     <string name="AuthenticationFailed">Forkert email eller password</string>
     <string name="EmailError">Ugyldig email addresse</string>
     <string name="PasswordError">Ugyldigt password</string>
@@ -19,46 +30,32 @@
     <string name="LoginButtonTitle">Log ind</string>
     <string name="LoginStatus">LoginStatus</string>
     <string name="StoredEmail">StoredEmail</string>
-    <string name="DefaultEmail">invalid@email.dk</string>
-    <string name="LoginPreferences">LoginPreferences</string>
+    <string name="DefaultEmail">invalid@email.dk</string> -->
 
     <!-- MAIN MENU -->
-    <string name="ActionBarSettingsTitle">Indstillinger</string>
-
-    <string name="LogoDescription">Logo</string>
-
-    <string name="TripButtonTitleStart">Start Tur</string>
-    <string name="TripButtonTitleStop">Stop Tur</string>
-    <string name="TripButtonTitleStopping">Afslutter tur</string>
-    <string name ="TripStoppingText">Dette kan tage et par minutter</string>
-    <string name="ActiveTripButtonTitle">Vis på kort</string>
     <string name="TripOverviewButtonTitle">Turliste</string>
     <string name="CompetitionsButtonTitle">Konkurrencer</string>
-
-    <string name="UserIdNotSetToast">Sæt venligst dit bruger ID under indstillinger før du starter en tur</string>
-    <string name="TripStartToast">Starter tur</string>
-    <string name="TripStopToast">Stopper tur</string>
-    <string name="OnBackPressedToast">Stop venligst tur inden afslutning</string>
-
-    <string name="GPSDisabledDialogTitle">GPS ikke indstillet korrekt</string>
-    <string name="GPSDisabledDialogText">Slå venligst GPS til med "Høj Præcision" før du starter din tur</string>
+    <string name="LiveMapButtonTitle">Vis på kort</string>
+    <string name="TripButtonTitleStart">Start Tur</string>
+    <string name="TripButtonTitleStop">Stop Tur</string>
+    <string name="TripButtonTitleStopping">Afslutter Tur</string>
+    <string name="TripStoppingDescription">Dette kan tage et par minutter</string>
+    <string name="ActionBarSettingsTitle">@string/title_activity_settings</string>
+    <string name="LogoDescription">Logo</string>
+    <string name="TripStartToast">Tur begyndt\nDrive-Lab tracker nu din kørsel</string>
+    <string name="TripStopToast">Tur afsluttet\nDrive-Lab analyserer nu din kørsel</string>
+    <string name="GPSDisabledDialogTitle">GPS ikke indstillet optimalt</string>
+    <string name="GPSDisabledDialogText">Slå venligst din GPS til med "Høj nøjagtighed" før du starter din tur</string>
     <string name="GPSDisabledSettingsButtonText">Gå til Indstillinger</string>
-    <string name="GPSDisabledCancelButtonText">Annuller</string>
-
     <string name="IMEIDialogTitle">Mangler tilladelse</string>
     <string name="IMEIDialogText">Drive-LaB kræver information om telefonen for at kunne fungere</string>
     <string name="IMEIRetryButtonText">Giv tilladelse</string>
-    <string name="IMEICancelButtonText">Afslut</string>
-
     <string name="SendIMEIDialogTitle">Ingen forbindelse</string>
     <string name="SendIMEIDialogText">Drive-LaB kunne ikke oprette forbindelse til serveren</string>
     <string name="SendIMEIRetryButtonText">Prøv igen</string>
-    <string name="SendIMEICancelButtonText">Afslut</string>
-
     <string name="IsGPSDialogOpen">IsGPSDialogOpen</string>
     <string name="IsTripProcessing">IsTripProcessing</string>
     <string name="IsTripActive">IsTripActive</string>
-    <string name="UserPreferences">UserPreferences</string>
     <string name="CarIdStatus">CarIdStatus</string>
     <string name="StoredIMEI">StoredIMEI</string>
     <string name="StoredCarId">StoredCarId</string>
@@ -78,7 +75,6 @@
     <string name="TripListEmptyText">Ingen ture kørt</string>
     <string name="TripListLoadErrorText">Kunne ikke indlæse ture</string>
     <string name="TripListRetryLoad">Prøv igen</string>
-    <string name="TripListCancelLoad">Ignorer</string>
     <string name="TripDistanceText">%.1f km</string>
     <string name="CurrentTripTitle">Igangværende tur</string>
     <string name="CurrentTripDistanceText">%.1f km kørt</string>
@@ -92,7 +88,6 @@
     <string name="TripStatisticsButtonText">Statistik</string>
     <string name="TripStatisticsIntent">Statistik</string>
     <string name="TripOverviewLoadErrorText">Kunne ikke indlæse turoversigt</string>
-    <string name="TripOverviewErrorGoBack">Gå tilbage</string>
     <string name="BaseCostText">Kilometer kørt:</string>
     <string name="BaseCostValue">%.1f km</string>
     <string name="EnvironmentText">Miljø &amp; trafik:</string>
@@ -143,11 +138,8 @@
     <string name="CompetitionOverviewRankText">Din placering: %1$,d / %2$,d</string>
     <string name="CompetitionOverviewAvgScore">Gns. score: %.2f</string>
     <string name="LeaderboardAvgScore">%.2f</string>
-
     <string name="UsernameNotSetTitle">Vælg brugernavn</string>
     <string name="UsernameNotSetDescription">For at kunne deltage i konkurrencer skal du have et brugernavn</string>
-    <string name="UsernameOk">OK</string>
-    <string name="UsernameGoBack">Gå tilbage</string>
     <string name="UsernameTooShortError">Navnet er for kort</string>
 
     <!-- COMPETITION OVERVIEW -->
@@ -155,12 +147,12 @@
 
     <!-- SETTINGS ACTIVITY -->
     <string name="SettingsCategoryUser">Bruger</string>
+    <string name="UsernameTitle">Brugernavn til konkurrencer</string>
+    <string name="UsernameDescription">Vælg&#8230;</string>
+    <!--
     <string name="SettingsCategoryStorage">Lager</string>
     <string name="SettingsCategorySupport">Support</string>
     <string name="SettingsCategoryAbout">Om</string>
-
-    <string name="UsernameTitle">Brugernavn til konkurrencer</string>
-    <string name="UsernameDescription">Vælg&#8230;</string>
     <string name="UserLogoutTitle">Log ud</string>
     <string name="SyncOnlineSettingTitle">Gem ture online</string>
     <string name="SyncOnlineSettingDescription">Spar plads på din enhed og gem dine ture i skyen</string>
@@ -170,16 +162,13 @@
     <string name="AboutSettingTitle">Om Drive-LaB</string>
     <string name="OnLogoutWhileTripActiveToast">Afslut venligst din tur før du logger ud</string>
     <string name="UnfinishedFeatureText">Denne feature kommer snart</string>
+    -->
 
     <!-- TRIP SERVICE -->
-    <string name="ServiceNotificationTitle">Drive-LaB</string>
-    <string name="ServiceNotificationText">Din tur er aktiv</string>
-
-    <string name="FailedTripPreferences">FailedTripPreferences</string>
+    <string name="ServiceNotificationTitle">Drive-LaB tracker din kørsel</string>
+    <string name="ServiceNotificationText">Tryk her for at åbne Drive-LaB</string>
     <string name="FailedTripStatus">FailedTripStatus</string>
     <string name="StoredTrips">StoredTrips</string>
-
-    <string name="RoutePreferences">RoutePreferences</string>
     <string name="StoredRoute">StoredRoute</string>
     <string name="StoredRouteStart">StoredRouteStart</string>
 
@@ -212,7 +201,4 @@
     <string name="TimeMonths">for %d måneder siden</string>
     <string name="TimeYear">for mere end et år siden</string>
 
-    <!-- OTHER -->
-    <string name="app_name">Drive-LaB</string>
-    <string name="DefaultText">DefaultText</string>
 </resources>

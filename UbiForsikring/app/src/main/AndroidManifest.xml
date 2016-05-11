@@ -70,10 +70,10 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".TripListActivity"/>
-    </activity>
+        </activity>
         <activity
             android:name=".TripStatisticsActivity"
-            android:label="@string/title_activity_trip_overview"
+            android:label="@string/title_activity_trip_statistics"
             android:launchMode="singleTask" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

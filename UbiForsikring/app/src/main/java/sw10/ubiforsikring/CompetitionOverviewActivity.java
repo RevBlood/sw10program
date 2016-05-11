@@ -68,7 +68,7 @@ public class CompetitionOverviewActivity extends AppCompatActivity {
         @Override
         protected Boolean doInBackground(Integer... competitionId) {
             try {
-                SharedPreferences preferences = getSharedPreferences(getString(R.string.UserPreferences), Context.MODE_PRIVATE);
+                SharedPreferences preferences = getSharedPreferences(getString(R.string.SW10Preferences), Context.MODE_PRIVATE);
                 int userId = preferences.getInt(getString(R.string.StoredCarId), -1);
                 mCompetition = ServiceHelper.GetCompetitionForOverview(competitionId[0], userId);
                 return true;
@@ -124,7 +124,7 @@ public class CompetitionOverviewActivity extends AppCompatActivity {
                         dialog.cancel();
                     }
                 })
-                .setNegativeButton(getString(R.string.TripOverviewErrorGoBack), new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.DialogBack), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         finish();
                     }

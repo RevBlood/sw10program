@@ -197,7 +197,7 @@ public class TripService extends Service implements ConnectionCallbacks, OnConne
     private void UpdateRouteBroadcast() {
         //Get the logged entries from the LocationListener
         ArrayList<Location> entries = new ArrayList<>(mLocationListener.GetEntries());
-        SharedPreferences.Editor editor = getSharedPreferences(getString(R.string.RoutePreferences), Context.MODE_MULTI_PROCESS).edit();
+        SharedPreferences.Editor editor = getSharedPreferences(getString(R.string.SW10Preferences), Context.MODE_MULTI_PROCESS).edit();
 
         if (!entries.isEmpty()) {
             // Save route in SharedPreferences
@@ -256,7 +256,7 @@ public class TripService extends Service implements ConnectionCallbacks, OnConne
                 entries.remove(i);
             }
 
-            SharedPreferences preferences = getSharedPreferences(getString(R.string.UserPreferences), Context.MODE_PRIVATE);
+            SharedPreferences preferences = getSharedPreferences(getString(R.string.SW10Preferences), Context.MODE_PRIVATE);
             int userId = preferences.getInt(getString(R.string.StoredCarId), -1);
 
             for (Location entry : entries) {
@@ -340,7 +340,7 @@ public class TripService extends Service implements ConnectionCallbacks, OnConne
         }
 
         //Get previously unresolved trips if any, and add the failed trip to the set
-        SharedPreferences preferences = getSharedPreferences(getString(R.string.FailedTripPreferences), Context.MODE_PRIVATE);
+        SharedPreferences preferences = getSharedPreferences(getString(R.string.SW10Preferences), Context.MODE_PRIVATE);
         Set<String> unresolvedTrips = preferences.getStringSet(getString(R.string.StoredTrips), new HashSet<String>());
         unresolvedTrips.add(failedTrip.toString());
 
@@ -353,7 +353,7 @@ public class TripService extends Service implements ConnectionCallbacks, OnConne
 
     private boolean SendUnresolvedTrips() {
         boolean success = true;
-        SharedPreferences preferences = getSharedPreferences(getString(R.string.FailedTripPreferences), Context.MODE_PRIVATE);
+        SharedPreferences preferences = getSharedPreferences(getString(R.string.SW10Preferences), Context.MODE_PRIVATE);
 
         // Get all unresolved trips (List might be empty)
         Set<String> unresolvedTrips = preferences.getStringSet(getString(R.string.StoredTrips), new HashSet<String>());
