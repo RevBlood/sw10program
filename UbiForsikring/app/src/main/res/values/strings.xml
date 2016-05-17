@@ -43,7 +43,7 @@
     <string name="ActionBarSettingsTitle">@string/title_activity_settings</string>
     <string name="LogoDescription">Logo</string>
     <string name="TripStartToast">Tur begyndt\nDrive-Lab tracker nu din kørsel</string>
-    <string name="TripStopToast">Tur afsluttet\nDrive-Lab analyserer nu din kørsel</string>
+    <string name="TripStopToast">Tur stoppet\nDrive-Lab analyserer nu din kørsel</string>
     <string name="GPSDisabledDialogTitle">GPS ikke indstillet optimalt</string>
     <string name="GPSDisabledDialogText">Slå venligst din GPS til med "Høj nøjagtighed" før du starter din tur</string>
     <string name="GPSDisabledSettingsButtonText">Gå til Indstillinger</string>

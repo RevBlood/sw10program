@@ -4,8 +4,8 @@
     <gradient
         android:centerX="50%"
         android:centerColor="@color/transparent"
-        android:startColor="@color/colorPrimary"
-        android:endColor="@color/colorPrimary"
+        android:startColor="@color/graphColorGreen"
+        android:endColor="@color/graphColorGreen"
         android:type="linear" />
 
 </shape>
