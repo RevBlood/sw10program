@@ -111,19 +111,6 @@ public class LiveMapActivity extends AppCompatActivity implements OnMapReadyCall
 
     @Override
     public void onResume() {
-        //Ensure all data is cleared
-        mRoute.clear();
-        mStartMarker = null;
-        mCurrentMarker = null;
-        mTripStartTime = null;
-        mTripDistance = 0;
-
-        //Redraw polyline, if GoogleMap is ready
-        if (mMap != null) {
-            mMap.clear();
-            mRouteLine = mMap.addPolyline(mRouteOptions);
-        }
-
         //Re-calculate distance before listening for new updates
         registerReceiver(mRouteReceiver, new IntentFilter(getString(R.string.BroadcastRouteIntent)));
 
@@ -176,6 +163,19 @@ public class LiveMapActivity extends AppCompatActivity implements OnMapReadyCall
         public void onReceive(Context context, Intent intent) {
             //Unregister the receiver - We only need the route once
             unregisterReceiver(mRouteReceiver);
+
+            //Having received a route, clear any earlier data, if any
+            mRoute.clear();
+            mStartMarker = null;
+            mCurrentMarker = null;
+            mTripStartTime = null;
+            mTripDistance = 0;
+
+            //Redraw polyline, if GoogleMap is ready
+            if (mMap != null) {
+                mMap.clear();
+                mRouteLine = mMap.addPolyline(mRouteOptions);
+            }
 
             // Read the route from SharedPreferences
             List<LatLng> route = new ArrayList<>();
@@ -329,7 +329,7 @@ public class LiveMapActivity extends AppCompatActivity implements OnMapReadyCall
 
             //Move camera to the new position
             if (mKeepAnimating) {
-                mMap.moveCamera(CameraUpdateFactory.zoomTo(18));
+                mMap.moveCamera(CameraUpdateFactory.zoomTo(16));
                 mMap.animateCamera(CameraUpdateFactory.newLatLng(position), getResources().getInteger(R.integer.AnimationSpeed), mAnimationCallback);
             }
 

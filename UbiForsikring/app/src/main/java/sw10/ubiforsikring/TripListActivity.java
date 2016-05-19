@@ -154,6 +154,10 @@ public class TripListActivity extends AppCompatActivity {
             //Unregister the receiver - We only need the route once
             unregisterReceiver(mRouteReceiver);
 
+            // Reset any variables that could have been used earlier
+            mMetersDriven = 0;
+            mPreviousPosition = null;
+
             // Read the route from SharedPreferences
             List<LatLng> route = new ArrayList<>();
             SharedPreferences preferences = getSharedPreferences(getString(R.string.SW10Preferences), Context.MODE_MULTI_PROCESS);
@@ -177,12 +181,12 @@ public class TripListActivity extends AppCompatActivity {
             }
 
             //Register receiver for getting new positions
-            mLocationReceiver = new PositionReceiver();
+            mLocationReceiver = new LocationReceiver();
             registerReceiver(mLocationReceiver, new IntentFilter(getString(R.string.BroadcastLiveGpsIntent)));
         }
     }
 
-    private class PositionReceiver extends BroadcastReceiver {
+    private class LocationReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
             Location location = intent.getParcelableExtra(getString(R.string.BroadcastLiveGpsLocation));
@@ -201,9 +205,6 @@ public class TripListActivity extends AppCompatActivity {
 
     private void HandleTripStatus() {
         if (mIsTripActive) {
-            // Initialize relevant variables
-            mMetersDriven = 0;
-
             //Listen for, and request the route so far, from the TripService
             mRouteReceiver = new RouteReceiver();
             registerReceiver(mRouteReceiver, new IntentFilter(getString(R.string.BroadcastRouteIntent)));

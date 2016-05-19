@@ -199,6 +199,10 @@ public class TripService extends Service implements ConnectionCallbacks, OnConne
         ArrayList<Location> entries = new ArrayList<>(mLocationListener.GetEntries());
         SharedPreferences.Editor editor = getSharedPreferences(getString(R.string.SW10Preferences), Context.MODE_MULTI_PROCESS).edit();
 
+        //Clear any earlier data stored in SharedPreferences
+        editor.remove(getString(R.string.StoredRoute));
+        editor.remove(getString(R.string.StoredRouteStart));
+
         if (!entries.isEmpty()) {
             // Save route in SharedPreferences
             Set<String> values = new HashSet<>();
@@ -208,9 +212,6 @@ public class TripService extends Service implements ConnectionCallbacks, OnConne
 
             editor.putStringSet(getString(R.string.StoredRoute), values);
             editor.putLong(getString(R.string.StoredRouteStart), entries.get(0).getTime());
-        } else {
-            editor.remove(getString(R.string.StoredRoute));
-            editor.remove(getString(R.string.StoredRouteStart));
         }
 
         editor.commit();
