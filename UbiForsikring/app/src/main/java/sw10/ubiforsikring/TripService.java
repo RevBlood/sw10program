@@ -254,7 +254,7 @@ public class TripService extends Service implements ConnectionCallbacks, OnConne
 
             //Discard first 5 entries as they are usually shit
             for (int i = 0; i < 5; i++) {
-                entries.remove(i);
+                entries.remove(0);
             }
 
             SharedPreferences preferences = getSharedPreferences(getString(R.string.SW10Preferences), Context.MODE_PRIVATE);
